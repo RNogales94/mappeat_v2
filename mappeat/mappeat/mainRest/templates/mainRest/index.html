@@ -1,0 +1,12 @@
+
+{% extends "base.html" %}
+    <div><p>Hola picha {{ STATIC_URL }}</p></div>
+ {% load i18n %}
+ {% block content %}
+ <div class="container content" ng-app="TableApp">
+     <div ui-view >Loading...</div>
+ </div>
+ {% endblock content %}
+ {% block extra_javascript %}
+ <script src="{{ STATIC_URL }}/javascript/app.js"></script>
+ {% endblock extra_javascript %}
