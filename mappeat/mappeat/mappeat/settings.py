@@ -38,9 +38,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'tastypie',
-    'djng',
-    'crispy_forms',
 ]
 
 MIDDLEWARE = [
