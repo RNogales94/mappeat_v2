@@ -82,6 +82,7 @@ class Table(models.Model):
     )
     number = models.IntegerField()
     type_table = models.CharField(max_length=1, choices=TABLE_TYPES)
+    is_available = models.BooleanField() #Default = True
     
     @staticmethod
     def table_type_to_str(choice):
