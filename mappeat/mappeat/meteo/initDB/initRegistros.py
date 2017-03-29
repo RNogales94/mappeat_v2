@@ -9,11 +9,14 @@ from pprint import pprint
 import ssl
 import json
 
+from dateutil import parser
+import datetime
+
 from geo.models import *
 from meteo.models import *
 from meteo import AEMET
 
-
+def initRegistro(fechaini, fechafin, indicativo)
 ssl._create_default_https_context = ssl._create_unverified_context
 
 estaciones = Estacion.objects.all()
@@ -29,25 +32,108 @@ meteo = urllib.request.urlopen(data['datos'])
 meteo =  str(meteo.read(), 'latin-1')  #Pasamos a unicode para que no haya problemas con las Ñ's etc
 meteoJSON = json.loads(meteo)
 
-#print("CHACHIS: "+str(len(meteoJSON)))
+#print(meteoJSON)
+"""
+CAMPOS DE UN REGISTRO:
+  + fecha
+  + tmed
+  + prec
+  + tmin
+  + horatmin
+  + tmax
+  + horatmax
+  + dir (Direccion del viento)
+  + velmedia
+  + racha
+  + horaracha
+  + sol
+  + presMax
+  + presMin
+  + horapresMax
+  + horapresMin
+
+"""
+def asPrec(prec):
+    if prec == 'Ip':
+        prec = 0;
+    else:
+        prec = float(prec.replace(',','.'))
+    return prec
+
+def asSol(sol):
+    if sol is None:
+        sol = null
+    else:
+        sol = float(sol.replace(',','.'))
+    return sol
+
+
+
 
 num_dias = len(meteoJSON)
 for registro_diario in range(0, num_dias):
-    print(float((meteoJSON[registro_diario]['tmed'].replace(',', '.'))))
+    r = meteoJSON[registro_diario] #Variable auxiliar para hacer mas rapida la escritura
+    #ESTACION
+    estacion = Estacion.objects.filter(indicativo=r['indicativo'])[0]
+    
+    #SOL
+    try:
+        sol_value = asSol(r['sol'])
+    except KeyError:
+        sol_value = None
+    
+    #HORA TMIN
+    try:
+        dt = parser.parse(r['horatmin'])
+        hora_tmin = datetime.time(dt.hour, dt.minute)
+    except ValueError:
+        hora_tmin = None
+    
+    #HORA TMAX
+    try:
+        dt = parser.parse(r['horatmax'])
+        hora_tmax = datetime.time(dt.hour, dt.minute)
+    except ValueError:
+        hora_tmax = None
+    
+    #HORA PresMIN
+    try:
+        hora_pmin = datetime.time(int(r['horaPresMin']))
+    except ValueError:
+        hora_pmin = None
+    
+    #HORA PresMAX
+    try:
+        hora_pmax = datetime.time(int(r['horaPresMax']))
+    except ValueError:
+        hora_pmax = None
+        
+    registro_actual = Registro( fecha = parser.parse(r['fecha']),
+                                estacion = estacion,
+                                tmed = float(r['tmed'].replace(',','.')),
+                                tmin = float(r['tmin'].replace(',','.')),
+                                tmax = float(r['tmax'].replace(',','.')),
+                                direction = float(r['dir'].replace(',','.')),
+                                racha = float(r['racha'].replace(',','.')),
+                                prec = asPrec(r['prec']),
+                                vel_media = float(r['velmedia'].replace(',','.')),
+                                sol = sol_value,
+                                pres_max = float(r['presMax'].replace(',','.')),
+                                pres_min = float(r['presMin'].replace(',','.')),
+                                hora_tmin = hora_tmin,
+                                hora_tmax = hora_tmax,
+                                hora_pres_min = hora_pmin,
+                                hora_pres_max = hora_pmax
+                                )
+    registro_actual.save()
+    
+    
+    
+    
+    #print(float((meteoJSON[registro_diario]['tmed'].replace(',', '.'))))
 
 
-"""
-estaciones = [ [meteoJSON[item]['indicativo'], meteoJSON[item]['provincia'], meteoJSON[item]['nombre'], meteoJSON[item]['altitud']] for item in range(0, len(meteoJSON))]
-#print(*ciudad_provincia)
-"""
 
-
-"""
-for i in estaciones:
-    #print(i[0], i[1], i[2], i[3])
-    estacion = Estacion(indicativo=str(i[0]), nombre=i[1], provincia=Provincia.objects.get(nombre=i[1]), ciudad=Ciudad.objects.get(nombre=i[2]), altitud=int(i[3]))
-    estacion.save()
-"""
 
 
 
