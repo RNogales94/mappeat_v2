@@ -9,8 +9,6 @@ class Icon(models.Model):
     image = models.ImageField()
     image_name = models.CharField(max_length=30)
 
-    
-    
 class Mesure_Unity(models.Model):
     name = models.CharField(max_length=15)  #kilogramos
     simbol = models.CharField(max_length=3) #kg
@@ -42,7 +40,6 @@ class Supply_Category(models.Model):
 class Supply(models.Model):
     name = models.CharField(max_length=40)
 
-        
 class Ref_Staff_Rol(models.Model):
     STAFF_ROLES = (
         ('W', 'Camarero'),
@@ -61,7 +58,6 @@ class Ref_Staff_Rol(models.Model):
             return "Barman"
         else:
             return choice
-
         
     def __str__(self):
         return self.staff_rol_to_str(self.staf_role_description)
@@ -105,6 +101,7 @@ class Menu_Category(models.Model):
 
     def __str__(self):
         return self.menu_name
+    
 class Product(models.Model):
     menu_ID = models.ForeignKey(Menu_Category)
     icon_item = models.ForeignKey(Icon, null=True)
@@ -114,7 +111,6 @@ class Product(models.Model):
     def __str__(self):
         return self.menu_ID.menu_name + " | " + self.product_name
     
-       
 class Ticket_Resume(models.Model):
     table_id = models.ForeignKey(Table)
     staff_id = models.ForeignKey(Staff)
@@ -131,13 +127,13 @@ Relaciona los tickets y los productos y representa cada linea de un ticket
 cuando se añade un producto a una cuenta se crea una nueva instancia de Ticket_Detail
 asociada a esa cuenta con el tipo de producto y la cantidad.
 """
+
 class Ticket_Detail(models.Model):
     ticket_ID = models.ForeignKey(Ticket_Resume)
     product_ID = models.ForeignKey(Product)
     quantity = models.IntegerField()
     price = models.FloatField()
     
-
 """
 Relaciona los insumos (supply) y los productos acabados (Products)
 permite hacer consultas del tipo:
@@ -166,8 +162,7 @@ class Service(models.Model):
     restaurant_ID = models.ForeignKey(Restaurant)
     date = models.DateField
     cost = models.FloatField()
-    
-    
+        
 """
 A efectos prácticos es el modelo que representa la carta de precios de un restaurante
 """
@@ -176,11 +171,6 @@ class Inventory(models.Model):
     restaurant_ID = models.ForeignKey(Restaurant)
     actual_price = models.FloatField()
     avalible = models.BooleanField() #Indica si está agotado o aún queda
-    
-
-    
-    
-    
 
 
 
