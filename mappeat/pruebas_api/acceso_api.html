@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8">
+		<title>API de Mappeat</title>
+		<meta name="author" content="Luis Castro Martín">
+	</head>
+
+	<body>
+		<script>
+			var provider = { name:"Prueba" };
+			
+			var request = new XMLHttpRequest();
+			request.open("POST", "http://127.0.0.1:8000/mainRest/api/v1/providers/");
+			
+			request.onload = function() {
+				//var request2 = new XMLHttpRequest();
+				//request2.open("GET", "submitform.php");
+				
+				//request2.onload = function() {
+					
+				//}
+				
+				//request2.send();
+				
+				var p = document.createElement("p");
+				p.innerHTML = "Todo correcto."
+				//document.body.appendChild(JSON.stringify(p));
+				document.body.appendChild(p);
+			}
+			
+			request.send(provider);
+		</script>
+	</body>
+</html>
