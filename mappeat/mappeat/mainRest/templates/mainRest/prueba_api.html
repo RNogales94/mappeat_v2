@@ -1,2 +1,37 @@
+<!doctype html>
+<html lang="es">
+	<head>
+		<meta charset="utf-8">
+		<title>API de Mappeat</title>
+		<meta name="author" content="Luis Castro Martín">
+	</head>
 
-     ESCRIBE AQUI TU CODIGO LUIS
+	<body>
+		<script>
+			var provider = { name:"Prueba" };
+			
+			var request = new XMLHttpRequest();
+			request.open("POST", "http://127.0.0.1:8000/mainRest/api/v1/providers/");
+			request.setRequestHeader("Content-type", "application/json");
+			
+			request.onload = function() {
+				var request2 = new XMLHttpRequest();
+				request2.open("GET", "http://127.0.0.1:8000/mainRest/api/v1/providers/");
+				request2.responseType = "json";
+				
+				request2.onload = function() {
+					"use strict";
+					for (let proveedor of request2.response) {
+						let p = document.createElement("p");
+						p.innerHTML = proveedor.name;
+						document.body.appendChild(p);
+					}
+				}
+				
+				request2.send();
+			}
+			
+			request.send(JSON.stringify(provider));
+		</script>
+	</body>
+</html>
