@@ -11,12 +11,3 @@ def index(request):
     table_list = Table.objects.order_by('type_table', 'number')
     context = {'table_list': table_list}
     return render(request, 'mainRest/index.html', context)
-
-#TODO
-def detailActualMeal(request, meal_id, table_id):
-    return render(request, 'mainRest/actual.html', context)
-
-#TODO
-def addDish(request, meal_id):
-    return render(request)
-
