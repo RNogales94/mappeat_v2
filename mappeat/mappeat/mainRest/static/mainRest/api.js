@@ -1,4 +1,4 @@
-var baseURI = "http://127.0.0.1:8000/mainRest/api/v1/"
+var baseURI = "/mainRest/api/v1/"
 
 function get(component, onLoad) {
 	"use strict;"
