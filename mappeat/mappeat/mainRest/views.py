@@ -14,3 +14,6 @@ def index(request):
 
 def prueba_api(request):
     return render(request, 'mainRest/prueba_api.html')
+
+def prueba_gui(request):
+    return render(request, 'mainRest/prueba_gui.html')
