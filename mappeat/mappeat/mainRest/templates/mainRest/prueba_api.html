@@ -4,39 +4,23 @@
 		<meta charset="utf-8">
 		<title>API de Mappeat</title>
 		<meta name="author" content="Luis Castro Martín">
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
+		<script src="api.js"></script>
 	</head>
 
 	<body>
 		<script>
-			var provider = { name:"Prueba" };
-            /*Capturamos el token para esta peticion (porque vamos a hacer POST)*/
-			var csrftoken = Cookies.get('csrftoken');
-            
-			var request = new XMLHttpRequest();
-			request.open("POST", "http://127.0.0.1:8000/mainRest/api/v1/providers/");
-			request.setRequestHeader("Content-type", "application/json");
-            /*Apuntamos el token anti ataques tipo csrf en la cabecera */
-			request.setRequestHeader("X-CSRFToken", csrftoken);
-            
-			request.onload = function() {
-				var request2 = new XMLHttpRequest();
-				request2.open("GET", "http://127.0.0.1:8000/mainRest/api/v1/providers/");
-				request2.responseType = "json";
-				
-				request2.onload = function() {
-					"use strict";
-					for (let proveedor of request2.response) {
-						let p = document.createElement("p");
-						p.innerHTML = proveedor.name;
-						document.body.appendChild(p);
-					}
+			function showResponse(){
+				"use strict";
+				for (let proveedor of this.response) {
+					let p = document.createElement("p");
+					p.innerHTML = proveedor.name;
+					document.body.appendChild(p);
 				}
-				
-				request2.send();
 			}
 			
-			request.send(JSON.stringify(provider));
+			var provider = { name:"Prueba" };
+			post("providers/", get("providers/", showResponse), provider);
 		</script>
 	</body>
 </html>
