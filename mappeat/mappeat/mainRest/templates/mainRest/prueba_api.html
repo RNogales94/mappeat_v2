@@ -1,4 +1,4 @@
-{% load static %}
+{% load static from staticfiles %}
 
 <!doctype html>
 <html lang="es">
@@ -7,7 +7,7 @@
 		<title>API de Mappeat</title>
 		<meta name="author" content="Luis Castro Martín">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
-        <script src="{{ STATIC_URL }}'js/api.js'"></script> #Probando cosas
+        <script src="{% static "mainRest/api.js" %}"></script>
 	</head>
 
 	<body>
