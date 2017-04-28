@@ -19,53 +19,94 @@
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 	</head>
 
- <body>
-     <nav class="navbar navbar-inverse">
-        <div class="container">
-          <div class="navbar-header">
-            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
-              <span class="sr-only">Toggle navigation</span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-              <span class="icon-bar"></span>
-            </button>
-            <a class="navbar-brand" href="#">Mappeat</a>
+ <body> 
+
+<nav class="navbar navbar-inverse visible-xs">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>                        
+      </button>
+      <a class="navbar-brand" href="#">Logo</a>
+    </div>
+    <div class="collapse navbar-collapse" id="myNavbar">
+      <ul class="nav navbar-nav">
+        <li class="active"><a href="#">Dashboard</a></li>
+        <li><a href="#">Age</a></li>
+        <li><a href="#">Gender</a></li>
+        <li><a href="#">Geo</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
+
+<div class="container-fluid">
+  <div class="row content">
+    <div class="col-sm-1 sidenav " style="width: 12%">
+      <h2>Mappeat</h2>
+        <div class="btn-group-vertical" style="width: 110%">
+        <button type="button" class="btn btn-primary">Ver Mesas</button>
+        <button type="button" class="btn btn-warning">Abrir Cajon</button>
+        <button type="button" class="btn btn-success">Efectivo <span class="badge"> 12.50€</span></button>
+        <button type="button" class="btn btn-success">Cobro Avanzado</button>
+        <button type="button" class="btn btn-primary">Dividir Ticket</button>
+        <button type="button" class="btn btn-primary">Enviar a Cocina</button>
+        <button type="button" class="btn btn-danger">Borrar Linea</button>
+        <button type="button" class="btn btn-primary">Añadir Nota</button>
+        <button type="button" class="btn btn-warning">Transferir Mesa</button>
+        <button type="button" class="btn btn-primary">Buscar Ticket</button>
+        <button type="button" class="btn btn-primary">Imprimir Ticket</button>
+        <button type="button" class="btn btn-danger">Cancelar Ticket</button>
+        </div><br>
+    </div>
+    <br>
+    
+    <div class="col-sm-10">
+      <div class="row">
+        <div class="col-sm-8">
+          <div class="well">
+            <h4>Familias</h4>
+            <p> Aqui va una tabla con las categorias de productos</p>
+            <p> Al pulsar en una categoría la tabla de productos de abajo cambia</p>
           </div>
-          <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li class="dropdown-header">Nav header</li>
-                  <li><a href="#">Separated link</a></li>
-                  <li><a href="#">One more separated link</a></li>
-                </ul>
-              </li>
-            </ul>
-              
-            <form class="navbar-form navbar-right">
-                <button type="submit" class="btn btn-success">Salir</button>
-            </form>
-              
-          </div><!--/.nav-collapse -->
         </div>
-      </nav>
-         <div class="row">
-            <div class="col-md-3 left_col" style="background-color:lavender;">
-                Izda
-            </div>
-            <div class="col-md-8" style="background-color:lavenderblush;">
-                Dcha
-            </div>
-         </div>
-     
+        <div class="col-sm-4">
+          <div class="well">
+            <h4>Contexto Actual</h4>
+            <p>Total cuenta</p> 
+            <p>Nombre Camarero</p> 
+            <p>Numero de Mesa</p> 
+            <p>Numero de Ticket</p> 
+          </div>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-sm-8">
+          <div class="well">
+            <h4>Productos</h4>
+            <p>Aqui va una tabla con los productos.</p> 
+            <p>Estos productos aparecerán en un orden inteligente a ser posible.</p> 
+            <p>Cada vez que se pulsa un producto se añade al ticket del panel derecho</p> 
+          </div>
+            <div class="well">
+            <h4> Sugerencias de productos </h4>
+            <p> Aqui aparece una lista de productos de varias familias que tienen una gran probabilidad de ser incluídos en el ticket</p>
+          </div>
+        </div>
+        <div class="col-sm-4">
+          <div class="well">
+            <h4>Ticket Actual</h4>
+            <p>Contiene una lista dinámica con todos los productos del ticket actual</p> 
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
  </body>
  </html>
  
