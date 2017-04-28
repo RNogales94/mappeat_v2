@@ -16,9 +16,11 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from rest_framework.documentation import include_docs_urls
+from . import views
 
-
+app_name = 'mappeat'
 urlpatterns = [
+    url(r'^$', views.home),
     url(r'^admin/', admin.site.urls),
     url(r'^mainRest/', include('mainRest.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
