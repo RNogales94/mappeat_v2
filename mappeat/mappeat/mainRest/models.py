@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User 
+from django.utils import timezone
+import datetime
+ 
 # Create your models here.
 
 """
@@ -7,8 +10,11 @@ Secondary Tables
 """
 class Icon(models.Model):
     image = models.ImageField()
-    image_name = models.CharField(max_length=30)
-
+    name = models.CharField(max_length=30)
+    
+    def __str__(self):
+        return self.name
+        
 class Mesure_Unity(models.Model):
     name = models.CharField(max_length=15)  #kilogramos
     simbol = models.CharField(max_length=3) #kg
@@ -29,7 +35,7 @@ class Owner(models.Model):
         return self.name
 
 class Restaurant(models.Model):
-    owner = models.ForeignKey(Owner)
+    owner = models.ForeignKey(Owner, db_index=True)
     name =  models.CharField(max_length=40)
     address = models.CharField(max_length=90)
     city = models.CharField(max_length=90)
@@ -66,6 +72,7 @@ class Ref_Staff_Rol(models.Model):
         return self.staff_rol_to_str(self.staf_role_description)
 
 class Staff(models.Model):
+    restaurant = models.ForeignKey(Restaurant, db_index=True)
     staff_role_code = models.ForeignKey(Ref_Staff_Rol)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=50)
@@ -79,6 +86,7 @@ class Table(models.Model):
         ('T', 'Terraza'),
         ('B', 'Barra'),
     )
+    restaurant = models.ForeignKey(Restaurant, db_index=True)
     number = models.IntegerField()
     type_table = models.CharField(max_length=1, choices=TABLE_TYPES)
     is_available = models.BooleanField() #Default = True
@@ -94,86 +102,109 @@ class Table(models.Model):
         else:
             return choice
 
-        
     def __str__(self):
         return self.table_type_to_str(self.type_table) + " | " + str(self.number)
 
-class Menu_Category(models.Model):
-    menu_name = models.CharField(max_length=30)
-    icon_class = models.ForeignKey(Icon, null=True)
-
-    def __str__(self):
-        return self.menu_name
+class Family(models.Model):
+    name = models.CharField(max_length=30)
+    icon = models.ForeignKey(Icon, null=True)
     
-class Product(models.Model):
-    menu_ID = models.ForeignKey(Menu_Category)
-    icon_item = models.ForeignKey(Icon, null=True)
-    product_name = models.CharField(max_length=30)
-    price = models.FloatField(default = 0)
-
+#Product_Class (Producto Genérico) es una tabla que contiene productos propiamente dichos, como por ejemplo:
+#"CocaCola" cada restaurante instanciará su propia version del producto, con un precio distinto (ver Product)
+class Product_Class(models.Model):
+    name = models.CharField(max_length=50)
+    icon = models.ForeignKey(Icon, null=True)
+    recomended_family = models.ForeignKey(Family, null=True)
     def __str__(self):
-        return self.menu_ID.menu_name + " | " + self.product_name
+        return self.name
+
+"""
+Product:
+Es la especificación que cada restaurante toma de un producto generico (Product_Class)
+Por ejemplo del Product_Class "coca cola" se pueden extraer los productos:
+    - CocaCola mediana (330ml) 2.50€
+    - CocaCola pequeña (127ml) 1.50€
+La tabla Product puede considerarse como las "cartas" de todos los restaurantes
+filtrando por el campo 'restaurant' tenemos la carta de un restaurante concreto
+"""
+class Product(models.Model):
+    name = models.CharField(max_length=50)
+    price = models.FloatField(default = 0)
+    
+    restaurant = models.ForeignKey(Restaurant, db_index=True)
+    product = models.ForeignKey(Product_Class, db_index=True)
+    family = models.ForeignKey(Family, null=True)
+    icon = models.ForeignKey(Icon, null=True)
+    
+    def __str__(self):
+        return self.product.name + ": (" + self.name + ")"
     
 class Ticket_Resume(models.Model):
+    restaurant = models.ForeignKey(Restaurant, db_index=True)
     table_id = models.ForeignKey(Table)
     staff_id = models.ForeignKey(Staff)
-    date_of_meal = models.DateField()
+    date_of_meal = models.DateField(db_index=True)
     cost_of_meal = models.FloatField()
     
-    
-"""
-Relations Tables:
-"""
 
 """
 Relaciona los tickets y los productos y representa cada linea de un ticket
 cuando se añade un producto a una cuenta se crea una nueva instancia de Ticket_Detail
 asociada a esa cuenta con el tipo de producto y la cantidad.
 """
-
 class Ticket_Detail(models.Model):
-    ticket_ID = models.ForeignKey(Ticket_Resume)
-    product_ID = models.ForeignKey(Product)
+    ticket = models.ForeignKey(Ticket_Resume, db_index=True)
+    product = models.ForeignKey(Product)
     quantity = models.IntegerField()
     price = models.FloatField()
     
 """
+Ingredient:
+Puede verse como la receta de un producto compuesto por varios insumos (supply):
+
 Relaciona los insumos (supply) y los productos acabados (Products)
 permite hacer consultas del tipo:
 A) Que productos llevan XXX ingrediente?
 B) Cuales son los ingredientes del producto XXX?
 """    
 class Ingredient(models.Model):
-    product_ID = models.ForeignKey(Product, null=True)
-    supply_ID = models.ForeignKey(Supply, null=True)
-    ingredient_name = models.CharField(max_length=30)
     quantity = models.IntegerField()
     mesure_unity = models.ForeignKey(Mesure_Unity, null=True)
+
+    supply = models.ForeignKey(Supply, null=True)
+    product = models.ForeignKey(Product, null=True)
     
     def __str__(self):
-        return self.ingredient_name
+        return self.product.name + " ingredients"
 
 """
+Service:
 Relaciona los Restaurantes con sus compras: Materias primas (supply) y sus proveedores (Providers)
 permite hacer consultas del tipo a posteriori del tipo:
 A) Que Proveedores venden más XXX en una region concreta?
 B) Cuales son los clientes del proveedor XXX?
 """    
 class Service(models.Model):
-    supply_ID = models.ForeignKey(Supply)    
-    provider_ID = models.ForeignKey(Provider)    
-    restaurant_ID = models.ForeignKey(Restaurant)
-    date = models.DateField
+    date = models.DateField()
     cost = models.FloatField()
+    
+    supply = models.ForeignKey(Supply)    
+    provider = models.ForeignKey(Provider)    
+    restaurant = models.ForeignKey(Restaurant)
+    
         
 """
-A efectos prácticos es el modelo que representa la carta de precios de un restaurante
+Inventory:
+Representa las existencias en el almacen de un determinado suministro un determinado día
 """
 class Inventory(models.Model):
-    product_ID = models.ForeignKey(Product)
-    restaurant_ID = models.ForeignKey(Restaurant)
-    actual_price = models.FloatField()
-    avalible = models.BooleanField() #Indica si está agotado o aún queda
+    date = models.DateField(default=timezone.now, db_index=True)
+    restaurant = models.ForeignKey(Restaurant, db_index=True)
+    supply = models.ForeignKey(Supply, null=True)
+    
+    quantity = models.IntegerField(default=0)
+    avalible = models.BooleanField(default=False) #Indica si está agotado o aún queda 
+    
 
 
 

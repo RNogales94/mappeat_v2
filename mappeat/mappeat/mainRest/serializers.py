@@ -89,9 +89,9 @@ class TableSerializer(serializers.ModelSerializer):
         model = Table
         fields = "__all__" 
         
-class Menu_CategorySerializer(serializers.ModelSerializer):
+class Product_ClassSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Menu_Category
+        model = Product_Class
         fields = "__all__" 
         
 class ProductSerializer(serializers.ModelSerializer):
@@ -162,9 +162,9 @@ class TableViewSet(viewsets.ModelViewSet):
     queryset = Table.objects.all()
     serializer_class = TableSerializer 
     
-class Menu_CategoryViewSet(viewsets.ModelViewSet):
-    queryset = Menu_Category.objects.all()
-    serializer_class = Menu_CategorySerializer    
+class Product_ClassViewSet(viewsets.ModelViewSet):
+    queryset = Product_Class.objects.all()
+    serializer_class = Product_ClassSerializer    
     
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
@@ -202,7 +202,7 @@ router.register(r'suplies', SupplyViewSet)
 router.register(r'ref_staff_roles', Ref_Staff_RolViewSet)
 router.register(r'staff', StaffViewSet)
 router.register(r'tables', TableViewSet)
-router.register(r'menu_categories', Menu_CategoryViewSet)
+router.register(r'product_clases', Product_ClassViewSet)
 router.register(r'products', ProductViewSet)
 router.register(r'ticket_resumes', Ticket_ResumeViewSet)
 router.register(r'ticket_details', Ticket_DetailViewSet)
