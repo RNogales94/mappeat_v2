@@ -18,6 +18,11 @@ class Icon(models.Model):
 class Mesure_Unity(models.Model):
     name = models.CharField(max_length=15)  #kilogramos
     simbol = models.CharField(max_length=3) #kg
+    
+class IVA(models.Model):
+    name = models.CharField(max_length=10) #Example: 'General'
+    tax = models.FloatField(default=0) #0.21 = 21%
+    
 
 """
 Principal Tables
@@ -115,6 +120,7 @@ class Product_Class(models.Model):
     name = models.CharField(max_length=50)
     icon = models.ForeignKey(Icon, null=True)
     recomended_family = models.ForeignKey(Family, null=True)
+
     def __str__(self):
         return self.name
 
@@ -129,15 +135,30 @@ filtrando por el campo 'restaurant' tenemos la carta de un restaurante concreto
 """
 class Product(models.Model):
     name = models.CharField(max_length=50)
-    price = models.FloatField(default = 0)
+    principal = models.BooleanField(default=True)
+    complement = models.BooleanField(default=False)
+    price = models.FloatField(default=0)
+    price_as_complement = models.FloatField(default=0)
     
     restaurant = models.ForeignKey(Restaurant, db_index=True)
     product = models.ForeignKey(Product_Class, db_index=True)
-    family = models.ForeignKey(Family, null=True)
     icon = models.ForeignKey(Icon, null=True)
+    iva = models.ForeignKey(IVA, null=True)
     
     def __str__(self):
         return self.product.name + ": (" + self.name + ")"
+
+"""
+Product_Family:
+Tabla que permite que un producto esté asociado a varias familias
+product='coca cola', family='bebidas'
+proudct='coca cola', family='refrescos'
+"""
+class Product_Family(models.Model):
+    restaurant = models.ForeignKey(Restaurant, db_index=True, null=True) #Optimiza consultas (Filtro)
+    family = models.ForeignKey(Family, db_index=True)
+    product = models.ForeignKey(Product)
+    
     
 class Ticket_Resume(models.Model):
     restaurant = models.ForeignKey(Restaurant, db_index=True)
