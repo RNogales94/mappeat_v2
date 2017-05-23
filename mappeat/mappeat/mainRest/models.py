@@ -19,9 +19,16 @@ class Mesure_Unity(models.Model):
     name = models.CharField(max_length=15)  #kilogramos
     simbol = models.CharField(max_length=3) #kg
     
+    def __str__(self):
+        return self.name
+    
 class IVA(models.Model):
-    name = models.CharField(max_length=10) #Example: 'General'
+    name = models.CharField(max_length=15) #Example: 'General'
     tax = models.FloatField(default=0) #0.21 = 21%
+    
+    def __str__(self):
+        return self.name
+    
     
 
 """
@@ -37,22 +44,34 @@ class Owner(models.Model):
     phone_number = models.CharField(max_length=12)
     
     def __str__(self):
-        return self.name
+        return self.name + " " + self.surname
 
 class Restaurant(models.Model):
     owner = models.ForeignKey(Owner, db_index=True)
     name =  models.CharField(max_length=40)
     address = models.CharField(max_length=90)
     city = models.CharField(max_length=90)
+    
+    def __str__(self):
+        return self.name
 
 class Provider(models.Model):
     name = models.CharField(max_length=40)
+    
+    def __str__(self):
+        return self.name
 
 class Supply_Category(models.Model):
     name = models.CharField(max_length=20)
+    
+    def __str__(self):
+        return self.name
 
 class Supply(models.Model):
     name = models.CharField(max_length=40)
+    
+    def __str__(self):
+        return self.name
 
 class Ref_Staff_Rol(models.Model):
     STAFF_ROLES = (
@@ -94,7 +113,7 @@ class Table(models.Model):
     restaurant = models.ForeignKey(Restaurant, db_index=True)
     number = models.IntegerField()
     type_table = models.CharField(max_length=1, choices=TABLE_TYPES)
-    is_available = models.BooleanField() #Default = True
+    is_available = models.BooleanField(default=True) #Default = True
     
     @staticmethod
     def table_type_to_str(choice):
@@ -113,6 +132,10 @@ class Table(models.Model):
 class Family(models.Model):
     name = models.CharField(max_length=30)
     icon = models.ForeignKey(Icon, null=True)
+    
+    def __str__(self):
+        return self.name
+    
     
 #Product_Class (Producto Genérico) es una tabla que contiene productos propiamente dichos, como por ejemplo:
 #"CocaCola" cada restaurante instanciará su propia version del producto, con un precio distinto (ver Product)
@@ -136,14 +159,14 @@ filtrando por el campo 'restaurant' tenemos la carta de un restaurante concreto
 class Product(models.Model):
     name = models.CharField(max_length=50)
     principal = models.BooleanField(default=True)
-    complement = models.BooleanField(default=False)
-    price = models.FloatField(default=0)
-    price_as_complement = models.FloatField(default=0)
+    can_be_complement = models.BooleanField(default=False)
+    price_with_tax = models.FloatField(default=0)
+    price_as_complement_with_tax = models.FloatField(default=0)
     
     restaurant = models.ForeignKey(Restaurant, db_index=True)
     product = models.ForeignKey(Product_Class, db_index=True)
     icon = models.ForeignKey(Icon, null=True)
-    iva = models.ForeignKey(IVA, null=True)
+    iva_tax = models.ForeignKey(IVA, null=True)
     
     def __str__(self):
         return self.product.name + ": (" + self.name + ")"
@@ -164,8 +187,19 @@ class Ticket_Resume(models.Model):
     restaurant = models.ForeignKey(Restaurant, db_index=True)
     table_id = models.ForeignKey(Table)
     staff_id = models.ForeignKey(Staff)
-    date_of_meal = models.DateField(db_index=True)
-    cost_of_meal = models.FloatField()
+    date_of_meal = models.DateField(db_index=True, default=datetime.datetime.today())
+    time_of_meal = models.TimeField(db_index=True, default = datetime.datetime.today().time())
+    cost_of_meal = models.FloatField(default = 0)
+    is_closed = models.BooleanField(default = False)
+    
+    #NO TESTEADO
+    def close_ticket(self):
+        self.is_closed = True
+        self.save()
+        
+    def __str__(self):
+        return str(self.date_of_meal) + ": " + self.restaurant.name
+
     
 
 """
@@ -176,8 +210,26 @@ asociada a esa cuenta con el tipo de producto y la cantidad.
 class Ticket_Detail(models.Model):
     ticket = models.ForeignKey(Ticket_Resume, db_index=True)
     product = models.ForeignKey(Product)
+    isComplement = models.BooleanField(default=False)
     quantity = models.IntegerField()
-    price = models.FloatField()
+    price = models.FloatField(default = 0)
+    time_of_meal = models.TimeField(default = datetime.datetime.today().time())
+    
+    def save(self, *args, **kwargs):
+        #Actualiza el precio de la cuenta total:
+        self.ticket.cost_of_meal = self.ticket.cost_of_meal + self.price
+        super(Ticket_Resume, self.ticket).save()
+        super(Ticket_Detail, self).save(*args, **kwargs)
+
+    def delete(self, *args, **kwargs):
+        #Actualiza el precio de la cuenta total:
+        print("Hola, aqui borro: ", self.ticket.cost_of_meal, " - ", self.price)
+        self.ticket.cost_of_meal = self.ticket.cost_of_meal - self.price
+        super(Ticket_Resume, self.ticket).save()
+        super(Ticket_Detail, self).delete(*args, **kwargs)
+        
+    def __str__(self):
+        return self.product.name + "  × " + str(self.quantity) +": ------  "+ str(self.price) + "€"
     
 """
 Ingredient:
