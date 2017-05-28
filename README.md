@@ -12,6 +12,7 @@ pip3 install markdown
 pip3 install django-filter  
 pip3 install coreapi  
 pip3 install pygments  
+pip3 install -e django-registration-rest-framework
 
 ##Documentacion de la api:  
 En la carpeta: mappeat_v2/mappeat/mappeat  

@@ -41,8 +41,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'django.contrib.sites',
     'rest_framework',
+    'registration_api',
 ]
+
+SITE_ID=1
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -129,6 +133,10 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'mainRest/static')
 ]
 
+# This setting is mandatory
+REGISTRATION_API_ACTIVATION_SUCCESS_URL = '/'
+
+REGISTRATION_API_ACCOUNT_ACTIVATION_DAYS = 7
 
 #REST Framework
 #http://www.django-rest-framework.org
@@ -140,3 +148,19 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+"""
+EMAIL BACKEND con SENDGRID:
+https://sendgrid.com/docs/Integrate/Frameworks/django.html
+
+Se va a usar para enviar los email de activación de cuentas
+"""
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'mappeat@gmail.com'
+EMAIL_HOST_PASSWORD = 'neyumansa'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+
+
+

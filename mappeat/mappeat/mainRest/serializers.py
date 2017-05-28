@@ -24,7 +24,6 @@ router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 """
 
-
 """
 Serializadores para los modelos de mainRest
 """
@@ -124,8 +123,6 @@ class InventorySerializer(serializers.ModelSerializer):
         model = Inventory
         fields = "__all__"         
             
-
-# ViewSets define the view behavior.
 class MesureUnityViewSet(viewsets.ModelViewSet):
     queryset = Mesure_Unity.objects.all()
     serializer_class = MesureUnitySerializer

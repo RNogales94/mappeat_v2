@@ -9,5 +9,4 @@ urlpatterns = [
     url(r'^prueba_api$', views.prueba_api, name='prueba_api'),
     url(r'^prueba_gui$', views.prueba_gui, name='prueba_gui'),
     url(r'^api/v1/', include(serializers.router.urls)),
-
 ]
