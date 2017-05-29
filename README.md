@@ -8,11 +8,13 @@ Paquetes necesarios:
 
 pip3 install django   
 pip3 install djangorestframework  
-pip3 install drfdocs #Documentacion alternativa
+pip3 install django-rest-swagger
 pip3 install markdown  
 pip3 install django-filter  
-pip3 install pygments  #Tal vez no necesaria
-pip3 install -e django-registration-rest-framework
+pip3 install pygments  
+
+En la carpeta principal (la que tiene el 'manage.py'):
+pip3 install -e ./django-registration-rest-framework
 
 ##Documentacion de la api:  
 En la carpeta: mappeat_v2/mappeat/mappeat  
