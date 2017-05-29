@@ -15,6 +15,10 @@ VALID_USER_FIELDS = utils.get_valid_user_fields()
 @api_view(['POST'])
 @permission_classes((AllowAny, ))
 def register(request):
+    """
+    Example valid JSON:
+    {"username": "john", "email": "john@example.com", "password": "verylongpassword"}
+    """
     serialized = UserSerializer(data=request.data)
     if serialized.is_valid():
         user_data = utils.get_user_data(request.data)
