@@ -15,7 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
-from rest_framework.documentation import include_docs_urls
+#from rest_framework.documentation import include_docs_urls #Default DOC
+from rest_framework_swagger.views import get_swagger_view
+
+schema_view = get_swagger_view(title='Mappeat Swagger API')
+
+
+
 from . import views
 
 app_name = 'mappeat'
@@ -24,6 +30,7 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
     url(r'^mainRest/', include('mainRest.urls')),
     url(r'^api-auth/', include('rest_framework.urls', namespace='rest_framework')),
-    url(r'^dev/docs/', include_docs_urls(title='Mappeat API V1')),
+    url(r'^dev/docs/', schema_view),
     url(r'^accounts_api/', include('registration_api.urls')),
+
 ]

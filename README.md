@@ -8,10 +8,10 @@ Paquetes necesarios:
 
 pip3 install django   
 pip3 install djangorestframework  
+pip3 install drfdocs #Documentacion alternativa
 pip3 install markdown  
 pip3 install django-filter  
-pip3 install coreapi  
-pip3 install pygments  
+pip3 install pygments  #Tal vez no necesaria
 pip3 install -e django-registration-rest-framework
 
 ##Documentacion de la api:  

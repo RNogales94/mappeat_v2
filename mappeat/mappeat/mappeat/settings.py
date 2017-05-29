@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'django.contrib.sites',
     'rest_framework',
+    'rest_framework_docs',
+    'rest_framework_swagger',
     'registration_api',
 ]
 
@@ -148,6 +150,21 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
     ]
 }
+
+"""
+Django Rest Framework Documentation: DRF DOC
+
+Es el modulo encargado de crear automáticamente la documentacion de las APIs
+Para detalles de configuracion ir a la web oficial:
+
+http://drfdocs.com/settings/
+"""
+
+REST_FRAMEWORK_DOCS = {
+    'HIDE_DOCS': False
+}
+
+
 
 """
 EMAIL BACKEND con SENDGRID:
