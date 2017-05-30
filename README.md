@@ -5,13 +5,13 @@ Python 3.6.0
 Django 1.10.5
 
 
-###Como activar el entorno virtual:
-$ source venv-mappeat/bin/activate
+###Como activar el entorno virtual:  
+$ source venv-mappeat/bin/activate  
 
 Ahora tendremos de forma automática todas las dependencias listas sin tener que instalarlas con pip3  
-Para desactivar el venv solo hay que ejecutar "deactivate"
+Para desactivar el venv solo hay que ejecutar "deactivate"  
 
-$ deactivate
+$ deactivate  
 
 Nota: hay que tener en cuenta que mientras tengamos activado el venv (virtual environment) lo que instalemos con pip3 se quedará dentro del venv y no en nuestra version de python local.
 
