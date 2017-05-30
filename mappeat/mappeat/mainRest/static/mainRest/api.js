@@ -1,4 +1,4 @@
-function get(component, onLoad, baseURI = "/mainRest/api/v1/", handleErrors = false) {
+function get(component, onLoad, handleErrors = false, baseURI = "/mainRest/api/v1/") {
 	"use strict;"
 	let request = new XMLHttpRequest();
 	request.open("GET", baseURI + component);
@@ -14,7 +14,7 @@ function get(component, onLoad, baseURI = "/mainRest/api/v1/", handleErrors = fa
 	request.send();
 }
 
-function post(component, onLoad, data, baseURI = "/mainRest/api/v1/", handleErrors = false) {
+function post(component, onLoad, data, handleErrors = false, baseURI = "/mainRest/api/v1/") {
 	"use strict;"
 	let request = new XMLHttpRequest();
 	request.open("POST", baseURI + component);
