@@ -64,14 +64,32 @@
         </div>
       </nav>   
 		<div class="jumbotron">
-			<form class="formulario" onsubmit="return register(this)">
-				<input type="text" name="name" placeholder="Nombre" required />
-				<input type="text" name="lastName" placeholder="Apellidos" required />
+			<form id="formRegistro" class="formulario" onsubmit="return register(this)">
+				<input type="text" name="username" placeholder="Nombre de usuario" required />
 				<input type="email" name="mail" placeholder="Correo electrónico" required />
 				<input type="password" name="pass" placeholder="Contraseña nueva" required />
 				<input type="password" name="passRepeated" placeholder="Repetir contraseña" required />
 				<input type="submit" value="Registrarse">
 			</form>
 		</div>
+		<script>
+			function register(form){
+				if( form.pass.value != form.passRepeated.value ){
+					alert("Error: Las contraseñas deben coincidir.");
+					return false;
+				}
+				
+				var valores = Object();
+				valores.username = form.username.value;
+				valores.email = form.mail.value;
+				valores.password = form.pass.value;
+				
+				post("register/", function(){
+					alert("Registro completado, comprueba tu email.");
+				}, valores, "/accounts_api/");
+				
+				return false;
+			}
+		</script>
 	</body>
 </html>
