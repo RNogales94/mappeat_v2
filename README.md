@@ -16,15 +16,16 @@ $ deactivate
 Nota: hay que tener en cuenta que mientras tengamos activado el venv (virtual environment) lo que instalemos con pip3 se quedará dentro del venv y no en nuestra version de python local.
 
 
-###Dependencias:  (Ya incluidas en el venv)
-$ pip3 install django   
-$ pip3 install djangorestframework  
-$ pip3 install django-filter  
-$ pip3 install markdown 
-$ pip3 install Pillow
-$ pip3 install pygments 
-$ pip3 install git+https://github.com/RNogales94/django-registration-rest-framework.git
-$ pip3 install django-rest-swagger
+###Dependencias:  (Ya incluidas en el venv)  
+
++ $ pip3 install django   
++ $ pip3 install djangorestframework   
++ $ pip3 install django-filter  
++ $ pip3 install markdown 
++ $ pip3 install Pillow  
++ $ pip3 install pygments   
++ $ pip3 install git+https://github.com/RNogales94/django-registration-rest-framework.git  
++ $ pip3 install django-rest-swagger  
 
 
 ##Documentacion de la api:  
