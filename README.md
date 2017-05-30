@@ -6,12 +6,18 @@ Django 1.10.5
 
 Paquetes necesarios:  
 
+
 pip3 install django   
 pip3 install djangorestframework  
-pip3 install django-rest-swagger
-pip3 install markdown  
 pip3 install django-filter  
-pip3 install pygments  
+pip3 install markdown 
+pip3 install Pillow
+pip3 install pygments 
+pip3 install git+https://github.com/RNogales94/django-registration-rest-framework.git
+pip3 install django-rest-swagger
+
+
+ 
 
 En la carpeta principal (la que tiene el 'manage.py'):
 pip3 install -e ./django-registration-rest-framework
