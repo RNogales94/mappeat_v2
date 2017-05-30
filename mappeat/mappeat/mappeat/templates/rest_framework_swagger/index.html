@@ -1,1 +1,9 @@
 {% extends "rest_framework_swagger/base.html" %}
+
+{% block logo %}
+  <a id="logo" href="http://localhost:8000"><img class="logo__img" alt="swagger" height="30" width="30" src="https://image.freepik.com/iconos-gratis/simple-cuadrado_318-30371.jpg" /><span class="logo__title">Mappeat</span></a>
+{% endblock %}
+
+{% block user_context_message %}
+    {{ request.user }}
+{% endblock %}
