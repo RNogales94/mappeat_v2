@@ -26,7 +26,7 @@ def register(request):
         return Response(utils.USER_CREATED_RESPONSE_DATA,
                         status=status.HTTP_201_CREATED)
     else:
-        return Response(serialized._errors, status=status.HTTP_400_BAD_REQUEST)
+        return Response(serialized._errors, status=status.HTTP_409_CONFLICT)
 
 
 @api_view(['GET'])
