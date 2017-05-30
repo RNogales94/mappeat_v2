@@ -1,6 +1,4 @@
-var baseURI = "/mainRest/api/v1/"
-
-function get(component, onLoad) {
+function get(component, onLoad, baseURI = "/mainRest/api/v1/") {
 	"use strict;"
 	let request = new XMLHttpRequest();
 	request.open("GET", baseURI + component);
@@ -9,7 +7,7 @@ function get(component, onLoad) {
 	request.send();
 }
 
-function post(component, onLoad, data) {
+function post(component, onLoad, data, baseURI = "/mainRest/api/v1/") {
 	"use strict;"
 	let request = new XMLHttpRequest();
 	request.open("POST", baseURI + component);
