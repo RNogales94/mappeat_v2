@@ -22,7 +22,7 @@
 			}
 			
 			var provider = { name:"Prueba" };
-			post("providers/", get("providers/", showResponse), provider);
+			post("providers/", function(){ get("providers/", showResponse) }, provider);
 		</script>
 	</body>
 </html>
