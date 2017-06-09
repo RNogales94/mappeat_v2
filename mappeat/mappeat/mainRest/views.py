@@ -13,3 +13,6 @@ def prueba_api(request):
 
 def prueba_gui(request):
     return render(request, 'mainRest/prueba_gui.html')
+
+def prueba_acceso(request):
+    return render(request, 'mainRest/prueba_acceso.html')
