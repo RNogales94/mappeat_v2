@@ -26,6 +26,8 @@ Nota: hay que tener en cuenta que mientras tengamos activado el venv (virtual en
 + $ pip3 install pygments   
 + $ pip3 install git+https://github.com/RNogales94/django-registration-rest-framework.git  
 + $ pip3 install django-rest-swagger  
++ $ pip3 install django-rest-auth
+
 
 
 ##Documentacion de la api:  
