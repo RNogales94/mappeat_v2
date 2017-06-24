@@ -26,8 +26,7 @@ function loadTPV(){
 		     <div class="col-sm-8">
 		       <div class="well">
 		         <h4>Familias</h4>
-		         <p> Aqui va una tabla con las categorias de productos</p>
-		         <p> Al pulsar en una categoría la tabla de productos de abajo cambia</p>
+		         <ul id="familiesList">Cargando...</ul>
 		       </div>
 		     </div>
 		     <div class="col-sm-4">
@@ -63,6 +62,17 @@ function loadTPV(){
 		 </div>
 	  </div>
 	</div>`;
+	
+	// ES CON DOS ESES!!!
+	get("product_clases/", function(){
+			"use strict";
+			let list = document.getElementById('familiesList');
+			list.innerHTML = '';
+			
+			for (let family of this.response){
+				list.insertAdjacentHTML('beforeend', `<li onclick="void(0)">${family.name}</li>`);
+			}
+	});
 }
 
 function loadApp(){
