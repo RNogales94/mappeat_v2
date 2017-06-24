@@ -73,6 +73,21 @@
 			</form>
 		</div>
 		<script>
+			function loadApp(){
+				document.body.innerHTML = `<header>
+					<h3>Mappeat</h3>
+					<button>Almacén</button>
+					<button>Menú</button>
+					<button>TPV</button>
+					<button>Informes</button>
+					<button>Ajustes</button>
+					<button onclick="location.reload()">Salir</button>
+				</header>
+				<main>
+					<p>Aplicación tope guapa.</p>
+				</main>`;
+			}
+			
 			function register(form){
 				if( form.pass.value != form.passRepeated.value ){
 					alert("Error: Las contraseñas deben coincidir.");
@@ -85,7 +100,7 @@
 				valores.password = form.pass.value;
 				
 				post("register/", function(){
-					alert("Registro completado, comprueba tu email.");
+					form.parentNode.innerHTML = "<p>Registro completado, comprueba tu email.</p>";
 				}, valores, true, "/accounts_api/");
 				
 				return false;
@@ -97,7 +112,7 @@
 				valores.password = form.pass.value;
 				
 				post("login/", function(){
-					document.body.innerHTML = `<p>${valores.username}</p>`;
+					loadApp();
 				}, valores, true, "/rest-auth/");
 				
 				return false;
