@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'registration_api',
     'rest_framework.authtoken',
     'rest_auth',
+    'django_filters'
 ]
 
 SITE_ID=1
@@ -152,6 +153,11 @@ REST_FRAMEWORK = {
     ]
 }
 
+REST_FRAMEWORK = {
+    'DEFAULT_FILTER_BACKENDS': ('rest_framework.filters.DjangoFilterBackend',)
+}
+
+
 """
 
 """
@@ -174,6 +180,3 @@ EMAIL_HOST_USER = 'mappeat@gmail.com'
 EMAIL_HOST_PASSWORD = 'neyumansa'
 EMAIL_PORT = 587
 EMAIL_USE_TLS = True
-
-
-

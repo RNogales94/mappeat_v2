@@ -3,7 +3,10 @@ Serializers
 """
 
 from rest_framework import routers, serializers, viewsets
+from django_filters import rest_framework as filters
+from .filters import *
 from .models import *
+
 
 """
 from django.contrib.auth.models import User
@@ -88,6 +91,11 @@ class TableSerializer(serializers.ModelSerializer):
         model = Table
         fields = "__all__"
 
+class FamilySerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Family
+        fields = "__all__"
+
 class Product_ClassSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product_Class
@@ -159,9 +167,19 @@ class TableViewSet(viewsets.ModelViewSet):
     queryset = Table.objects.all()
     serializer_class = TableSerializer
 
+class FamilyViewSet(viewsets.ModelViewSet):
+    queryset = Family.objects.all()
+    serializer_class = FamilySerializer
+
 class Product_ClassViewSet(viewsets.ModelViewSet):
     queryset = Product_Class.objects.all()
     serializer_class = Product_ClassSerializer
+    filter_backend = filters.DjangoFilterBackend
+    filter_class = Product_ClassFilter
+
+
+
+
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
@@ -199,6 +217,7 @@ router.register(r'suplies', SupplyViewSet)
 router.register(r'ref_staff_roles', Ref_Staff_RolViewSet)
 router.register(r'staff', StaffViewSet)
 router.register(r'tables', TableViewSet)
+router.register(r'families', FamilyViewSet)
 router.register(r'product_classes', Product_ClassViewSet)
 router.register(r'products', ProductViewSet)
 router.register(r'ticket_resumes', Ticket_ResumeViewSet)
