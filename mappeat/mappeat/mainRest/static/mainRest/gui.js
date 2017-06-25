@@ -3,14 +3,13 @@ var familyWanted;
 
 function loadFamily(id){
 	familyWanted = id;
-	
-	// Dos eses...
-	get("product_clases/" + id + "/", function(){
+
+	get("product_classes/" + id + "/", function(){
 			"use strict";
 			if (familyWanted == id){
 				let list = document.getElementById('productsList');
 				list.innerHTML = '';
-			
+
 				for (let product of this.response){
 					list.insertAdjacentHTML('beforeend', `<li onclick="void(0)">${product.name}</li>`);
 				}
@@ -38,7 +37,7 @@ function loadTPV(){
 		     </div><br>
 		 </div>
 		 <br>
-		 
+
 		 <div class="col-sm-10">
 		   <div class="row">
 		     <div class="col-sm-8">
@@ -50,10 +49,10 @@ function loadTPV(){
 		     <div class="col-sm-4">
 		       <div class="well">
 		         <h4>Contexto Actual</h4>
-		         <p>Total cuenta</p> 
-		         <p>Nombre Camarero</p> 
-		         <p>Numero de Mesa</p> 
-		         <p>Numero de Ticket</p> 
+		         <p>Total cuenta</p>
+		         <p>Nombre Camarero</p>
+		         <p>Numero de Mesa</p>
+		         <p>Numero de Ticket</p>
 		       </div>
 		     </div>
 		   </div>
@@ -71,33 +70,32 @@ function loadTPV(){
 		     <div class="col-sm-4">
 		       <div class="well">
 		         <h4>Ticket Actual</h4>
-		         <p>Contiene una lista dinámica con todos los productos del ticket actual</p> 
+		         <p>Contiene una lista dinámica con todos los productos del ticket actual</p>
 		       </div>
 		     </div>
 		   </div>
 		 </div>
 	  </div>
 	</div>`;
-	
+
 	familyWanted = -1;
-	
-	// ES CON DOS ESES!!!
-	get("product_clases/", function(){
+
+	get("product_classes/", function(){
 			"use strict";
 			let list = document.getElementById('familiesList');
 			list.innerHTML = '';
-			
+
 			for (let family of this.response){
 				list.insertAdjacentHTML('beforeend', `<li onclick="loadFamily(${family.id})">${family.name}</li>`);
 			}
 	});
-	
+
 	get("products/", function(){
 			"use strict";
 			if (familyWanted == -1){
 				let list = document.getElementById('productsList');
 				list.innerHTML = '';
-			
+
 				for (let product of this.response){
 					list.insertAdjacentHTML('beforeend', `<li onclick="void(0)">${product.name}</li>`);
 				}
@@ -117,7 +115,7 @@ function loadApp(){
 	</header>
 	<main>
 	</main>`;
-	
+
 	main = document.querySelector('main');
 	loadTPV();
 }
@@ -127,16 +125,16 @@ function register(form){
 		alert("Error: Las contraseñas deben coincidir.");
 		return false;
 	}
-	
+
 	var valores = Object();
 	valores.username = form.username.value;
 	valores.email = form.mail.value;
 	valores.password = form.pass.value;
-	
+
 	post("register/", function(){
 		form.parentNode.innerHTML = "<p>Registro completado, comprueba tu email.</p>";
 	}, valores, true, "/accounts_api/");
-	
+
 	return false;
 }
 
@@ -144,10 +142,10 @@ function login(form){
 	var valores = Object();
 	valores.username = form.username.value;
 	valores.password = form.pass.value;
-	
+
 	post("login/", function(){
 		loadApp();
 	}, valores, true, "/rest-auth/");
-	
+
 	return false;
 }
