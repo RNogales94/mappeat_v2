@@ -1,7 +1,9 @@
 var main;
 var familyWanted;
 
-function loadFamily(id){
+
+
+function loadProductsClasses(id){
 	familyWanted = id;
 	document.getElementById('productsList').innerHTML = "Cargando...";
 
