@@ -5,7 +5,7 @@ function loadFamily(name){
 	familyWanted = name;
 	document.getElementById('productsList').innerHTML = "Cargando...";
 
-	get("products/?family=" + name, function(){
+	get("products/?family=" + encodeURIComponent(name), function(){
 			"use strict";
 			if (familyWanted == name){
 				let list = document.getElementById('productsList');
@@ -87,7 +87,7 @@ function loadTPV(){
 			list.innerHTML = '';
 
 			for (let family of this.response){
-				list.insertAdjacentHTML('beforeend', `<li onclick="loadFamily('${encodeURIComponent(family.name)}')">${family.name}</li>`);
+				list.insertAdjacentHTML('beforeend', `<li onclick="loadFamily('${family.name}')">${family.name}</li>`);
 			}
 	});
 
