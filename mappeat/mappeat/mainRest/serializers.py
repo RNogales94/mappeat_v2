@@ -178,12 +178,11 @@ class Product_ClassViewSet(viewsets.ModelViewSet):
     filter_class = Product_ClassFilter
 
 
-
-
-
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
+    filter_class = ProductFilter
+
 
 class Ticket_ResumeViewSet(viewsets.ModelViewSet):
     queryset = Ticket_Resume.objects.all()

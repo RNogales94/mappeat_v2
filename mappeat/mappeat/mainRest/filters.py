@@ -1,5 +1,5 @@
 import django_filters
-from mainRest.models import Product_Class
+from mainRest.models import *
 
 class Product_ClassFilter(django_filters.FilterSet):
     """
@@ -10,3 +10,13 @@ class Product_ClassFilter(django_filters.FilterSet):
     class Meta:
         model = Product_Class
         fields = ('name','family')
+
+class ProductFilter(django_filters.FilterSet):
+    """
+    Atencion a las mayusculas en el nombre de la family
+    """
+    family = django_filters.CharFilter(name="product__recomended_family__name")
+
+    class Meta:
+        model = Product
+        fields = ('name','restaurant', 'family')
