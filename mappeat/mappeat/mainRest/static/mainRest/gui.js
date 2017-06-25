@@ -1,4 +1,22 @@
 var main;
+var familyWanted;
+
+function loadFamily(id){
+	familyWanted = id;
+	
+	// Dos eses...
+	get("product_clases/" + id + "/", function(){
+			"use strict";
+			if (familyWanted == id){
+				let list = document.getElementById('productsList');
+				list.innerHTML = '';
+			
+				for (let product of this.response){
+					list.insertAdjacentHTML('beforeend', `<li onclick="void(0)">${product.name}</li>`);
+				}
+			}
+	});
+}
 
 function loadTPV(){
 	main.innerHTML = `<div class="container-fluid">
@@ -43,9 +61,7 @@ function loadTPV(){
 		     <div class="col-sm-8">
 		       <div class="well">
 		         <h4>Productos</h4>
-		         <p>Aqui va una tabla con los productos.</p> 
-		         <p>Estos productos aparecerán en un orden inteligente a ser posible.</p> 
-		         <p>Cada vez que se pulsa un producto se añade al ticket del panel derecho</p> 
+		         <ul id="productsList">Cargando...</ul>
 		       </div>
 		         <div class="well">
 		         <h4> Sugerencias de productos </h4>
@@ -63,6 +79,8 @@ function loadTPV(){
 	  </div>
 	</div>`;
 	
+	familyWanted = -1;
+	
 	// ES CON DOS ESES!!!
 	get("product_clases/", function(){
 			"use strict";
@@ -70,7 +88,19 @@ function loadTPV(){
 			list.innerHTML = '';
 			
 			for (let family of this.response){
-				list.insertAdjacentHTML('beforeend', `<li onclick="void(0)">${family.name}</li>`);
+				list.insertAdjacentHTML('beforeend', `<li onclick="loadFamily(${family.id})">${family.name}</li>`);
+			}
+	});
+	
+	get("products/", function(){
+			"use strict";
+			if (familyWanted == -1){
+				let list = document.getElementById('productsList');
+				list.innerHTML = '';
+			
+				for (let product of this.response){
+					list.insertAdjacentHTML('beforeend', `<li onclick="void(0)">${product.name}</li>`);
+				}
 			}
 	});
 }
