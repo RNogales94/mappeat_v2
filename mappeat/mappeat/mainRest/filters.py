@@ -16,7 +16,8 @@ class ProductFilter(django_filters.FilterSet):
     Atencion a las mayusculas en el nombre de la family
     """
     family = django_filters.CharFilter(name="product__recomended_family__name")
+    restaurant = django_filters.CharFilter(name="restaurant__name")
 
     class Meta:
         model = Product
-        fields = ('name','restaurant', 'family')
+        fields = ('name','restaurant', 'family', 'can_be_complement')

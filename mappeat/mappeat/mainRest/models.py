@@ -1,8 +1,8 @@
 from django.db import models
-from django.contrib.auth.models import User 
+from django.contrib.auth.models import User
 from django.utils import timezone
 import datetime
- 
+
 # Create your models here.
 
 """
@@ -11,29 +11,29 @@ Secondary Tables
 class Icon(models.Model):
     image = models.ImageField()
     name = models.CharField(max_length=30)
-    
+
     def __str__(self):
         return self.name
-        
+
 class Mesure_Unity(models.Model):
     name = models.CharField(max_length=15)  #kilogramos
     simbol = models.CharField(max_length=3) #kg
-    
+
     def __str__(self):
         return self.name
-    
+
 class IVA(models.Model):
     name = models.CharField(max_length=15) #Example: 'General'
     tax = models.FloatField(default=0) #0.21 = 21%
-    
+
     def __str__(self):
         return self.name
-    
-    
+
+
 
 """
 Principal Tables
-"""    
+"""
 
 class Owner(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
@@ -42,7 +42,7 @@ class Owner(models.Model):
     location = models.CharField(max_length=30, blank=True)
     birth_date = models.DateField(null=True, blank=True)
     phone_number = models.CharField(max_length=12)
-    
+
     def __str__(self):
         return self.name + " " + self.surname
 
@@ -51,25 +51,25 @@ class Restaurant(models.Model):
     name =  models.CharField(max_length=40)
     address = models.CharField(max_length=90)
     city = models.CharField(max_length=90)
-    
+
     def __str__(self):
         return self.name
 
 class Provider(models.Model):
     name = models.CharField(max_length=40)
-    
+
     def __str__(self):
         return self.name
 
 class Supply_Category(models.Model):
     name = models.CharField(max_length=20)
-    
+
     def __str__(self):
         return self.name
 
 class Supply(models.Model):
     name = models.CharField(max_length=40)
-    
+
     def __str__(self):
         return self.name
 
@@ -80,7 +80,7 @@ class Ref_Staff_Rol(models.Model):
         ('B', 'Barman'),
     )
     staf_role_description = models.CharField(max_length=1, choices=STAFF_ROLES)
-    
+
     @staticmethod
     def staff_rol_to_str(choice):
         if choice == 'W':
@@ -91,7 +91,7 @@ class Ref_Staff_Rol(models.Model):
             return "Barman"
         else:
             return choice
-        
+
     def __str__(self):
         return self.staff_rol_to_str(self.staf_role_description)
 
@@ -100,10 +100,10 @@ class Staff(models.Model):
     staff_role_code = models.ForeignKey(Ref_Staff_Rol)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=50)
-    
+
     def __str__(self):
         return (self.first_name + " " + self.last_name)
-    
+
 class Table(models.Model):
     TABLE_TYPES = (
         ('M', 'Mesa'),
@@ -114,7 +114,7 @@ class Table(models.Model):
     number = models.IntegerField()
     type_table = models.CharField(max_length=1, choices=TABLE_TYPES)
     is_available = models.BooleanField(default=True) #Default = True
-    
+
     @staticmethod
     def table_type_to_str(choice):
         if choice == 'M':
@@ -130,17 +130,17 @@ class Table(models.Model):
         return self.table_type_to_str(self.type_table) + " | " + str(self.number)
 
 class Family(models.Model):
-    name = models.CharField(max_length=30)
+    name = models.CharField(max_length=30, unique=True)
     icon = models.ForeignKey(Icon, null=True)
-    
+
     def __str__(self):
         return self.name
-    
-    
+
+
 #Product_Class (Producto Genérico) es una tabla que contiene productos propiamente dichos, como por ejemplo:
 #"CocaCola" cada restaurante instanciará su propia version del producto, con un precio distinto (ver Product)
 class Product_Class(models.Model):
-    name = models.CharField(max_length=50)
+    name = models.CharField(max_length=50, unique = True)
     icon = models.ForeignKey(Icon, null=True)
     recomended_family = models.ForeignKey(Family, null=True)
 
@@ -162,12 +162,15 @@ class Product(models.Model):
     can_be_complement = models.BooleanField(default=False)
     price_with_tax = models.FloatField(default=0)
     price_as_complement_with_tax = models.FloatField(default=0)
-    
+
     restaurant = models.ForeignKey(Restaurant, db_index=True)
     product = models.ForeignKey(Product_Class, db_index=True)
     icon = models.ForeignKey(Icon, null=True)
     iva_tax = models.ForeignKey(IVA, null=True)
-    
+
+    class Meta:
+        unique_together = ('name', 'restaurant',)
+
     def __str__(self):
         return self.product.name + ": (" + self.name + ")"
 
@@ -181,8 +184,8 @@ class Product_Family(models.Model):
     restaurant = models.ForeignKey(Restaurant, db_index=True, null=True) #Optimiza consultas (Filtro)
     family = models.ForeignKey(Family, db_index=True)
     product = models.ForeignKey(Product)
-    
-    
+
+
 class Ticket_Resume(models.Model):
     restaurant = models.ForeignKey(Restaurant, db_index=True)
     table_id = models.ForeignKey(Table)
@@ -191,16 +194,16 @@ class Ticket_Resume(models.Model):
     time_of_meal = models.TimeField(db_index=True, default = datetime.datetime.today().time())
     cost_of_meal = models.FloatField(default = 0)
     is_closed = models.BooleanField(default = False)
-    
+
     #NO TESTEADO
     def close_ticket(self):
         self.is_closed = True
         self.save()
-        
+
     def __str__(self):
         return str(self.date_of_meal) + ": " + self.restaurant.name
 
-    
+
 
 """
 Relaciona los tickets y los productos y representa cada linea de un ticket
@@ -214,7 +217,7 @@ class Ticket_Detail(models.Model):
     quantity = models.IntegerField()
     price = models.FloatField(default = 0)
     time_of_meal = models.TimeField(default = datetime.datetime.today().time())
-    
+
     def save(self, *args, **kwargs):
         #Actualiza el precio de la cuenta total:
         self.ticket.cost_of_meal = self.ticket.cost_of_meal + self.price
@@ -227,10 +230,10 @@ class Ticket_Detail(models.Model):
         self.ticket.cost_of_meal = self.ticket.cost_of_meal - self.price
         super(Ticket_Resume, self.ticket).save()
         super(Ticket_Detail, self).delete(*args, **kwargs)
-        
+
     def __str__(self):
         return self.product.name + "  × " + str(self.quantity) +": ------  "+ str(self.price) + "€"
-    
+
 """
 Ingredient:
 Puede verse como la receta de un producto compuesto por varios insumos (supply):
@@ -239,14 +242,14 @@ Relaciona los insumos (supply) y los productos acabados (Products)
 permite hacer consultas del tipo:
 A) Que productos llevan XXX ingrediente?
 B) Cuales son los ingredientes del producto XXX?
-"""    
+"""
 class Ingredient(models.Model):
     quantity = models.IntegerField()
     mesure_unity = models.ForeignKey(Mesure_Unity, null=True)
 
     supply = models.ForeignKey(Supply, null=True)
     product = models.ForeignKey(Product, null=True)
-    
+
     def __str__(self):
         return self.product.name + " ingredients"
 
@@ -256,16 +259,16 @@ Relaciona los Restaurantes con sus compras: Materias primas (supply) y sus prove
 permite hacer consultas del tipo a posteriori del tipo:
 A) Que Proveedores venden más XXX en una region concreta?
 B) Cuales son los clientes del proveedor XXX?
-"""    
+"""
 class Service(models.Model):
     date = models.DateField()
     cost = models.FloatField()
-    
-    supply = models.ForeignKey(Supply)    
-    provider = models.ForeignKey(Provider)    
+
+    supply = models.ForeignKey(Supply)
+    provider = models.ForeignKey(Provider)
     restaurant = models.ForeignKey(Restaurant)
-    
-        
+
+
 """
 Inventory:
 Representa las existencias en el almacen de un determinado suministro un determinado día
@@ -274,19 +277,6 @@ class Inventory(models.Model):
     date = models.DateField(default=timezone.now, db_index=True)
     restaurant = models.ForeignKey(Restaurant, db_index=True)
     supply = models.ForeignKey(Supply, null=True)
-    
+
     quantity = models.IntegerField(default=0)
-    avalible = models.BooleanField(default=False) #Indica si está agotado o aún queda 
-    
-
-
-
-
-
-    
-
-
-
-
-
-
+    avalible = models.BooleanField(default=False) #Indica si está agotado o aún queda

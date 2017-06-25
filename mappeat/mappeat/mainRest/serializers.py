@@ -177,7 +177,6 @@ class Product_ClassViewSet(viewsets.ModelViewSet):
     filter_backend = filters.DjangoFilterBackend
     filter_class = Product_ClassFilter
 
-
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
