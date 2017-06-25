@@ -3,6 +3,7 @@ var familyWanted;
 
 function loadFamily(id){
 	familyWanted = id;
+	document.getElementById('productsList').innerHTML = "Cargando...";
 
 	get("product_classes/" + id + "/", function(){
 			"use strict";
