@@ -1,15 +1,13 @@
 var main;
 var familyWanted;
 
-
-
-function loadProductsClasses(id){
-	familyWanted = id;
+function loadFamily(name){
+	familyWanted = name;
 	document.getElementById('productsList').innerHTML = "Cargando...";
 
-	get("product_classes/" + id + "/", function(){
+	get("products/?family=" + name, function(){
 			"use strict";
-			if (familyWanted == id){
+			if (familyWanted == name){
 				let list = document.getElementById('productsList');
 				list.innerHTML = '';
 
@@ -81,21 +79,21 @@ function loadTPV(){
 	  </div>
 	</div>`;
 
-	familyWanted = -1;
+	familyWanted = '';
 
-	get("product_classes/", function(){
+	get("families/", function(){
 			"use strict";
 			let list = document.getElementById('familiesList');
 			list.innerHTML = '';
 
 			for (let family of this.response){
-				list.insertAdjacentHTML('beforeend', `<li onclick="loadFamily(${family.id})">${family.name}</li>`);
+				list.insertAdjacentHTML('beforeend', `<li onclick="loadFamily('${encodeURIComponent(family.name)}')">${family.name}</li>`);
 			}
 	});
 
 	get("products/", function(){
 			"use strict";
-			if (familyWanted == -1){
+			if (familyWanted == ''){
 				let list = document.getElementById('productsList');
 				list.innerHTML = '';
 
