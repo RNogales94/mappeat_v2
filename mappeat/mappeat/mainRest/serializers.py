@@ -39,7 +39,7 @@ class MesureUnitySerializer(serializers.ModelSerializer):
 class OwnerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Owner
-        fields = "__all__"
+        fields = "__all__"a
 """
 TODO: def create:
     Crear nuevo propietario creando un Usuario dentro del metodo create y asociando dicho
@@ -166,6 +166,7 @@ class StaffViewSet(viewsets.ModelViewSet):
 class TableViewSet(viewsets.ModelViewSet):
     queryset = Table.objects.all()
     serializer_class = TableSerializer
+    filter_class = TableFilter
 
 class FamilyViewSet(viewsets.ModelViewSet):
     queryset = Family.objects.all()

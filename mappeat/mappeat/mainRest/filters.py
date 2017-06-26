@@ -21,3 +21,14 @@ class ProductFilter(django_filters.FilterSet):
     class Meta:
         model = Product
         fields = ('name','restaurant', 'family', 'can_be_complement')
+
+class TableFilter(django_filters.FilterSet):
+    """
+    @note:
+    type_table puede ser: M, B, T
+    que significan: Mesa, Barra, Terraza respectivamente.
+    """
+    restaurant = django_filters.CharFilter(name="restaurant__name")
+    class Meta:
+        model = Product
+        fields = ('number', 'restaurant', 'type_table', 'is_available')
