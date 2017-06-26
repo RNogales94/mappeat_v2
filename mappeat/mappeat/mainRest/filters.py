@@ -29,6 +29,7 @@ class TableFilter(django_filters.FilterSet):
     que significan: Mesa, Barra, Terraza respectivamente.
     """
     restaurant = django_filters.CharFilter(name="restaurant__name")
+
     class Meta:
-        model = Product
+        model = Table
         fields = ('number', 'restaurant', 'type_table', 'is_available')
