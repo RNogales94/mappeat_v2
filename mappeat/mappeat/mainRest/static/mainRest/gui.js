@@ -1,16 +1,67 @@
 var main;
 var familyWanted;
+var currentTable;
+var currentTableID;
 
 function loadSettings(){
-	main.innerHTML = `<div>
-		<h3>Ajustes</h3>
-		<button>Mesas</button>
-		<button>Personal</button>
-		<button>Restaurante</button>
-		<button>Otros</button>
-	</div>
-	<div>
-	</div>`;
+	main.innerHTML = `<div class="container-fluid">
+                            <div class="col-sm-1 sidenav " style="width: 12%">
+		                      <h3>Ajustes</h3>
+		                      <button onclick="loadTables()">Mesas</button>
+		                      <button>Personal</button>
+		                      <button>Restaurante</button>
+		                      <button>Otros</button>
+                            </div>
+                       <div class="col-sm-10">
+		                  
+	                       <div class="well" id="content">
+                           </div>
+                          </div>
+                        
+                    </div>`;
+    
+}
+
+function loadTables(restaurant=''){
+     frame = document.getElementById('content');
+     frame.innerHTML = `<h4> Mesas </h4>
+                        <p>Mesa actual : ${currentTable}</p>
+                        
+                        <div class="col-sm-1 sidenav ">
+                            <label> Mesa </label> <button onclick="addTable(${restaurant},"M")">Añadir</button>
+                            <label> Terraza </label> <button onclick="addTable(${restaurant},"T")">Añadir</button>
+                            <label> Barra </label> <button onclick="addTable(${restaurant},"B")">Añadir</button>
+                            <button onclick="removeTable(${currentTable},${currentTableID})">Eliminar</button>
+                        </div>
+                
+                        <div class="col-sm-10">
+                            <ul id="tableList">Cargando...</ul>
+	                    </div>`;
+     get("tables/?restaurant"+ encodeURIComponent(restaurant), function(){
+			"use strict";
+			let list = document.getElementById('tableList');
+			list.innerHTML = '';
+
+			for (let table of this.response){
+				list.insertAdjacentHTML('beforeend', `<li onclick="selectTable(${table.number},${table.id})">${table.number}</li>`);
+			}
+	});
+}
+
+function selectTable(newTable,id){
+    currentTable = newTable;
+    currentTableID = id;
+    loadTables();
+}
+
+function addTable(restaurant,type){
+    
+}
+
+function removeTable(num,id){
+     if (confirm('¿Esta seguro de borrar la mesa '+num+'?')){
+       
+    }  
 }
 
 function loadFamily(name){
@@ -92,7 +143,7 @@ function loadTPV(){
 	</div>`;
 
 	familyWanted = '';
-
+    
 	get("families/", function(){
 			"use strict";
 			let list = document.getElementById('familiesList');
