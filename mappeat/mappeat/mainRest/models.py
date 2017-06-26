@@ -115,6 +115,9 @@ class Table(models.Model):
     type_table = models.CharField(max_length=1, choices=TABLE_TYPES)
     is_available = models.BooleanField(default=True) #Default = True
 
+    class Meta:
+        unique_together = ('number', 'restaurant',)
+
     @staticmethod
     def table_type_to_str(choice):
         if choice == 'M':
