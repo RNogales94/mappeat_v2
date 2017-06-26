@@ -20,7 +20,7 @@ function loadFamily(name){
 
 function loadTPV(){
 	main.innerHTML = `<div class="container-fluid">
-	  <div class="row content">
+		<div class="row content">
 		 <div class="col-sm-1 sidenav " style="width: 12%">
 		     <div class="btn-group-vertical" style="width: 110%">
 		     <button type="button" class="btn btn-primary">Ver Mesas</button>
@@ -106,13 +106,21 @@ function loadTPV(){
 
 function loadApp(){
 	document.body.innerHTML = `<header>
-		<h2>Mappeat</h2>
-		<button>Almacén</button>
-		<button>Menú</button>
-		<button onclick="loadTPV()">TPV</button>
-		<button>Informes</button>
-		<button>Ajustes</button>
-		<button onclick="location.reload()">Salir</button>
+	<nav class="navbar navbar-inverse">
+	<div class="container">
+		<div class="navbar-header">
+		  <a class="navbar-brand" href="#">Mappeat</a>
+		</div>
+			<div class="navbar-collapse collapse navbar-right ">
+				<button>Almacén</button>
+				<button>Menú</button>
+				<button onclick="loadTPV()">TPV</button>
+				<button>Informes</button>
+				<button>Ajustes</button>
+				<button onclick="location.reload()">Salir</button>
+			</div>
+	</div>
+	</nav>
 	</header>
 	<main>
 	</main>`;
