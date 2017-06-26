@@ -96,6 +96,7 @@ class Ref_Staff_Rol(models.Model):
         return self.staff_rol_to_str(self.staf_role_description)
 
 class Staff(models.Model):
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
     restaurant = models.ForeignKey(Restaurant, db_index=True)
     staff_role_code = models.ForeignKey(Ref_Staff_Rol)
     first_name = models.CharField(max_length=20)
