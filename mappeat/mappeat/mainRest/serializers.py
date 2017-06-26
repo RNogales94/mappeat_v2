@@ -76,7 +76,7 @@ class StaffSerializer(serializers.ModelSerializer):
     staff_role_code = Ref_Staff_RolSerializer()
     class Meta:
         model = Staff
-        fields = ('staff_role_code', 'first_name', 'last_name')
+        fields = "__all__"
 
     def create(self, validated_data):
         print(validated_data)

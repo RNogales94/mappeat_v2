@@ -1,7 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
-import datetime
 
 # Create your models here.
 
@@ -36,7 +35,7 @@ Principal Tables
 """
 
 class Owner(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
     name = models.CharField(max_length=40)
     surname = models.CharField(max_length=40)
     location = models.CharField(max_length=30, blank=True)
@@ -78,6 +77,7 @@ class Ref_Staff_Rol(models.Model):
         ('W', 'Camarero'),
         ('K', 'Cocinero'),
         ('B', 'Barman'),
+        ('M', 'Manager'),
     )
     staf_role_description = models.CharField(max_length=1, choices=STAFF_ROLES)
 
@@ -89,6 +89,8 @@ class Ref_Staff_Rol(models.Model):
             return "Cocinero"
         elif choice == 'B':
             return "Barman"
+        elif choice == 'M':
+            return "Manager"
         else:
             return choice
 
@@ -96,7 +98,7 @@ class Ref_Staff_Rol(models.Model):
         return self.staff_rol_to_str(self.staf_role_description)
 
 class Staff(models.Model):
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
     restaurant = models.ForeignKey(Restaurant, db_index=True)
     staff_role_code = models.ForeignKey(Ref_Staff_Rol)
     first_name = models.CharField(max_length=20)
@@ -194,8 +196,8 @@ class Ticket_Resume(models.Model):
     restaurant = models.ForeignKey(Restaurant, db_index=True)
     table_id = models.ForeignKey(Table)
     staff_id = models.ForeignKey(Staff)
-    date_of_meal = models.DateField(db_index=True, default=datetime.datetime.today())
-    time_of_meal = models.TimeField(db_index=True, default = datetime.datetime.today().time())
+    date_of_meal = models.DateField(db_index=True, default=timezone.now())
+    time_of_meal = models.TimeField(db_index=True, default = timezone.now().time())
     cost_of_meal = models.FloatField(default = 0)
     is_closed = models.BooleanField(default = False)
 
@@ -220,7 +222,7 @@ class Ticket_Detail(models.Model):
     isComplement = models.BooleanField(default=False)
     quantity = models.IntegerField()
     price = models.FloatField(default = 0)
-    time_of_meal = models.TimeField(default = datetime.datetime.today().time())
+    time_of_meal = models.TimeField(default = timezone.now().time())
 
     def save(self, *args, **kwargs):
         #Actualiza el precio de la cuenta total:
