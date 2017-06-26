@@ -27,14 +27,14 @@ function loadTables(restaurant=''){
      frame.innerHTML = `<h4> Mesas </h4>
                         <p>Mesa actual : ${currentTable}</p>
                         
-                        <div class="col-sm-1 sidenav ">
-                            <label> Mesa </label> <button onclick="addTable(${restaurant},"M")">Añadir</button>
-                            <label> Terraza </label> <button onclick="addTable(${restaurant},"T")">Añadir</button>
-                            <label> Barra </label> <button onclick="addTable(${restaurant},"B")">Añadir</button>
+                        <div>
+                            <label> Mesa </label> <button onclick="addTable('','M')">Añadir</button>
+                            <label> Terraza </label> <button onclick="addTable('','T')">Añadir</button>
+                            <label> Barra </label> <button onclick="addTable('','B')">Añadir</button>
                             <button onclick="removeTable(${currentTable},${currentTableID})">Eliminar</button>
                         </div>
                 
-                        <div class="col-sm-10">
+                        <div >
                             <ul id="tableList">Cargando...</ul>
 	                    </div>`;
      get("tables/?restaurant"+ encodeURIComponent(restaurant), function(){
@@ -54,8 +54,17 @@ function selectTable(newTable,id){
     loadTables();
 }
 
-function addTable(restaurant,type){
-    
+function addTable(restaurant,type,number){
+   var valores = Object();
+   // Esto se deberia añadir automaticamente
+   valores.number=number;
+   valores.type_table=type;
+   valores.is_avaible = true;
+   valores.restaurant = 1 ;
+   
+   post("tables/", function(){
+		loadTables('');
+	}, valores, true);
 }
 
 function removeTable(num,id){
