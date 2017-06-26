@@ -1,6 +1,18 @@
 var main;
 var familyWanted;
 
+function loadSettings(){
+	main.innerHTML = `<div>
+		<h3>Ajustes</h3>
+		<button>Mesas</button>
+		<button>Personal</button>
+		<button>Restaurante</button>
+		<button>Otros</button>
+	</div>
+	<div>
+	</div>`;
+}
+
 function loadFamily(name){
 	familyWanted = name;
 	document.getElementById('productsList').innerHTML = "Cargando...";
@@ -116,7 +128,7 @@ function loadApp(){
 				<button>Menú</button>
 				<button onclick="loadTPV()">TPV</button>
 				<button>Informes</button>
-				<button>Ajustes</button>
+				<button onclick="loadSettings()">Ajustes</button>
 				<button onclick="location.reload()">Salir</button>
 			</div>
 	</div>
