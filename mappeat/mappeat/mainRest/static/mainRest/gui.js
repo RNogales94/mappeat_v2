@@ -25,12 +25,12 @@ function loadSettings(){
 function loadTables(restaurant=''){
      frame = document.getElementById('content');
      frame.innerHTML = `<h4> Mesas </h4>
-                        <p>Mesa actual : ${currentTable}</p>
+                        <p>Mesa actual : ${currentTable} </p>
                         
                         <div>
-                            <label> Mesa </label> <button onclick="addTable('','M')">Añadir</button>
-                            <label> Terraza </label> <button onclick="addTable('','T')">Añadir</button>
-                            <label> Barra </label> <button onclick="addTable('','B')">Añadir</button>
+                            <label> Mesa </label> <button onclick="addTable('M')">Añadir</button>
+                            <label> Terraza </label> <button onclick="addTable('T')">Añadir</button>
+                            <label> Barra </label> <button onclick="addTable('B')">Añadir</button>
                             <button onclick="removeTable(${currentTable},${currentTableID})">Eliminar</button>
                         </div>
                 
@@ -54,13 +54,14 @@ function selectTable(newTable,id){
     loadTables();
 }
 
-function addTable(restaurant,type,number){
+function addTable(type){
    var valores = Object();
    // Esto se deberia añadir automaticamente
    valores.number=number;
    valores.type_table=type;
    valores.is_avaible = true;
-   valores.restaurant = 1 ;
+   //La variable de sesion se rellena al hacer login.
+   valores.restaurant = sessionStorage['restaurant'] ;
    
    post("tables/", function(){
 		loadTables('');
@@ -123,7 +124,7 @@ function loadTPV(){
 		       <div class="well">
 		         <h4>Contexto Actual</h4>
 		         <p>Total cuenta</p>
-		         <p>Nombre Camarero</p>
+		         <p>Camarero:  ${sessionStorage['username']}</p>
 		         <p>Numero de Mesa</p>
 		         <p>Numero de Ticket</p>
 		       </div>
@@ -227,6 +228,7 @@ function login(form){
 	post("login/", function(){
 		loadApp();
 	}, valores, true, "/rest-auth/");
-
+    
+    sessionStorage['username']= valores.username;
 	return false;
 }
