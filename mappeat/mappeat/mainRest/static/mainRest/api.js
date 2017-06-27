@@ -3,6 +3,7 @@ function get(component, onLoad, handleErrors = true, baseURI = "/mainRest/api/v1
 	let request = new XMLHttpRequest();
 	request.open("GET", baseURI + component);
 	request.responseType = "json";
+	request.setRequestHeader("X-CSRFToken", Cookies.get('csrftoken'));
 	
 	request.onload = function(){
 		if (this.status >= 400 && handleErrors)
