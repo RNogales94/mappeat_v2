@@ -1,6 +1,7 @@
 import django_filters
 from mainRest.models import *
 
+
 class Product_ClassFilter(django_filters.FilterSet):
     """
     Atencion a las mayusculas en el nombre de la family

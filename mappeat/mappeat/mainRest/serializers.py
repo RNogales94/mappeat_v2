@@ -6,6 +6,9 @@ from rest_framework import routers, serializers, viewsets
 from django_filters import rest_framework as filters
 from .filters import *
 from .models import *
+from rest_framework.response import Response
+from django.shortcuts import get_object_or_404
+
 
 
 """
@@ -168,6 +171,12 @@ class TableViewSet(viewsets.ModelViewSet):
     serializer_class = TableSerializer
     filter_class = TableFilter
 
+    def get_queryset(self):
+        staff = Staff.objects.filter(user=self.request.user)
+        print(self.request.user.username)
+        return self.queryset.filter(restaurant=staff[0].restaurant)
+
+
 class FamilyViewSet(viewsets.ModelViewSet):
     queryset = Family.objects.all()
     serializer_class = FamilySerializer
@@ -179,9 +188,9 @@ class Product_ClassViewSet(viewsets.ModelViewSet):
     filter_class = Product_ClassFilter
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_class = ProductFilter
+    queryset = Product.objects.all()
 
 
 class Ticket_ResumeViewSet(viewsets.ModelViewSet):
