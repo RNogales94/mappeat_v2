@@ -98,7 +98,7 @@ class Ref_Staff_Rol(models.Model):
         return self.staff_rol_to_str(self.staf_role_description)
 
 class Staff(models.Model):
-    user = models.OneToOneField(User, on_delete=models.SET_NULL, null=True)
+    user = models.OneToOneField(User, db_index=True, on_delete=models.SET_NULL, null=True)
     restaurant = models.ForeignKey(Restaurant, db_index=True)
     staff_role_code = models.ForeignKey(Ref_Staff_Rol)
     first_name = models.CharField(max_length=20)
@@ -169,7 +169,7 @@ class Product(models.Model):
     price_with_tax = models.FloatField(default=0)
     price_as_complement_with_tax = models.FloatField(default=0)
 
-    restaurant = models.ForeignKey(Restaurant, db_index=True)
+    restaurant = models.ForeignKey(Restaurant, db_index=True) #Se usa el db_index
     product = models.ForeignKey(Product_Class, db_index=True)
     icon = models.ForeignKey(Icon, null=True)
     iva_tax = models.ForeignKey(IVA, null=True)

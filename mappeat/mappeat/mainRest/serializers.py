@@ -45,8 +45,11 @@ class OwnerSerializer(serializers.ModelSerializer):
         fields = "__all__"
 """
 TODO: def create:
-    Crear nuevo propietario creando un Usuario dentro del metodo create y asociando dicho
-    propietario a este nuevo usuario
+        Crear nuevo propietario creando un Usuario dentro del metodo create y asociando dicho
+        propietario a este nuevo usuario
+#TODO 2:
+      def create:
+        Tambien debe crear un Staff de tipo manager asociado al owner
 """
 
 class RestaurantSerializer(serializers.ModelSerializer):
@@ -134,6 +137,13 @@ class InventorySerializer(serializers.ModelSerializer):
         model = Inventory
         fields = "__all__"
 
+""""
+##
+#  viewsets:
+##
+"""
+
+
 class MesureUnityViewSet(viewsets.ModelViewSet):
     queryset = Mesure_Unity.objects.all()
     serializer_class = MesureUnitySerializer
@@ -142,9 +152,19 @@ class OwnerViewSet(viewsets.ModelViewSet):
     queryset = Owner.objects.all()
     serializer_class = OwnerSerializer
 
+    #TODO test get_queryset
+    def get_queryset(self):
+        return self.queryset.filter(user=self.request.user)
+
 class RestaurantViewSet(viewsets.ModelViewSet):
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
+
+    #TODO test get_queryset
+    def get_queryset(self):
+        staff = Staff.objects.filter(user=self.request.user)
+        print(self.request.user.username)
+        return self.queryset.filter(restaurant=staff[0].restaurant)
 
 class ProviderViewSet(viewsets.ModelViewSet):
     queryset = Provider.objects.all()
@@ -166,16 +186,26 @@ class StaffViewSet(viewsets.ModelViewSet):
     queryset = Staff.objects.all()
     serializer_class = StaffSerializer
 
+    #TODO test get_queryset
+    def get_queryset(self):
+        owner_local = Owner.objects.filter(user=self.request.user)
+        #TODO comprobar si len(owner_local) es cero y actuar en consecuenca
+        #Esto significaria que el usuario que hace la peticion no es un propietario...
+        restaurant_local = Restaurant.objects.filter(owner=owner_local[0])
+        return self.queryset.filter(restaurant=restaurant_local[0])
+
+
 class TableViewSet(viewsets.ModelViewSet):
     queryset = Table.objects.all()
     serializer_class = TableSerializer
     filter_class = TableFilter
 
+    #TODO test get_queryset
     def get_queryset(self):
+        #Nos quedamos solo con los objetos del usuario que lanza la peticion
         staff = Staff.objects.filter(user=self.request.user)
         print(self.request.user.username)
         return self.queryset.filter(restaurant=staff[0].restaurant)
-
 
 class FamilyViewSet(viewsets.ModelViewSet):
     queryset = Family.objects.all()
@@ -188,9 +218,15 @@ class Product_ClassViewSet(viewsets.ModelViewSet):
     filter_class = Product_ClassFilter
 
 class ProductViewSet(viewsets.ModelViewSet):
+    queryset = Product.objects.all()
     serializer_class = ProductSerializer
     filter_class = ProductFilter
-    queryset = Product.objects.all()
+
+    #TODO test get_queryset
+    def get_queryset(self):
+        staff = Staff.objects.filter(user=self.request.user)
+        print(self.request.user.username)
+        return self.queryset.filter(restaurant=staff[0].restaurant)
 
 
 class Ticket_ResumeViewSet(viewsets.ModelViewSet):
