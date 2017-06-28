@@ -119,7 +119,7 @@ class Table(models.Model):
     is_available = models.BooleanField(default=True) #Default = True
 
     class Meta:
-        unique_together = ('number', 'restaurant',)
+        unique_together = ('number', 'restaurant', 'type_table')
 
     @staticmethod
     def table_type_to_str(choice):
@@ -133,7 +133,10 @@ class Table(models.Model):
             return choice
 
     def __str__(self):
-        return self.table_type_to_str(self.type_table) + " | " + str(self.number)
+        rest = self.restaurant.name
+        type_table = self.table_type_to_str(self.type_table)
+        number = str(self.number)
+        return type_table + " | " + number + " | " + rest
 
 class Family(models.Model):
     name = models.CharField(max_length=30, unique=True)

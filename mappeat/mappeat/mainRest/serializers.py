@@ -8,7 +8,7 @@ from .filters import *
 from .models import *
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
-
+from django.db.models import Max
 
 
 """
@@ -89,13 +89,43 @@ class StaffSerializer(serializers.ModelSerializer):
         rol_data = validated_data.pop('staff_role_code')
         rol_choice = rol_data['staf_role_description']
         rol = Ref_Staff_Rol.objects.all().filter(staf_role_description=rol_choice)
-        staff = Staff.objects.create(staff_role_code=rol[0], **validated_data)
-        return staff
+        new_staff = Staff.objects.create(staff_role_code=rol[0], **validated_data)
+        return new_staff
 
 class TableSerializer(serializers.ModelSerializer):
     class Meta:
         model = Table
         fields = "__all__"
+
+    def create(self, validated_data):
+        """
+        Crea una mesa con el numero consecutivo al existente
+        Nota: ignora el parametro 'number' que le pasamos por la peticion
+        Nota2: Lleva un contador para cada tipo de mesa
+        """
+
+        #Debug:
+        print(self.context)
+        print(validated_data)
+        
+        number = validated_data.pop('number')
+        #Filtramos las mesas por restaurante y por tipo de mesa
+        tables = Table.objects.all()
+        staff = Staff.objects.filter(user=self.context['request'].user)
+        rest = staff[0].restaurant
+        ttab = validated_data['type_table']
+        tables = tables.filter(restaurant=rest).filter(type_table=ttab)
+
+        print(tables)
+        if len(tables)==0:
+            next_number = 1  #Caso de la primera mesa de ese tipo
+        else:
+            #Buscamos la mesa de mayor numero:
+            next_number = tables.aggregate(Max('number'))['number__max'] + 1
+        #Creamos la mesa con el siguiente numero
+        new_table = Table.objects.create(number=next_number, **validated_data)
+        return new_table
+
 
 class FamilySerializer(serializers.ModelSerializer):
     class Meta:
@@ -206,6 +236,8 @@ class TableViewSet(viewsets.ModelViewSet):
         staff = Staff.objects.filter(user=self.request.user)
         print(self.request.user.username)
         return self.queryset.filter(restaurant=staff[0].restaurant)
+
+
 
 class FamilyViewSet(viewsets.ModelViewSet):
     queryset = Family.objects.all()
