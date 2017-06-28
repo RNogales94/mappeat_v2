@@ -6,7 +6,7 @@ Django 1.10.5
 
 
 ###Como activar el entorno virtual:  
-$ source venv-mappeat/bin/activate  
+$ source venv/mappeat/bin/activate  
 
 Ahora tendremos de forma automática todas las dependencias listas sin tener que instalarlas con pip3  
 Para desactivar el venv solo hay que ejecutar "deactivate"  
