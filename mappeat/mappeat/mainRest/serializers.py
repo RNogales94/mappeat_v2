@@ -114,9 +114,10 @@ class TableSerializer(serializers.ModelSerializer):
         tables = Table.objects.all()
         staff = Staff.objects.filter(user=self.context['request'].user)
         rest = staff[0].restaurant
+        restaurant = validated_data.pop('restaurant')
         ttab = validated_data['type_table']
         tables = tables.filter(restaurant=rest).filter(type_table=ttab)
-
+        
         print(tables)
         if len(tables)==0:
             next_number = 1  #Caso de la primera mesa de ese tipo
@@ -124,7 +125,7 @@ class TableSerializer(serializers.ModelSerializer):
             #Buscamos la mesa de mayor numero:
             next_number = tables.aggregate(Max('number'))['number__max'] + 1
         #Creamos la mesa con el siguiente numero
-        new_table = Table.objects.create(number=next_number, **validated_data)
+        new_table = Table.objects.create(number=next_number,restaurant = rest, **validated_data)
         return new_table
 
 
@@ -238,7 +239,7 @@ class TableViewSet(viewsets.ModelViewSet):
         #Nos quedamos solo con los objetos del usuario que lanza la peticion
         staff = Staff.objects.filter(user=self.request.user)
         print(self.request.user.username)
-        return self.queryset.filter(restaurant=staff[0].restaurant)
+        return self.queryset.filter(restaurant=staff[0].restaurant).order_by('type_table')
 
 
 

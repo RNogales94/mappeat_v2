@@ -43,7 +43,7 @@ function loadTables(restaurant=''){
 			list.innerHTML = '';
 
 			for (let table of this.response){
-				list.insertAdjacentHTML('beforeend', `<li onclick="selectTable(${table.number},${table.id})">${table.number}</li>`);
+				list.insertAdjacentHTML('beforeend', `<li onclick="selectTable(${table.number},${table.id})">${table.type_table}${table.number}</li>`);
 			}
 	});
 }
@@ -56,12 +56,10 @@ function selectTable(newTable,id){
 
 function addTable(type){
    var valores = Object();
-   // Esto se deberia añadir automaticamente
-   valores.number=number;
+   valores.number=0;
    valores.type_table=type;
    valores.is_avaible = true;
-   //La variable de sesion se rellena al hacer login.
-   valores.restaurant = sessionStorage['restaurant'] ;
+   valores.restaurant = 3;
    
    post("tables/", function(){
 		loadTables('');
