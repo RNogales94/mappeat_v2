@@ -58,6 +58,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
         #fields = ('owner', 'name', 'address', 'city')
         fields = "__all__"
 
+
 class ProviderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Provider
@@ -107,7 +108,7 @@ class TableSerializer(serializers.ModelSerializer):
         #Debug:
         print(self.context)
         print(validated_data)
-        
+
         number = validated_data.pop('number')
         #Filtramos las mesas por restaurante y por tipo de mesa
         tables = Table.objects.all()
@@ -190,11 +191,14 @@ class RestaurantViewSet(viewsets.ModelViewSet):
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
 
-    #TODO test get_queryset
     def get_queryset(self):
+        """
+        Se filtra por primary key del restaurante asociado al staff asociado
+        al user de django que hace la peticion
+        """
         staff = Staff.objects.filter(user=self.request.user)
-        print(self.request.user.username)
-        return self.queryset.filter(restaurant=staff[0].restaurant)
+        return self.queryset.filter(pk=staff[0].restaurant.pk)
+
 
 class ProviderViewSet(viewsets.ModelViewSet):
     queryset = Provider.objects.all()
@@ -216,7 +220,7 @@ class StaffViewSet(viewsets.ModelViewSet):
     queryset = Staff.objects.all()
     serializer_class = StaffSerializer
 
-    #TODO test get_queryset
+    #TODO FIX get_queryset
     def get_queryset(self):
         owner_local = Owner.objects.filter(user=self.request.user)
         #TODO comprobar si len(owner_local) es cero y actuar en consecuenca
@@ -230,7 +234,6 @@ class TableViewSet(viewsets.ModelViewSet):
     serializer_class = TableSerializer
     filter_class = TableFilter
 
-    #TODO test get_queryset
     def get_queryset(self):
         #Nos quedamos solo con los objetos del usuario que lanza la peticion
         staff = Staff.objects.filter(user=self.request.user)
