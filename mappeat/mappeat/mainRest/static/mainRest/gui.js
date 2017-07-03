@@ -8,7 +8,7 @@ function loadSettings(){
                             <div class="col-sm-1 sidenav " style="width: 12%">
 		                      <h3>Ajustes</h3>
 		                      <button onclick="loadTables()">Mesas</button>
-		                      <button>Personal</button>
+		                      <button onclick="loadStaff()">Personal</button>
 		                      <button>Restaurante</button>
 		                      <button>Otros</button>
                             </div>
@@ -22,7 +22,7 @@ function loadSettings(){
     
 }
 
-function loadTables(restaurant=''){
+function loadTables(){
      frame = document.getElementById('content');
      frame.innerHTML = `<h4> Mesas </h4>
                         <p>Mesa actual : ${currentTable} </p>
@@ -37,7 +37,7 @@ function loadTables(restaurant=''){
                         <div >
                             <ul id="tableList">Cargando...</ul>
 	                    </div>`;
-     get("tables/?restaurant"+ encodeURIComponent(restaurant), function(){
+     get("tables", function(){
 			"use strict";
 			let list = document.getElementById('tableList');
 			list.innerHTML = '';
@@ -48,6 +48,22 @@ function loadTables(restaurant=''){
 	});
 }
 
+function loadStaff(){
+     frame = document.getElementById('content');
+     frame.innerHTML = `<h4> Personal </h4>
+                        <div>
+                            <ul id="staffList">Cargando...</ul>
+	                    </div>`;
+     get("staff/", function(){
+			"use strict";
+			let list = document.getElementById('staffList');
+			list.innerHTML = '';
+
+			for (let table of this.response){
+				list.insertAdjacentHTML('beforeend', `<li>${table.first_name} ${table.second_name}</li>`);
+			}
+	});
+}
 function selectTable(newTable,id){
     currentTable = newTable;
     currentTableID = id;
@@ -62,7 +78,7 @@ function addTable(type){
    valores.restaurant = 3;
    
    post("tables/", function(){
-		loadTables('');
+		loadTables();
 	}, valores, true);
 }
 
