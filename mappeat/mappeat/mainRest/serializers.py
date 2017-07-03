@@ -226,9 +226,9 @@ class StaffViewSet(viewsets.ModelViewSet):
         owner_local = Owner.objects.filter(user=self.request.user)
         #TODO comprobar si len(owner_local) es cero y actuar en consecuenca
         #Esto significaria que el usuario que hace la peticion no es un propietario...
-        restaurant_local = Restaurant.objects.filter(owner=owner_local[0])
-        return self.queryset.filter(restaurant=restaurant_local[0])
-
+        if(len(owner_local)>0):
+            restaurant_local = Restaurant.objects.filter(owner=owner_local[0])
+            return self.queryset.filter(restaurant=restaurant_local[0])
 
 class TableViewSet(viewsets.ModelViewSet):
     queryset = Table.objects.all()
@@ -262,7 +262,7 @@ class ProductViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         staff = Staff.objects.filter(user=self.request.user)
         print(self.request.user.username)
-        return self.queryset.filter(restaurant=staff[0].restaurant)
+        return self.queryset.filter(restaurant=staff[0].restaurant.pk)
 
 
 class Ticket_ResumeViewSet(viewsets.ModelViewSet):
