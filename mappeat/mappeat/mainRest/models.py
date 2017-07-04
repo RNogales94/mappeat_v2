@@ -103,6 +103,19 @@ class Staff(models.Model):
     staff_role_code = models.ForeignKey(Ref_Staff_Rol)
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=50)
+    is_active  = models.BooleanField(default=True)
+    hourly_rate = models.FloatField(null=True, default=None)
+    notes = models.TextField(null=True, blank=True, default="")
+
+    """
+    Mejoras a tener en cuenta:
+    Añadir unos días de trabajo habituales, de forma que se le envíe un email
+    al manager en el caso de que un empleado haga login fuera de su horario habitual
+    (pero que sea solo una medida de control extra y en ningun caso impida hacer login
+    puesto que podría ser porque se han cambiado el día dos camareros o cosas asi
+    que son bastante habituales)
+    """
+
 
     def __str__(self):
         return (self.first_name + " " + self.last_name)
