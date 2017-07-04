@@ -104,7 +104,7 @@ class Staff(models.Model):
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=50)
     is_active  = models.BooleanField(default=True)
-    hourly_rate = models.FloatField(null=True, default=None)
+    hourly_rate = models.FloatField(null=True, default=None, blank=True)
     notes = models.TextField(null=True, blank=True, default="")
 
     """
