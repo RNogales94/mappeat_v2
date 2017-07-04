@@ -52,7 +52,17 @@ function loadStaff(){
      frame = document.getElementById('content');
      frame.innerHTML = `<h4> Personal </h4>
                         <div>
-                            <ul id="staffList">Cargando...</ul>
+                            <table class='table'>
+                            <thead>
+                            <th></th>
+                            <th>Nombre</th>
+                            <th>Cargo</th>
+                            <th>Sueldo/hora</th>
+                            <th>Activo</th>
+                            <th>Notas</th>
+                            <tbody id='staffList'>
+                            </tbody>
+                            </table>
 	                    </div>`;
      get("staff/", function(){
 			"use strict";
@@ -60,9 +70,27 @@ function loadStaff(){
 			list.innerHTML = '';
 
 			for (let table of this.response){
-				list.insertAdjacentHTML('beforeend', `<li>${table.first_name} ${table.second_name}</li>`);
+				list.insertAdjacentHTML('beforeend', `<tr>
+                                                        <td><button onclick='removeStaff(${table.user})' class="glyphicon glyphicon-remove"></button></td>
+                                                        <td><input type='text' name='first_name' value=${table.first_name}><input type='text' name='last_name' value=${table.last_name}><button class="glyphicon glyphicon-pencil"></button></td>
+                                                        <td><select name='role' value=${table.staff_role_code.staf_role_description}>
+                                                            <option>M</option>
+                                                            <option>W</option>
+                                                            <option>B</option>
+                                                            </select></td>
+                                                        <td><input type='text' name='hourly_rate' value=${table.hourly_rate}><button class="glyphicon glyphicon-pencil"></button></td>
+                                                        <td><input type='checkbox' name='is_active' checked=${table.is_active}></td>
+                                                        <td><input type='text' name='notes' value=${table.notes}><button class="glyphicon glyphicon-pencil"></button></td>
+                                                       </tr>`);
 			}
+          list.insertAdjacentHTML('beforeend',`<tr id='newStaff'><td><button onclick='showStaffForm()' class="glyphicon glyphicon-plus"></button></td>`);
 	});
+}
+
+function removeStaff(id_user){
+    if(confirm("Confirme el borrado")){
+        
+    }
 }
 function selectTable(newTable,id){
     currentTable = newTable;
@@ -80,6 +108,19 @@ function addTable(type){
    post("tables/", function(){
 		loadTables();
 	}, valores, true);
+}
+
+function showStaffForm(){
+    let list = document.getElementById('newStaff');
+    list.insertAdjacentHTML('beforeend',`<td><input type='text' name='first_name' id='newStaff'><input type='text' class='newStaff' name='last_name' > </td>
+                                        <td><select name='role'>
+                                            <option>M</option>
+                                            <option>W</option>
+                                            <option>B</option>
+                                        </select></td>
+                                        <td><input type='text' name='hourly_rate'></td>
+                                        <td><input type='checkbox' name='is_active' ></td>
+                                        <td><input type='text' name='notes'></form></td><td><button onclick="addStaff()">Registrar</button></td></tr>`);
 }
 
 function removeTable(num,id){
