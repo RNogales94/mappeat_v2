@@ -51,7 +51,7 @@ function loadTables(){
 function loadStaff(){
      frame = document.getElementById('content');
      frame.innerHTML = `<h4> Personal </h4>
-                        <div>
+                        <div id='staffPanel'>
                             <table class='table'>
                             <thead>
                             <th></th>
@@ -72,18 +72,18 @@ function loadStaff(){
 			for (let table of this.response){
 				list.insertAdjacentHTML('beforeend', `<tr>
                                                         <td><button onclick='removeStaff(${table.user})' class="glyphicon glyphicon-remove"></button></td>
-                                                        <td><input type='text' name='first_name' value=${table.first_name}><input type='text' name='last_name' value=${table.last_name}><button class="glyphicon glyphicon-pencil"></button></td>
+                                                        <td><input type='text' class="form-control" name='first_name' value=${table.first_name}><input type='text' name='last_name' class="form-control" value=${table.last_name}><button class="glyphicon glyphicon-pencil"></button></td>
                                                         <td><select name='role' value=${table.staff_role_code.staf_role_description}>
                                                             <option>M</option>
                                                             <option>W</option>
                                                             <option>B</option>
                                                             </select></td>
-                                                        <td><input type='text' name='hourly_rate' value=${table.hourly_rate}><button class="glyphicon glyphicon-pencil"></button></td>
+                                                        <td><input type='text' class="form-control" name='hourly_rate' value=${table.hourly_rate}><button class="glyphicon glyphicon-pencil"></button></td>
                                                         <td><input type='checkbox' name='is_active' checked=${table.is_active}></td>
-                                                        <td><input type='text' name='notes' value=${table.notes}><button class="glyphicon glyphicon-pencil"></button></td>
+                                                        <td><input type='text' class="form-control" name='notes' value=${table.notes}><button class="glyphicon glyphicon-pencil"></button></td>
                                                        </tr>`);
 			}
-          list.insertAdjacentHTML('beforeend',`<tr id='newStaff'><td><button onclick='showStaffForm()' class="glyphicon glyphicon-plus"></button></td>`);
+          list.insertAdjacentHTML('beforeend',`<tr><td><button onclick='showStaffForm()' class="glyphicon glyphicon-plus"></button></td></tr></table>`);
 	});
 }
 
@@ -111,16 +111,40 @@ function addTable(type){
 }
 
 function showStaffForm(){
-    let list = document.getElementById('newStaff');
-    list.insertAdjacentHTML('beforeend',`<td><input type='text' name='first_name' id='newStaff'><input type='text' class='newStaff' name='last_name' > </td>
-                                        <td><select name='role'>
+    let list = document.getElementById('staffPanel');
+    list.innerHTML=''
+    list.insertAdjacentHTML('beforeend',`<form onsubmit='return addStaff(this)'>
+                                       
+                                        <input type='text' class=class="input-group" name='first_name' placeholder='Nombre'>
+                                        <input type='text' name='last_name' placeholder='Apellidos'>
+                                        <label> Cargo </label><select name='role'>
                                             <option>M</option>
                                             <option>W</option>
                                             <option>B</option>
-                                        </select></td>
-                                        <td><input type='text' name='hourly_rate'></td>
-                                        <td><input type='checkbox' name='is_active' ></td>
-                                        <td><input type='text' name='notes'></form></td><td><button onclick="addStaff()">Registrar</button></td></tr>`);
+                                            <option>K</option>
+                                        </select>
+                                        <input type='text' placeholder='Sueldo/hora' name='hourly_rate'>
+                                        <label>Activo</label><input type='checkbox' name='is_active'>
+                                        <input type='text' name='notes' placeholder='Notas'>
+                                         <button type='submit'>Registrar</button>`);
+}
+
+function addStaff(form){
+    var valores = Object();
+    
+	valores.first_name = form.first_name.value;
+	valores.last_name = form.last_name.value;
+    valores.staff_role_code = {id: 3,staf_role_description: "B"};
+    valores.hourly_rate = form.hourly_rate.value;
+    valores.is_active = form.is_active.checked;
+    valores.restaurant = 2;
+    valores.notes = form.notes.value;
+    
+       post("staff/", function(){
+		loadStaff();
+	}, valores, true);
+    	return false;
+
 }
 
 function removeTable(num,id){
