@@ -31,7 +31,7 @@ function loadTables(){
                             <label> Mesa </label> <button onclick="addTable('M')">Añadir</button>
                             <label> Terraza </label> <button onclick="addTable('T')">Añadir</button>
                             <label> Barra </label> <button onclick="addTable('B')">Añadir</button>
-                            <button onclick="removeTable(${currentTable},${currentTableID})">Eliminar</button>
+                            <button class='btn-danger' onclick="removeTable(${currentTable},${currentTableID})">Eliminar</button>
                         </div>
                 
                         <div >
@@ -71,22 +71,54 @@ function loadStaff(){
 
 			for (let table of this.response){
 				list.insertAdjacentHTML('beforeend', `<tr>
-                                                        <td><button onclick='removeStaff(${table.user})' class="glyphicon glyphicon-remove"></button></td>
-                                                        <td><input type='text' class="form-control" name='first_name' value=${table.first_name}><input type='text' name='last_name' class="form-control" value=${table.last_name}><button class="glyphicon glyphicon-pencil"></button></td>
-                                                        <td><select name='role' value=${table.staff_role_code.staf_role_description}>
-                                                            <option>M</option>
-                                                            <option>W</option>
-                                                            <option>B</option>
-                                                            </select></td>
-                                                        <td><input type='text' class="form-control" name='hourly_rate' value=${table.hourly_rate}><button class="glyphicon glyphicon-pencil"></button></td>
-                                                        <td><input type='checkbox' name='is_active' checked=${table.is_active}></td>
-                                                        <td><input type='text' class="form-control" name='notes' value=${table.notes}><button class="glyphicon glyphicon-pencil"></button></td>
+                                                        <td><button onclick='removeStaff(${table.user})' id='staffInput' class="glyphicon glyphicon-remove btn-danger"></button></td>
+                                                        <td><input type='text' class="form-control" name='first_name' id='first_name${table.user}' value=${table.first_name} readonly>
+                                                        <input type='text' class="form-control" name='last_name' id='last_name${table.user}' value=${table.last_name} readonly></td>
+                                                        <td><p id='rol${table.user}'>${table.staff_role_code.staf_role_description}</p></td>
+                                                        <td><input type='text'  class="form-control-addon"  id='hourly_rate${table.user}' name='hourly_rate' value=${table.hourly_rate} readonly>
+                                                        <td><input type='checkbox' readonly name='is_active${table.user}'  id='is_active${table.user}'  class="form-control" checked=${table.is_active}></td>
+                                                        <td><input type='text'  readonly  class="form-control-addon" id='notes${table.user}' name='notes'></td>
+                                                        <td id='editButton${table.user}'><button class="glyphicon glyphicon-pencil btn-warning" onclick='allowEditStaff(${table.user})'></button></td>
                                                        </tr>`);
 			}
-          list.insertAdjacentHTML('beforeend',`<tr><td><button onclick='showStaffForm()' class="glyphicon glyphicon-plus"></button></td></tr></table>`);
+          list.insertAdjacentHTML('beforeend',`<tr><td><button onclick='showStaffForm()' class="glyphicon glyphicon-plus btn-success"></button></td></tr></table>`);
 	});
 }
 
+function allowEditStaff(id_user){
+    var rol = document.getElementById('rol'+id_user);
+    
+    rol.innerHTML = '';
+    rol.insertAdjacentHTML('beforeend',` <select name='role'>
+                                 <option>M</option>
+                                 <option>W</option>
+                                 <option>B</option>
+                                 <option>K</option>
+                                </select>`);
+    
+    document.getElementById('first_name'+id_user).readOnly=false;
+    document.getElementById('last_name'+id_user).readOnly=false;
+    document.getElementById('is_active'+id_user).readOnly=false;
+    document.getElementById('hourly_rate'+id_user).readOnly=false;
+    document.getElementById('notes'+id_user).readOnly=false;
+    
+    var button = document.getElementById('editButton'+id_user);
+    button.innerHTML='';
+    button.insertAdjacentHTML('beforeend',`<button class="btn-warning"  onclick='editStaff(${id_user})'>Editar</button>`);
+}
+
+function editStaff(id_user){
+    var valores = Object();
+    
+    valores.first_name = document.getElementById('first_name'+id_user).value;
+	valores.last_name = document.getElementById('last_name'+id_user).value;
+    valores.staff_role_code = {id: 3,staf_role_description: "B"};
+    valores.hourly_rate = document.getElementById('hourly_rate'+id_user).value;
+    valores.is_active =  document.getElementById('is_active'+id_user).checked;
+    valores.notes = document.getElementById('notes'+id_user);
+    
+    
+}
 function removeStaff(id_user){
     if(confirm("Confirme el borrado")){
         
