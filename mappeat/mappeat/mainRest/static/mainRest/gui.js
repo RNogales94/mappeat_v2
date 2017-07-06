@@ -184,8 +184,9 @@ function addStaff(form){
 
 function removeTable(num,id){
      if (confirm('¿Esta seguro de borrar la mesa '+num+'?')){
-       
-    }  
+       _delete("tables/"+id+"/",function(){loadTables();},true);
+    } 
+    return false;
 }
 
 function loadFamily(name){
