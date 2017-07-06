@@ -88,11 +88,16 @@ class StaffSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def create(self, validated_data):
-        print(validated_data)
+        
         rol_data = validated_data.pop('staff_role_code')
         rol_choice = rol_data['staf_role_description']
         rol = Ref_Staff_Rol.objects.all().filter(staf_role_description=rol_choice)
-        new_staff = Staff.objects.create(staff_role_code=rol[0], **validated_data)
+        
+        staff = Staff.objects.filter(user=self.context['request'].user)
+        rest = staff[0].restaurant
+        restaurant = validated_data.pop('restaurant')
+        
+        new_staff = Staff.objects.create(staff_role_code=rol[0],restaurant = rest, **validated_data)
         return new_staff
 
 class TableSerializer(serializers.ModelSerializer):
@@ -226,6 +231,7 @@ class StaffViewSet(viewsets.ModelViewSet):
     #TODO FIX get_queryset
     def get_queryset(self):
         owner_local = Owner.objects.filter(user=self.request.user)
+      
         #TODO comprobar si len(owner_local) es cero y actuar en consecuenca
         #Esto significaria que el usuario que hace la peticion no es un propietario...
         if(len(owner_local)>0):
