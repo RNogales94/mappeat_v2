@@ -48,6 +48,31 @@ function loadTables(){
 	});
 }
 
+function selectTable(newTable,id){
+    currentTable = newTable;
+    currentTableID = id;
+    loadTables();
+}
+
+function addTable(type){
+   var valores = Object();
+   valores.number=0;
+   valores.type_table=type;
+   valores.is_avaible = true;
+   valores.restaurant = 3;
+   
+   post("tables/", function(){
+		loadTables();
+	}, valores, true);
+}
+
+function removeTable(num,id){
+     if (confirm('¿Esta seguro de borrar la mesa '+num+'?')){
+       _delete("tables/"+id+"/",function(){loadTables();},true);
+    } 
+    return false;
+}
+
 function loadStaff(){
      frame = document.getElementById('content');
      frame.innerHTML = `<h4> Personal </h4>
@@ -74,7 +99,7 @@ function loadStaff(){
                                                         <td><button onclick='removeStaff(${table.id})' id='staffInput' class="glyphicon glyphicon-remove btn-danger"></button></td>
                                                         <td><input type='text' class="form-control" name='first_name' id='first_name${table.id}' value=${table.first_name} readonly>
                                                         <input type='text' class="form-control" name='last_name' id='last_name${table.id}' value=${table.last_name} readonly></td>
-                                                        <td><p id='rol${table.id}'>${table.staff_role_code.staf_role_code}</p></td>
+                                                        <td><p id='rol${table.id}'>${table.staff_role_code.staff_role_code}</p></td>
                                                         <td><input type='text'  class="form-control-addon"  id='hourly_rate${table.id}' name='hourly_rate' value=${table.hourly_rate} readonly>
                                                         <td><input type='checkbox' readonly name='is_active${table.id}'  id='is_active${table.id}'  class="form-control" checked=${table.is_active}></td>
                                                         <td><input type='text'  readonly  class="form-control-addon" id='notes${table.id}' name='notes' value=${table.notes}></td>
@@ -124,26 +149,10 @@ function editStaff(id_user){
 }
 function removeStaff(id_user){
     if(confirm("Confirme el borrado")){
-        
+        _delete('staff/'+id_user+'/',function(){loadStaff();},true);
     }
 }
-function selectTable(newTable,id){
-    currentTable = newTable;
-    currentTableID = id;
-    loadTables();
-}
 
-function addTable(type){
-   var valores = Object();
-   valores.number=0;
-   valores.type_table=type;
-   valores.is_avaible = true;
-   valores.restaurant = 3;
-   
-   post("tables/", function(){
-		loadTables();
-	}, valores, true);
-}
 
 function showStaffForm(){
     let list = document.getElementById('staffPanel');
@@ -182,12 +191,6 @@ function addStaff(form){
 
 }
 
-function removeTable(num,id){
-     if (confirm('¿Esta seguro de borrar la mesa '+num+'?')){
-       _delete("tables/"+id+"/",function(){loadTables();},true);
-    } 
-    return false;
-}
 
 function loadFamily(name){
 	familyWanted = name;

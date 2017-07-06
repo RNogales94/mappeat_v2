@@ -90,8 +90,8 @@ class StaffSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         
         rol_data = validated_data.pop('staff_role_code')
-        rol_choice = rol_data['staff_role_description']
-        rol = Ref_Staff_Rol.objects.all().filter(staf_role_description=rol_choice)
+        rol_choice = rol_data['staff_role_code']
+        rol = Ref_Staff_Rol.objects.all().filter(staff_role_code=rol_choice)
         
         staff = Staff.objects.filter(user=self.context['request'].user)
         rest = staff[0].restaurant
