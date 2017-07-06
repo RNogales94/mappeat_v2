@@ -75,12 +75,14 @@ class SupplySerializer(serializers.ModelSerializer):
         fields = "__all__"
 
 class Ref_Staff_RolSerializer(serializers.ModelSerializer):
+    #description = serializers.ReadOnlyField(source='describe')
     class Meta:
         model = Ref_Staff_Rol
-        fields = "__all__"
+        fields = ("id", "staf_role_code")# ,"description")
 
 class StaffSerializer(serializers.ModelSerializer):
     staff_role_code = Ref_Staff_RolSerializer()
+
     class Meta:
         model = Staff
         fields = "__all__"
@@ -117,7 +119,7 @@ class TableSerializer(serializers.ModelSerializer):
         restaurant = validated_data.pop('restaurant')
         ttab = validated_data['type_table']
         tables = tables.filter(restaurant=rest).filter(type_table=ttab)
-        
+
         print(tables)
         if len(tables)==0:
             next_number = 1  #Caso de la primera mesa de ese tipo

@@ -79,7 +79,7 @@ class Ref_Staff_Rol(models.Model):
         ('B', 'Barman'),
         ('M', 'Manager'),
     )
-    staf_role_description = models.CharField(max_length=1, choices=STAFF_ROLES)
+    staf_role_code = models.CharField(max_length=1, choices=STAFF_ROLES)
 
     @staticmethod
     def staff_rol_to_str(choice):
@@ -95,7 +95,7 @@ class Ref_Staff_Rol(models.Model):
             return choice
 
     def __str__(self):
-        return self.staff_rol_to_str(self.staf_role_description)
+        return self.staff_rol_to_str(self.staf_role_code)
 
 class Staff(models.Model):
     user = models.OneToOneField(User, db_index=True, on_delete=models.SET_NULL, null=True)
