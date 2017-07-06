@@ -31,3 +31,20 @@ function post(component, onLoad, data, handleErrors = true, baseURI = "/mainRest
 	
 	request.send(JSON.stringify(data));
 }
+
+function put(component, onLoad, data, handleErrors = true, baseURI = "/mainRest/api/v1/") {
+	"use strict;"
+	let request = new XMLHttpRequest();
+	request.open("PUT", baseURI + component);
+	request.setRequestHeader("Content-type", "application/json");
+	request.setRequestHeader("X-CSRFToken", Cookies.get('csrftoken'));
+	
+	request.onload = function(){
+		if (this.status >= 400 && handleErrors)
+			alert("Error: " + this.statusText + "\n\n" + this.responseText);
+		else
+			onLoad.call(this);
+	};
+	
+	request.send(JSON.stringify(data));
+}

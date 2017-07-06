@@ -78,7 +78,7 @@ class Ref_Staff_RolSerializer(serializers.ModelSerializer):
     #description = serializers.ReadOnlyField(source='describe')
     class Meta:
         model = Ref_Staff_Rol
-        fields = ("id", "staf_role_code")# ,"description")
+        fields = ("id", "staff_role_code")# ,"description")
 
 class StaffSerializer(serializers.ModelSerializer):
     staff_role_code = Ref_Staff_RolSerializer()
@@ -90,7 +90,7 @@ class StaffSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         
         rol_data = validated_data.pop('staff_role_code')
-        rol_choice = rol_data['staf_role_description']
+        rol_choice = rol_data['staff_role_description']
         rol = Ref_Staff_Rol.objects.all().filter(staf_role_description=rol_choice)
         
         staff = Staff.objects.filter(user=self.context['request'].user)
@@ -99,7 +99,23 @@ class StaffSerializer(serializers.ModelSerializer):
         
         new_staff = Staff.objects.create(staff_role_code=rol[0],restaurant = rest, **validated_data)
         return new_staff
-
+    
+    def update(self, instance, validated_data):
+        
+        staff = Staff.objects.filter(user=self.context['request'].user)
+        rest = staff[0].restaurant
+        
+        instance.first_name = validated_data.pop('first_name')
+        instance.last_name = validated_data.pop('last_name')
+        instance.is_active = validated_data.pop('is_active')
+        instance.staff_role_code = validated_data.pop('staff_role_code')
+        instance.hourly_rate = validated_data.pop('hourly_rate')
+        instance.notes = validated_data.pop('notes')
+        instance.restaurant = rest
+       
+        instance.save()
+        return instance
+    
 class TableSerializer(serializers.ModelSerializer):
     class Meta:
         model = Table

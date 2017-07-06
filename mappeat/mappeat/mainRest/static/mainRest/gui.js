@@ -71,14 +71,14 @@ function loadStaff(){
 
 			for (let table of this.response){
 				list.insertAdjacentHTML('beforeend', `<tr>
-                                                        <td><button onclick='removeStaff(${table.user})' id='staffInput' class="glyphicon glyphicon-remove btn-danger"></button></td>
-                                                        <td><input type='text' class="form-control" name='first_name' id='first_name${table.user}' value=${table.first_name} readonly>
-                                                        <input type='text' class="form-control" name='last_name' id='last_name${table.user}' value=${table.last_name} readonly></td>
-                                                        <td><p id='rol${table.user}'>${table.staff_role_code.staf_role_description}</p></td>
-                                                        <td><input type='text'  class="form-control-addon"  id='hourly_rate${table.user}' name='hourly_rate' value=${table.hourly_rate} readonly>
-                                                        <td><input type='checkbox' readonly name='is_active${table.user}'  id='is_active${table.user}'  class="form-control" checked=${table.is_active}></td>
-                                                        <td><input type='text'  readonly  class="form-control-addon" id='notes${table.user}' name='notes'></td>
-                                                        <td id='editButton${table.user}'><button class="glyphicon glyphicon-pencil btn-warning" onclick='allowEditStaff(${table.user})'></button></td>
+                                                        <td><button onclick='removeStaff(${table.id})' id='staffInput' class="glyphicon glyphicon-remove btn-danger"></button></td>
+                                                        <td><input type='text' class="form-control" name='first_name' id='first_name${table.id}' value=${table.first_name} readonly>
+                                                        <input type='text' class="form-control" name='last_name' id='last_name${table.id}' value=${table.last_name} readonly></td>
+                                                        <td><p id='rol${table.id}'>${table.staff_role_code.staf_role_code}</p></td>
+                                                        <td><input type='text'  class="form-control-addon"  id='hourly_rate${table.id}' name='hourly_rate' value=${table.hourly_rate} readonly>
+                                                        <td><input type='checkbox' readonly name='is_active${table.id}'  id='is_active${table.id}'  class="form-control" checked=${table.is_active}></td>
+                                                        <td><input type='text'  readonly  class="form-control-addon" id='notes${table.id}' name='notes' value=${table.notes}></td>
+                                                        <td id='editButton${table.id}'><button class="glyphicon glyphicon-pencil btn-warning" onclick='allowEditStaff(${table.id})'></button></td>
                                                        </tr>`);
 			}
           list.insertAdjacentHTML('beforeend',`<tr><td><button onclick='showStaffForm()' class="glyphicon glyphicon-plus btn-success"></button></td></tr></table>`);
@@ -89,11 +89,11 @@ function allowEditStaff(id_user){
     var rol = document.getElementById('rol'+id_user);
     
     rol.innerHTML = '';
-    rol.insertAdjacentHTML('beforeend',` <select name='role'>
-                                 <option>M</option>
-                                 <option>W</option>
-                                 <option>B</option>
-                                 <option>K</option>
+    rol.insertAdjacentHTML('beforeend',` <select id='role${id_user}'>
+                                            <option value='M'>Manager</option>
+                                            <option value='W'>Camarero</option>
+                                            <option value='B'>Barman</option>
+                                            <option value='K'>Cocinero</option>
                                 </select>`);
     
     document.getElementById('first_name'+id_user).readOnly=false;
@@ -112,12 +112,15 @@ function editStaff(id_user){
     
     valores.first_name = document.getElementById('first_name'+id_user).value;
 	valores.last_name = document.getElementById('last_name'+id_user).value;
-    valores.staff_role_code = {id: 3,staf_role_description: "B"};
+    valores.staff_role_code = {staff_role_code: "B"};
     valores.hourly_rate = document.getElementById('hourly_rate'+id_user).value;
     valores.is_active =  document.getElementById('is_active'+id_user).checked;
-    valores.notes = document.getElementById('notes'+id_user);
-    
-    
+    valores.notes = document.getElementById('notes'+id_user).value;
+    valores.restaurant = 2;
+    console.log(valores);
+     put('staff/'+id_user+'/', function(){
+		loadTables();
+	}, valores, true);
 }
 function removeStaff(id_user){
     if(confirm("Confirme el borrado")){
@@ -150,10 +153,10 @@ function showStaffForm(){
                                         <input type='text' class=class="input-group" name='first_name' placeholder='Nombre'>
                                         <input type='text' name='last_name' placeholder='Apellidos'>
                                         <label> Cargo </label><select name='role'>
-                                            <option>M</option>
-                                            <option>W</option>
-                                            <option>B</option>
-                                            <option>K</option>
+                                            <option value='M'>Manager</option>
+                                            <option value='W'>Camarero</option>
+                                            <option value='B'>Barman</option>
+                                            <option value='K'>Cocinero</option>
                                         </select>
                                         <input type='text' placeholder='Sueldo/hora' name='hourly_rate'>
                                         <label>Activo</label><input type='checkbox' name='is_active'>
