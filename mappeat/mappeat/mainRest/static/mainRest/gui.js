@@ -9,7 +9,7 @@ function loadSettings(){
 		                      <h3>Ajustes</h3>
 		                      <button onclick="loadTables()">Mesas</button>
 		                      <button onclick="loadStaff()">Personal</button>
-		                      <button>Restaurante</button>
+		                      <button  onclick="loadRestaurant()">Restaurante</button>
 		                      <button>Otros</button>
                             </div>
                        <div class="col-sm-10">
@@ -147,12 +147,12 @@ function editStaff(id_user){
 		loadTables();
 	}, valores, true);
 }
+
 function removeStaff(id_user){
     if(confirm("Confirme el borrado")){
         _delete('staff/'+id_user+'/',function(){loadStaff();},true);
     }
 }
-
 
 function showStaffForm(){
     let list = document.getElementById('staffPanel');
@@ -191,6 +191,56 @@ function addStaff(form){
 
 }
 
+function loadRestaurant(){
+    frame = document.getElementById('content');
+    frame.innerHTML=`<div id='restInfo'></div>`;
+    get("restaurants/",function(){
+        "use strict";
+        let list = document.getElementById('restInfo');
+        list.innerHTML = '';
+        
+        for (let table of this.response){
+				list.insertAdjacentHTML('beforeend',`<div class='row'><div class='col-md-6'><input type='hidden' name='id' value='${table.id}'>
+                                                            <label>Nombre</label><input type='text' class="form-group" name='name' value='${table.name}'><br>
+                                                            <label>Propietario</label><input type='text' id='owner' class="form-group" name='owner' value='${table.owner}' ><br>
+                                                            <fielset>
+                                                                <legend>Dirección</legend>
+                                                                <label>Calle</label><input type='text' name='street' id='address' class="form-group" value='${table.address}'><br>
+                                                                <label>Localidad</label><input type='text' class="form-group" name='city' value='${table.city}'><br>
+                                                                <label>Provincia</label><input type='text' name='province' value='${table.province}'>
+                                                            </fielset></div>
+                                                        <div class='col-md-6'>
+                                                            <div><label>Lat:</label><input id='lat' value='${table.lat}' readonly>
+                                                                 <label>Long:</label><input id='long' value='${table.lng}' readonly>
+                                                            </div>
+                                                            <div id='map'></div>
+                                                        </div>
+                                                    </div>
+                                                        <div class='row'>
+                                                            <button class='btn pull-right' onclick='getLatLong()'>Guardar</button>
+                                                        </div>`);
+			}
+         
+    });
+}
+/*
+function initMap(){
+    var my_rest = {lat: -25.363, lng: 131.044};
+        var map = new google.maps.Map(document.getElementById('map'), {
+          zoom: 4,
+          center: my_rest
+        });
+        var marker = new google.maps.Marker({
+          position: my_rest,
+          map: map
+        });
+
+}
+
+function getLatLong(){
+    var address = document.getElementById('address').value.split(","); 
+    console.log(address);
+}*/
 
 function loadFamily(name){
 	familyWanted = name;

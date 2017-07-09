@@ -50,6 +50,7 @@ class Restaurant(models.Model):
     name =  models.CharField(max_length=40)
     address = models.CharField(max_length=90)
     city = models.CharField(max_length=90)
+    province = models.CharField(max_length=90)
     lat = models.FloatField(null=True, blank=True)
     lng = models.FloatField(null=True, blank=True)
 
