@@ -142,7 +142,7 @@ function editStaff(id_user){
     valores.is_active =  document.getElementById('is_active'+id_user).checked;
     valores.notes = document.getElementById('notes'+id_user).value;
     valores.restaurant = 2;
-    console.log(valores);
+    
      put('staff/'+id_user+'/', function(){
 		loadTables();
 	}, valores, true);
@@ -200,14 +200,16 @@ function loadRestaurant(){
         list.innerHTML = '';
         
         for (let table of this.response){
-				list.insertAdjacentHTML('beforeend',`<div class='row'><div class='col-md-6'><input type='hidden' name='id' value='${table.id}'>
-                                                            <label>Nombre</label><input type='text' class="form-group" name='name' value='${table.name}'><br>
-                                                            <label>Propietario</label><input type='text' id='owner' class="form-group" name='owner' value='${table.owner}' ><br>
+				list.insertAdjacentHTML('beforeend',`
+                                                    <div class='row'><div class='col-md-6'><input type='hidden' id='id' value='${table.id}'>
+                                                            <label>Nombre</label><input type='text' class="form-group" id='name' value='${table.name}'><br>
+                                                            <input type='hidden' id='owner' value='${table.owner}'><br>
                                                             <fielset>
                                                                 <legend>Dirección</legend>
+                                                                <label>Numero</label><input type='text' id='number' class='form-group'><br>
                                                                 <label>Calle</label><input type='text' name='street' id='address' class="form-group" value='${table.address}'><br>
                                                                 <label>Localidad</label><input type='text' id='city' class="form-group" name='city' value='${table.city}'><br>
-                                                                <label>Provincia</label><input type='text' name='province' value='${table.province}'>
+                                                                <label>Provincia</label><input type='text' id='province' value='${table.province}'>
                                                             </fielset></div>
                                                         <div class='col-md-6'>
                                                             <div><label>Lat:</label><input id='lat' value='${table.lat}' readonly>
@@ -216,8 +218,8 @@ function loadRestaurant(){
                                                             <div id='map' style="height:300px"></div>
                                                         </div>
                                                     </div>
-                                                        <div class='row'>
-                                                            <button class='btn pull-right' onclick='getLatLong()'>Guardar</button>
+                                                        <div class='row' id='editRest'>
+                                                            <button class='btn pull-right' onclick='editRestaurant(${table.id})'>Editar</button>
                                                         </div>`);
 			}
          
@@ -238,14 +240,36 @@ function initMap(lat,long){
 }
 
 function getLatLong(){
-    var address = document.getElementById('address').value.split(","); 
-    get(address+"+"+document.getElementById('city').value,function(){var coords = this.response.results[0].geometry.location;
+    var n = document.getElementById('number').value;
+    var street = document.getElementById('address').value.split(","); 
+    var city = document.getElementById('city').value;
+    var prov = document.getElementById('province').value;
+    
+    get(n+"+"+street+"+"+city+"+"+prov,function(){var coords = this.response.results[0].geometry.location;
                                                                      var lat = coords.lat;
                                                                      var lng = coords.lng;
                                                                      document.getElementById('lat').value = lat;
                                                                      document.getElementById('long').value = lng;
                                                                      initMap(lat,lng);},
         true,"https://maps.googleapis.com/maps/api/geocode/json?address=",false);
+}
+
+
+function editRestaurant(id_rest){
+    getLatLong();
+    var n = document.getElementById('number').value;
+    var address = document.getElementById('address').value; 
+    
+    var valores = Object();
+    valores.name = document.getElementById('name').value;
+    valores.address = address;
+    valores.lat =  parseFloat(document.getElementById('lat').value);
+    valores.lng = parseFloat(document.getElementById('long').value);
+    valores.city = document.getElementById('city').value;
+    valores.province = document.getElementById('province').value;
+    valores.owner = document.getElementById('owner').value;
+    
+    put('restaurants/'+id_rest+'/', function(){initMap(valores.lat,valores.lng);}, valores);
 }
 
 function loadFamily(name){

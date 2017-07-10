@@ -33,7 +33,7 @@ function post(component, onLoad, data, handleErrors = true, baseURI = "/mainRest
 	request.send(JSON.stringify(data));
 }
 
-function put(component, onLoad, handleErrors = true, baseURI = "/mainRest/api/v1/") {
+function put(component, onLoad,data, handleErrors = true, baseURI = "/mainRest/api/v1/") {
 	"use strict;"
 	let request = new XMLHttpRequest();
 	request.open("PUT", baseURI + component);
@@ -47,7 +47,7 @@ function put(component, onLoad, handleErrors = true, baseURI = "/mainRest/api/v1
 			onLoad.call(this);
 	};
 	
-	request.send();
+	request.send(JSON.stringify(data));
 }
 
 function _delete(component, onLoad, data, handleErrors = true, baseURI = "/mainRest/api/v1/") {

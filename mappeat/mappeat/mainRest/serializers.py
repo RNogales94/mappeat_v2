@@ -57,7 +57,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
         model = Restaurant
         #fields = ('owner', 'name', 'address', 'city')
         fields = "__all__"
-
+    
 
 class ProviderSerializer(serializers.ModelSerializer):
     class Meta:
@@ -214,7 +214,7 @@ class OwnerViewSet(viewsets.ModelViewSet):
 class RestaurantViewSet(viewsets.ModelViewSet):
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
-
+    
     def get_queryset(self):
         """
         Se filtra por primary key del restaurante asociado al staff asociado
