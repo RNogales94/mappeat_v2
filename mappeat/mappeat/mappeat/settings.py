@@ -45,11 +45,13 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_swagger',
     'registration_api',
+    'allauth',
+    'allauth.account',
+    'rest_auth.registration'
     'rest_framework.authtoken',
     'rest_auth',
     'django_filters'
 ]
-
 
 SITE_ID=1
 
