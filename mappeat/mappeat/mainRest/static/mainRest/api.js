@@ -1,10 +1,11 @@
-function get(component, onLoad, handleErrors = true, baseURI = "/mainRest/api/v1/") {
+function get(component, onLoad, handleErrors = true, baseURI = "/mainRest/api/v1/",cors=true) {
 	"use strict;"
 	let request = new XMLHttpRequest();
 	request.open("GET", baseURI + component);
 	request.responseType = "json";
+    if(cors){
 	request.setRequestHeader("X-CSRFToken", Cookies.get('csrftoken'));
-	
+    }
 	request.onload = function(){
 		if (this.status >= 400 && handleErrors)
 			alert("Error: " + this.statusText + "\n\n" + this.responseText);

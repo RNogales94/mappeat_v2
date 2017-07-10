@@ -206,14 +206,14 @@ function loadRestaurant(){
                                                             <fielset>
                                                                 <legend>Dirección</legend>
                                                                 <label>Calle</label><input type='text' name='street' id='address' class="form-group" value='${table.address}'><br>
-                                                                <label>Localidad</label><input type='text' class="form-group" name='city' value='${table.city}'><br>
+                                                                <label>Localidad</label><input type='text' id='city' class="form-group" name='city' value='${table.city}'><br>
                                                                 <label>Provincia</label><input type='text' name='province' value='${table.province}'>
                                                             </fielset></div>
                                                         <div class='col-md-6'>
                                                             <div><label>Lat:</label><input id='lat' value='${table.lat}' readonly>
                                                                  <label>Long:</label><input id='long' value='${table.lng}' readonly>
                                                             </div>
-                                                            <div id='map'></div>
+                                                            <div id='map' style="height:300px"></div>
                                                         </div>
                                                     </div>
                                                         <div class='row'>
@@ -223,11 +223,11 @@ function loadRestaurant(){
          
     });
 }
-/*
-function initMap(){
-    var my_rest = {lat: -25.363, lng: 131.044};
+
+function initMap(lat,long){
+    var my_rest = {lat: lat, lng: long};
         var map = new google.maps.Map(document.getElementById('map'), {
-          zoom: 4,
+          zoom: 14,
           center: my_rest
         });
         var marker = new google.maps.Marker({
@@ -239,8 +239,14 @@ function initMap(){
 
 function getLatLong(){
     var address = document.getElementById('address').value.split(","); 
-    console.log(address);
-}*/
+    get(address+"+"+document.getElementById('city').value,function(){var coords = this.response.results[0].geometry.location;
+                                                                     var lat = coords.lat;
+                                                                     var lng = coords.lng;
+                                                                     document.getElementById('lat').value = lat;
+                                                                     document.getElementById('long').value = lng;
+                                                                     initMap(lat,lng);},
+        true,"https://maps.googleapis.com/maps/api/geocode/json?address=",false);
+}
 
 function loadFamily(name){
 	familyWanted = name;
