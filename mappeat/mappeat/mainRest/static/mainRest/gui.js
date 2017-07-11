@@ -189,6 +189,7 @@ function showStaffForm(){
 			                                     </div>
 			                                 <div class="modal-body">
                                                 <form onsubmit='return addStaff(this)'>
+                                                <input type='text' id='user' name='user'>
 				                                <label>Nombre</label><input type='text' class=class="input-group" name='first_name' placeholder='Nombre'><br>
                                                 <label>Apellidos</label><input type='text' name='last_name' placeholder='Apellidos'><br>
                                                 <label> Cargo </label><select name='role'>
@@ -470,7 +471,8 @@ function register_whitoutEmail(form){
 		$('#modalUser1').modal('hide');
         $('#modalUser2').modal('show');
 	}, valores, true, "/rest-auth/");
-
+    
+    get("user/",function(){ document.getElementById('user').value= this.response.pk;},true,"/rest-auth/",true);
 	return false;
 }
 function login(form){
