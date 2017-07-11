@@ -28,9 +28,9 @@ function loadTables(){
                         <p>Mesa actual : ${currentTable} </p>
                         
                         <div>
-                            <label> Mesa </label> <button onclick="addTable('M')">Añadir</button>
-                            <label> Terraza </label> <button onclick="addTable('T')">Añadir</button>
-                            <label> Barra </label> <button onclick="addTable('B')">Añadir</button>
+                            <label> Mesa </label> <button class='btn-success' onclick="addTable('M')">Añadir</button>
+                            <label> Terraza </label> <button  class='btn-success' onclick="addTable('T')">Añadir</button>
+                            <label> Barra </label> <button class='btn-success' onclick="addTable('B')">Añadir</button><br>
                             <button class='btn-danger' onclick="removeTable(${currentTable},${currentTableID})">Eliminar</button>
                         </div>
                 
@@ -106,7 +106,7 @@ function loadStaff(){
                                                         <td id='editButton${table.id}'><button class="glyphicon glyphicon-pencil btn-warning" onclick='allowEditStaff(${table.id})'></button></td>
                                                        </tr>`);
 			}
-          list.insertAdjacentHTML('beforeend',`<tr><td><button onclick='showStaffForm()' class="glyphicon glyphicon-plus btn-success"></button></td></tr></table>`);
+          list.insertAdjacentHTML('beforeend',`<tr><td><button onclick='showStaffForm()' class="glyphicon glyphicon-plus btn-success" data-toggle="modal" data-target="#modalUser1"></button></td></tr></table>`);
 	});
 }
 
@@ -157,20 +157,56 @@ function removeStaff(id_user){
 function showStaffForm(){
     let list = document.getElementById('staffPanel');
     list.innerHTML=''
-    list.insertAdjacentHTML('beforeend',`<form onsubmit='return addStaff(this)'>
-                                       
-                                        <input type='text' class=class="input-group" name='first_name' placeholder='Nombre'>
-                                        <input type='text' name='last_name' placeholder='Apellidos'>
-                                        <label> Cargo </label><select name='role'>
-                                            <option value='M'>Manager</option>
-                                            <option value='W'>Camarero</option>
-                                            <option value='B'>Barman</option>
-                                            <option value='K'>Cocinero</option>
-                                        </select>
-                                        <input type='text' placeholder='Sueldo/hora' name='hourly_rate'>
-                                        <label>Activo</label><input type='checkbox' name='is_active'>
-                                        <input type='text' name='notes' placeholder='Notas'>
-                                         <button type='submit'>Registrar</button>`);
+    list.insertAdjacentHTML('beforeend',`
+                                        <div class="modal fade" id="modalUser1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	                                       <div class="modal-dialog" role="document">
+		                                      <div class="modal-content">
+			                                     <div class="modal-header">
+				                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					                               <span aria-hidden="true">&times;</span></button>
+				                                    <h4 class="modal-title" id="myModalLabel">Usuario para el empleado:   (Paso 1 de 2)</h4>
+			                                     </div>
+			                                 <div class="modal-body">
+                                                <form onsubmit='return register_whitoutEmail(this);'>
+				                                <label>Nombre Usuario</label> <input type='text' name="username"><br>
+                                                <label>Contraseña</label><input type='password' name="pass"><br>
+                                                <label>Repetir Contraseña</label><input type='password' name="passRepeated"><br>
+                                         
+                                            <div class="modal-footer">
+                                            <p>Nota:Estos datos deben ser facilitados al empleado para poder conectarse y podrán ser modificados.</p>
+                                            <button type='submit' class='btn-success' data-toggle="modal" data-target="#modalUser2">Continuar</button>
+                                            </form>
+                                            </div>
+			                             </div></div></div></div>
+
+                                         <div class="modal fade" id="modalUser2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	                                       <div class="modal-dialog" role="document">
+		                                      <div class="modal-content">
+			                                     <div class="modal-header">
+				                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					                               <span aria-hidden="true">&times;</span></button>
+				                                    <h4 class="modal-title" id="myModalLabel">Datos del empleado:   (Paso 2 de 2)</h4>
+			                                     </div>
+			                                 <div class="modal-body">
+                                                <form onsubmit='return addStaff(this)'>
+				                                <label>Nombre</label><input type='text' class=class="input-group" name='first_name' placeholder='Nombre'><br>
+                                                <label>Apellidos</label><input type='text' name='last_name' placeholder='Apellidos'><br>
+                                                <label> Cargo </label><select name='role'>
+                                                    <option value='M'>Manager</option>
+                                                    <option value='W'>Camarero</option>
+                                                    <option value='B'>Barman</option>
+                                                    <option value='K'>Cocinero</option>
+                                                </select><br>
+                                                <label>Sueldo/hora</label><input type='text' placeholder='' name='hourly_rate'><br>
+                                                <label>Activo</label><input type='checkbox' name='is_active' checked><br>
+                                                <label>Anotaciones</label><input type='text' name='notes' placeholder='Notas'><br>
+                                               
+                                            <div class="modal-footer">
+                                                <p>Nota:Estos datos podrán ser modificados en el futuro.</p>
+                                                  <button type='submit' class='btn-success'>Finalizar</button>
+                                                </form>           
+                                            </div>
+			                             </div></div></div></div>`);
 }
 
 function addStaff(form){
@@ -419,6 +455,22 @@ function register(form){
 	return false;
 }
 
+function register_whitoutEmail(form){
+	if( form.pass.value != form.passRepeated.value ){
+		alert("Error: Las contraseñas deben coincidir.");
+		return false;
+	}
+
+	var valores = Object();
+	valores.username = form.username.value;
+	valores.password = form.pass.value;
+
+	post("registration/", function(){
+		form.parentNode.innerHTML = "<p>Registro completado, comprueba tu email.</p>";
+	}, valores, true, "/rest-auth/");
+
+	return false;
+}
 function login(form){
 	var valores = Object();
 	valores.username = form.username.value;
