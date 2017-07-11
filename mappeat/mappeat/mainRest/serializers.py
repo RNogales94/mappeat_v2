@@ -11,24 +11,21 @@ from django.shortcuts import get_object_or_404
 from django.db.models import Max
 
 
-"""
+
 from django.contrib.auth.models import User
 
 # Serializers define the API representation.
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('url', 'username', 'email', 'is_staff')
+        fields = ('pk', 'username') # 'email' field can be added
 
 # ViewSets define the view behavior.
 class UserViewSet(viewsets.ModelViewSet):
     queryset = User.objects.all()
+    filter_class = UserFilter
     serializer_class = UserSerializer
 
-# Routers provide an easy way of automatically determining the URL conf.
-router = routers.DefaultRouter()
-router.register(r'users', UserViewSet)
-"""
 
 """
 Serializadores para los modelos de mainRest
@@ -57,7 +54,7 @@ class RestaurantSerializer(serializers.ModelSerializer):
         model = Restaurant
         #fields = ('owner', 'name', 'address', 'city')
         fields = "__all__"
-    
+
 
 class ProviderSerializer(serializers.ModelSerializer):
     class Meta:
@@ -88,23 +85,23 @@ class StaffSerializer(serializers.ModelSerializer):
         fields = "__all__"
 
     def create(self, validated_data):
-        
+
         rol_data = validated_data.pop('staff_role_code')
         rol_choice = rol_data['staff_role_code']
         rol = Ref_Staff_Rol.objects.all().filter(staff_role_code=rol_choice)
-        
+
         staff = Staff.objects.filter(user=self.context['request'].user)
         rest = staff[0].restaurant
         restaurant = validated_data.pop('restaurant')
-        
+
         new_staff = Staff.objects.create(staff_role_code=rol[0],restaurant = rest, **validated_data)
         return new_staff
-    
+
     def update(self, instance, validated_data):
-        
+
         staff = Staff.objects.filter(user=self.context['request'].user)
         rest = staff[0].restaurant
-        
+
         instance.first_name = validated_data.pop('first_name')
         instance.last_name = validated_data.pop('last_name')
         instance.is_active = validated_data.pop('is_active')
@@ -112,10 +109,10 @@ class StaffSerializer(serializers.ModelSerializer):
         instance.hourly_rate = validated_data.pop('hourly_rate')
         instance.notes = validated_data.pop('notes')
         instance.restaurant = rest
-       
+
         instance.save()
         return instance
-    
+
 class TableSerializer(serializers.ModelSerializer):
     class Meta:
         model = Table
@@ -214,7 +211,7 @@ class OwnerViewSet(viewsets.ModelViewSet):
 class RestaurantViewSet(viewsets.ModelViewSet):
     queryset = Restaurant.objects.all()
     serializer_class = RestaurantSerializer
-    
+
     def get_queryset(self):
         """
         Se filtra por primary key del restaurante asociado al staff asociado
@@ -247,7 +244,7 @@ class StaffViewSet(viewsets.ModelViewSet):
     #TODO FIX get_queryset
     def get_queryset(self):
         owner_local = Owner.objects.filter(user=self.request.user)
-      
+
         #TODO comprobar si len(owner_local) es cero y actuar en consecuenca
         #Esto significaria que el usuario que hace la peticion no es un propietario...
         if(len(owner_local)>0):
@@ -312,6 +309,7 @@ class InventoryViewSet(viewsets.ModelViewSet):
 
 # Routers provide an easy way of automatically determining the URL conf.
 router = routers.DefaultRouter()
+router.register(r'users', UserViewSet)
 router.register(r'mesureUnities', MesureUnityViewSet)
 router.register(r'owners', OwnerViewSet)
 router.register(r'restaurants', RestaurantViewSet)

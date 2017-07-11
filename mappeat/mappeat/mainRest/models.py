@@ -71,6 +71,7 @@ class Supply_Category(models.Model):
 
 class Supply(models.Model):
     name = models.CharField(max_length=40)
+    category = models.ForeignKey(Supply_Category)
 
     def __str__(self):
         return self.name

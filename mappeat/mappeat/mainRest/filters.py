@@ -1,6 +1,14 @@
 import django_filters
 from mainRest.models import *
 
+from django.contrib.auth.models import User
+
+
+class UserFilter(django_filters.FilterSet):
+    class Meta:
+        model = User
+        fields = ('username',)
+
 
 class Product_ClassFilter(django_filters.FilterSet):
     """
