@@ -156,7 +156,7 @@ function removeStaff(id_user){
 
 function showStaffForm(){
     let list = document.getElementById('staffPanel');
-    list.innerHTML=''
+    list.innerHTML='';
     list.insertAdjacentHTML('beforeend',`
                                         <div class="modal fade" id="modalUser1" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	                                       <div class="modal-dialog" role="document">
@@ -189,7 +189,7 @@ function showStaffForm(){
 			                                     </div>
 			                                 <div class="modal-body">
                                                 <form onsubmit='return addStaff(this)'>
-                                                <input type='text' id='user' name='user'>
+                                                <input type='hidden' id='user' name='user'><br>
 				                                <label>Nombre</label><input type='text' class=class="input-group" name='first_name' placeholder='Nombre'><br>
                                                 <label>Apellidos</label><input type='text' name='last_name' placeholder='Apellidos'><br>
                                                 <label> Cargo </label><select name='role'>
@@ -219,8 +219,9 @@ function addStaff(form){
     valores.hourly_rate = form.hourly_rate.value;
     valores.is_active = form.is_active.checked;
     valores.restaurant = 2;
+    valores.user = form.user.value;
     valores.notes = form.notes.value;
-    
+    console.log(valores);
        post("staff/", function(){
 		loadStaff();
 	}, valores, true);
@@ -470,9 +471,10 @@ function register_whitoutEmail(form){
 	post("registration/", function(){
 		$('#modalUser1').modal('hide');
         $('#modalUser2').modal('show');
+        get("users/?username="+form.username.value,function(){document.getElementById('user').value = (this.response[0].pk);});
 	}, valores, true, "/rest-auth/");
     
-    get("user/",function(){ document.getElementById('user').value= this.response.pk;},true,"/rest-auth/",true);
+    
 	return false;
 }
 function login(form){
