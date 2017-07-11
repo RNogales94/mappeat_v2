@@ -221,6 +221,7 @@ function loadRestaurant(){
                                                         <div class='row' id='editRest'>
                                                             <button class='btn pull-right' onclick='editRestaurant(${table.id})'>Editar</button>
                                                         </div>`);
+            initMap(table.lat,table.lng);
 			}
          
     });
