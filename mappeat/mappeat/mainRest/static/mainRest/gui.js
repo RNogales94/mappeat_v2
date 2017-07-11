@@ -174,7 +174,7 @@ function showStaffForm(){
                                          
                                             <div class="modal-footer">
                                             <p>Nota:Estos datos deben ser facilitados al empleado para poder conectarse y podrán ser modificados.</p>
-                                            <button type='submit' class='btn-success' data-toggle="modal" data-target="#modalUser2">Continuar</button>
+                                            <button type='submit' class='btn-success'>Continuar</button>
                                             </form>
                                             </div>
 			                             </div></div></div></div>
@@ -463,10 +463,12 @@ function register_whitoutEmail(form){
 
 	var valores = Object();
 	valores.username = form.username.value;
-	valores.password = form.pass.value;
+	valores.password1 = form.pass.value;
+    valores.password2 = form.passRepeated.value;
 
 	post("registration/", function(){
-		form.parentNode.innerHTML = "<p>Registro completado, comprueba tu email.</p>";
+		$('#modalUser1').modal('hide');
+        $('#modalUser2').modal('show');
 	}, valores, true, "/rest-auth/");
 
 	return false;
