@@ -71,6 +71,7 @@ class Supply_Category(models.Model):
 
 class Supply(models.Model):
     name = models.CharField(max_length=40)
+    is_storable = models.BooleanField(default=True)
     category = models.ForeignKey(Supply_Category, null = True)
 
     def __str__(self):
