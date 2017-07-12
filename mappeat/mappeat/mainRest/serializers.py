@@ -70,42 +70,44 @@ class SupplySerializer(serializers.ModelSerializer):
     class Meta:
         model = Supply
         fields = "__all__"
-
+"""
+# @DEPRECATED
 class Ref_Staff_RolSerializer(serializers.ModelSerializer):
     #description = serializers.ReadOnlyField(source='describe')
     class Meta:
         model = Ref_Staff_Rol
         fields = ("id", "staff_role_code")# ,"description")
+"""
 
 class StaffSerializer(serializers.ModelSerializer):
-    staff_role_code = Ref_Staff_RolSerializer()
+    #staff_role_code = Ref_Staff_RolSerializer()
 
     class Meta:
         model = Staff
         fields = "__all__"
 
     def create(self, validated_data):
-
-        rol_data = validated_data.pop('staff_role_code')
-        rol_choice = rol_data['staff_role_code']
-        rol = Ref_Staff_Rol.objects.all().filter(staff_role_code=rol_choice)
-
-        staff = Staff.objects.filter(user=self.context['request'].user)
-        rest = staff[0].restaurant
+        """
+        Solo puede crearse personal asociado al restaurante del creador (manager)
+        """
+        manager = Staff.objects.filter(user=self.context['request'].user)[0]
+        rest = manager.restaurant
         restaurant = validated_data.pop('restaurant')
 
-        new_staff = Staff.objects.create(staff_role_code=rol[0],restaurant = rest, **validated_data)
+        new_staff = Staff.objects.create(restaurant = rest, **validated_data)
         return new_staff
 
     def update(self, instance, validated_data):
-
-        staff = Staff.objects.filter(user=self.context['request'].user)
-        rest = staff[0].restaurant
+        """
+        Puede actualizarse todo excepto el restaurante
+        """
+        staff = Staff.objects.filter(user=self.context['request'].user)[0]
+        rest = staff.restaurant
 
         instance.first_name = validated_data.pop('first_name')
         instance.last_name = validated_data.pop('last_name')
         instance.is_active = validated_data.pop('is_active')
-        instance.staff_role_code = validated_data.pop('staff_role_code')
+        instance.staff_role_code = validated_data.pop('role_code')
         instance.hourly_rate = validated_data.pop('hourly_rate')
         instance.notes = validated_data.pop('notes')
         instance.restaurant = rest
@@ -233,19 +235,24 @@ class SupplyViewSet(viewsets.ModelViewSet):
     queryset = Supply.objects.all()
     serializer_class = SupplySerializer
 
+"""
+# @DEPRECATED
 class Ref_Staff_RolViewSet(viewsets.ModelViewSet):
     queryset = Ref_Staff_Rol.objects.all()
     serializer_class = Ref_Staff_RolSerializer
 
+"""
 class StaffViewSet(viewsets.ModelViewSet):
     queryset = Staff.objects.all()
     serializer_class = StaffSerializer
 
-    #TODO FIX get_queryset
+    """
+    Cambiar owner por manager para que los owners no sean necesarios
+    """
     def get_queryset(self):
         owner_local = Owner.objects.filter(user=self.request.user)
 
-        #TODO comprobar si len(owner_local) es cero y actuar en consecuenca
+        #Comprobar si len(owner_local) es cero y actuar en consecuenca
         #Esto significaria que el usuario que hace la peticion no es un propietario...
         if(len(owner_local)>0):
             restaurant_local = Restaurant.objects.filter(owner=owner_local[0])
@@ -316,7 +323,7 @@ router.register(r'restaurants', RestaurantViewSet)
 router.register(r'providers', ProviderViewSet)
 router.register(r'suply_categories', Supply_CategoryViewSet)
 router.register(r'suplies', SupplyViewSet)
-router.register(r'ref_staff_roles', Ref_Staff_RolViewSet)
+#router.register(r'ref_staff_roles', Ref_Staff_RolViewSet) #@DEPRECATED
 router.register(r'staff', StaffViewSet)
 router.register(r'tables', TableViewSet)
 router.register(r'families', FamilyViewSet)

@@ -71,11 +71,12 @@ class Supply_Category(models.Model):
 
 class Supply(models.Model):
     name = models.CharField(max_length=40)
-    category = models.ForeignKey(Supply_Category)
+    category = models.ForeignKey(Supply_Category, null = True)
 
     def __str__(self):
         return self.name
-
+"""
+# @DEPRECATED
 class Ref_Staff_Rol(models.Model):
     STAFF_ROLES = (
         ('W', 'Camarero'),
@@ -101,15 +102,25 @@ class Ref_Staff_Rol(models.Model):
     def __str__(self):
         return self.staff_rol_to_str(self.staff_role_code)
 
+"""
+
 class Staff(models.Model):
     user = models.OneToOneField(User, db_index=True, on_delete=models.SET_NULL, null=True)
     restaurant = models.ForeignKey(Restaurant, db_index=True)
-    staff_role_code = models.ForeignKey(Ref_Staff_Rol)
+    #staff_role_code = models.ForeignKey(Ref_Staff_Rol) #@DEPRECATED
     first_name = models.CharField(max_length=20)
     last_name = models.CharField(max_length=50)
     is_active  = models.BooleanField(default=True)
     hourly_rate = models.FloatField(null=True, default=None, blank=True)
     notes = models.TextField(null=True, blank=True, default="")
+
+    STAFF_ROLES = (
+        ('W', 'Camarero'),
+        ('K', 'Cocinero'),
+        ('B', 'Barman'),
+        ('M', 'Manager'),
+    )
+    role_code = models.CharField(max_length=1, choices=STAFF_ROLES, default = 'W')
 
     """
     Mejoras a tener en cuenta:
@@ -119,10 +130,21 @@ class Staff(models.Model):
     puesto que podría ser porque se han cambiado el día dos camareros o cosas asi
     que son bastante habituales)
     """
-
+    @staticmethod
+    def role_to_str(choice):
+        if choice == 'W':
+            return "Camarero"
+        elif choice == 'K':
+            return "Cocinero"
+        elif choice == 'B':
+            return "Barman"
+        elif choice == 'M':
+            return "Manager"
+        else:
+            return choice
 
     def __str__(self):
-        return (self.first_name + " " + self.last_name)
+        return (self.first_name + " " + self.last_name + " " + self.role_to_str(self.role_code))
 
 class Table(models.Model):
     TABLE_TYPES = (
