@@ -90,7 +90,7 @@ class StaffSerializer(serializers.ModelSerializer):
         """
         Solo puede crearse personal asociado al restaurante del creador (manager)
         """
-        
+
         manager = Staff.objects.filter(user=self.context['request'].user)[0]
         rest = manager.restaurant
         restaurant = validated_data.pop('restaurant')
