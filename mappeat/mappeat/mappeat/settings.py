@@ -35,6 +35,7 @@ INSTALLED_APPS = [
     'mainRest',
     'geo',
     'meteo',
+    'django_extensions',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
