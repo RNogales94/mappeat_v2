@@ -99,7 +99,7 @@ function loadStaff(){
                                                         <td><button onclick='removeStaff(${table.id})' id='staffInput' class="glyphicon glyphicon-remove btn-danger"></button></td>
                                                         <td><input type='text' class="form-control" name='first_name' id='first_name${table.id}' value=${table.first_name} readonly>
                                                         <input type='text' class="form-control" name='last_name' id='last_name${table.id}' value=${table.last_name} readonly></td>
-                                                        <td><p id='rol${table.id}'>${table.staff_role_code.staff_role_code}</p></td>
+                                                        <td><p id='rol${table.id}'>${table.role_code}</p></td>
                                                         <td><input type='text'  class="form-control-addon"  id='hourly_rate${table.id}' name='hourly_rate' value=${table.hourly_rate} readonly>
                                                         <td><input type='checkbox' readonly name='is_active${table.id}'  id='is_active${table.id}'  class="form-control" checked=${table.is_active}></td>
                                                         <td><input type='text'  readonly  class="form-control-addon" id='notes${table.id}' name='notes' value=${table.notes}></td>
@@ -137,14 +137,14 @@ function editStaff(id_user){
     
     valores.first_name = document.getElementById('first_name'+id_user).value;
 	valores.last_name = document.getElementById('last_name'+id_user).value;
-    valores.staff_role_code = {staff_role_code: "B"};
+    valores.role_code =  document.getElementById('role'+id_user).value;;
     valores.hourly_rate = document.getElementById('hourly_rate'+id_user).value;
     valores.is_active =  document.getElementById('is_active'+id_user).checked;
     valores.notes = document.getElementById('notes'+id_user).value;
     valores.restaurant = 2;
-    
+   
      put('staff/'+id_user+'/', function(){
-		loadTables();
+		loadStaff();
 	}, valores, true);
 }
 
@@ -167,7 +167,7 @@ function showStaffForm(){
 				                                    <h4 class="modal-title" id="myModalLabel">Usuario para el empleado:   (Paso 1 de 2)</h4>
 			                                     </div>
 			                                 <div class="modal-body">
-                                                <form onsubmit='return register_whitoutEmail(this);'>
+                                                <form onsubmit='return register_whithoutEmail(this);'>
 				                                <label>Nombre Usuario</label> <input type='text' name="username"><br>
                                                 <label>Contraseña</label><input type='password' name="pass"><br>
                                                 <label>Repetir Contraseña</label><input type='password' name="passRepeated"><br>
@@ -215,13 +215,13 @@ function addStaff(form){
     
 	valores.first_name = form.first_name.value;
 	valores.last_name = form.last_name.value;
-    valores.staff_role_code = {id: 3,staf_role_description: "B"};
+    valores.role_code = form.role.value;
     valores.hourly_rate = form.hourly_rate.value;
     valores.is_active = form.is_active.checked;
     valores.restaurant = 2;
     valores.user = form.user.value;
     valores.notes = form.notes.value;
-    console.log(valores);
+    
        post("staff/", function(){
 		loadStaff();
 	}, valores, true);
@@ -457,7 +457,7 @@ function register(form){
 	return false;
 }
 
-function register_whitoutEmail(form){
+function register_whithoutEmail(form){
 	if( form.pass.value != form.passRepeated.value ){
 		alert("Error: Las contraseñas deben coincidir.");
 		return false;
