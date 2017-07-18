@@ -63,16 +63,29 @@ class Provider(models.Model):
     def __str__(self):
         return self.name
 
+"""
+La categoría de un supply (suministro) puede ser una de las siguientes:
+ * Servicio  (TODO: Los servicios no aparecen listados en el inventario)
+ * Articulo (TODO: Los articulos aparecen listados en el inventario)
+ * Otros  (Se evitará su uso)
+"""
+
 class Supply_Category(models.Model):
     name = models.CharField(max_length=20)
 
     def __str__(self):
         return self.name
 
+"""
+Los Supply (suministros) son las cosas que compra un cliente
+"""
+
 class Supply(models.Model):
     name = models.CharField(max_length=40)
+    mesure_unity = models.ForeignKey(Mesure_Unity, null=True)
     is_storable = models.BooleanField(default=True)
     category = models.ForeignKey(Supply_Category, null = True)
+    barcode = models.IntegerField(null = True)
 
     def __str__(self):
         return self.name
@@ -293,9 +306,7 @@ A) Que productos llevan XXX ingrediente?
 B) Cuales son los ingredientes del producto XXX?
 """
 class Ingredient(models.Model):
-    quantity = models.IntegerField()
-    mesure_unity = models.ForeignKey(Mesure_Unity, null=True)
-
+    quantity = models.FloatField()
     supply = models.ForeignKey(Supply, null=True)
     product = models.ForeignKey(Product, null=True)
 
