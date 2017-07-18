@@ -293,7 +293,6 @@ function getLatLong(){
         true,"https://maps.googleapis.com/maps/api/geocode/json?address=",false);
 }
 
-
 function editRestaurant(id_rest){
     getLatLong();
     var n = document.getElementById('number').value;
@@ -422,7 +421,7 @@ function loadApp(){
 		  <a class="navbar-brand" href="#">Mappeat</a>
 		</div>
 			<div class="navbar-collapse collapse navbar-right ">
-				<button>Almacén</button>
+				<button onclick="loadStore()">Almacén</button>
 				<button>Menú</button>
 				<button onclick="loadTPV()">TPV</button>
 				<button>Informes</button>
@@ -477,6 +476,7 @@ function register_whithoutEmail(form){
     
 	return false;
 }
+
 function login(form){
 	var valores = Object();
 	valores.username = form.username.value;
@@ -489,3 +489,61 @@ function login(form){
     sessionStorage['username']= valores.username;
 	return false;
 }
+
+function loadStore(){
+    main.innerHTML = `<div class="container-fluid">
+                        <div class="col-sm-10">
+		                      <div class="well" id="content">
+                                  <h4> Personal </h4>
+                                  <div>
+                                    <table class='table'>
+                                    <thead>
+                                    <th></th>
+                                    <th>Producto</th>
+                                    <th>Formato</th>
+                                    <th>Código de barras</th>
+                                    <th>Unidades</th>
+                                    
+                                    <tbody id='storeList'></tbody>
+                                    </table>
+	                               </div>
+                              </div>
+                        </div>
+                     </div>`;
+    get('inventory/',function(){
+                        'user strict';
+                        let list = document.getElementById('storeList');
+                        list.innerHTML='';
+        
+                        for(let table of this.response){
+                            list.insertAdjacentHTML('beforeend',`<tr><td></td><td></td><td></td><td>${table.quantity}</td></tr>`);
+                        }
+                         list.insertAdjacentHTML('beforeend',`<tr><td><button onclick='newSupplyForm()' class="glyphicon glyphicon-plus btn-success" data-toggle="modal" data-target="#modalStore"></button></td></tr></table>`);
+    });
+}
+
+function newSupplyForm(){
+    let list = document.getElementById('storeList');
+    list.innerHTML='';
+    list.insertAdjacentHTML('beforeend',`
+                                        <div class="modal fade" id="modalStore" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	                                       <div class="modal-dialog" role="document">
+		                                      <div class="modal-content">
+			                                     <div class="modal-header">
+				                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					                               <span aria-hidden="true">&times;</span></button>
+				                                    <h4 class="modal-title" id="myModalLabel">Registrar Nuevo Artículo:   (Paso 1 de 2)</h4>
+			                                     </div>
+			                                 <div class="modal-body">
+                                                <form onsubmit='return addSuply(this);'>
+				                                <label>Nombre</label> <input type='text' name="name"><br>
+                                                <label>Formato</label><select id='supplyFormat'></select><br>
+                                                <label>Código de Barras</label><input type='text' name="barcode"><br>
+                                         
+                                            <div class="modal-footer">
+                                            <button type='submit' class='btn-success'>Continuar</button>
+                                            </form>
+                                            </div>
+			                             </div></div></div></div>`);
+}
+

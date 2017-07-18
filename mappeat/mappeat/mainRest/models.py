@@ -337,6 +337,6 @@ class Inventory(models.Model):
     date = models.DateField(default=timezone.now, db_index=True)
     restaurant = models.ForeignKey(Restaurant, db_index=True)
     supply = models.ForeignKey(Supply, null=True)
-
+    
     quantity = models.IntegerField(default=0)
     avalible = models.BooleanField(default=False) #Indica si está agotado o aún queda
