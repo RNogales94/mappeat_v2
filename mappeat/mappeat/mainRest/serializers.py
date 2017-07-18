@@ -311,8 +311,8 @@ class ServiceViewSet(viewsets.ModelViewSet):
     serializer_class = ServiceSerializer
 
 class InventoryViewSet(viewsets.ModelViewSet):
-    queryset = Ticket_Detail.objects.all()
-    serializer_class = Ticket_DetailSerializer
+    queryset = Inventory.objects.all()
+    serializer_class = InventorySerializer
 
 
 # Routers provide an easy way of automatically determining the URL conf.
