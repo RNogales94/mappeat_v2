@@ -510,15 +510,19 @@ function loadStore(){
                               </div>
                         </div>
                      </div>`;
+    
+    let list = document.getElementById('storeList');
     get('inventory/',function(){
                         'user strict';
-                        let list = document.getElementById('storeList');
+                       
                         list.innerHTML='';
         
                         for(let table of this.response){
-                            list.insertAdjacentHTML('beforeend',`<tr><td></td><td></td><td></td><td>${table.quantity}</td></tr>`);
+                            get('suplies/'+table.supply,function(){
+                                list.insertAdjacentHTML('beforeend',`<tr><td><button onclick='' id='' class="glyphicon glyphicon-remove btn-danger"></button></td><td>${this.response.name}</td><td>${this.response.mesure_unity}</td><td>${this.response.barcode}</td><td>${table.quantity}</td></tr>`);}
+                               );
                         }
-                         list.insertAdjacentHTML('beforeend',`<tr><td><button onclick='newSupplyForm()' class="glyphicon glyphicon-plus btn-success" data-toggle="modal" data-target="#modalStore"></button></td></tr></table>`);
+                         list.insertAdjacentHTML('afterend',`<tr><td><button onclick='newSupplyForm()' class="glyphicon glyphicon-plus btn-success" data-toggle="modal" data-target="#modalStore"></button></td></tr></table>`);
     });
 }
 
@@ -531,27 +535,46 @@ function newSupplyForm(){
 			                                     <div class="modal-header">
 				                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
 					                               <span aria-hidden="true">&times;</span></button>
-				                                    <h4 class="modal-title" id="myModalLabel">Registrar Nuevo Artículo:   (Paso 1 de 2)</h4>
+				                                    <h4 class="modal-title" id="myModalLabel">Registrar Nuevo Artículo</h4>
 			                                     </div>
 			                                 <div class="modal-body">
-                                                <form onsubmit='return addSuply(this);'>
-				                                <label>Nombre</label> <input type='text' name="name"><br>
-                                                <label>Formato</label><select id='format'></select><br>
-                                                <label>Código de Barras</label><input type='text' name="barcode"><br>
+                                                <form id='newSupply' onsubmit='return addSupply(this)'>
+				                                <label>Nombre</label><input type='text'  name='name'><br>
+                                                <label>Formato</label><select name='mesure_unity' id='format'></select><br>
+                                                <label>Código de Barras</label><input type='text' name='barcode'><br>
                                                 <label>Almacenable</label><input type='checkbox' name='storable' checked>
                                             <div class="modal-footer">
                                             <button type='submit' class='btn-success'>Continuar</button>
-                                            </form>
-                                            </div>
+                                            </form>                                            
+                                        </div>
+                                            
+
 			                             </div></div></div></div>`);
-    fillFormats();
+  fillFormats();
 }
 
 function fillFormats(){
+    
     get('mesureUnities/',function(){
         let list = document.getElementById('format');
+        list.innerHTML='';
         for(let format of this.response){
             list.insertAdjacentHTML('beforeend',`<option>${format.name}</option>`);
         }
     });
+}
+
+function addSupply(form){
+    var valores = new Object();
+    valores.name = form.name.value;
+    valores.is_storable = form.storable.checked;
+    valores.barcode = form.barcode.value;
+    valores.mesure_unity = form.mesure_unity.value;
+    valores.category = 2; // La categoria 2 se corresponde a 'Articulo'
+    console.log(valores);
+    
+    post("suplies/", function(){
+		//crear tupla en inventory
+        loadStore();
+	}, valores, true);
 }

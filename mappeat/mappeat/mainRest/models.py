@@ -334,7 +334,7 @@ Inventory:
 Representa las existencias en el almacen de un determinado suministro un determinado día
 """
 class Inventory(models.Model):
-    date = models.DateField(default=timezone.now, db_index=True)
+    date = models.DateField(default=timezone.now().date(), db_index=True)
     restaurant = models.ForeignKey(Restaurant, db_index=True)
     supply = models.ForeignKey(Supply, null=True)
     
