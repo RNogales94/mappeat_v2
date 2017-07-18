@@ -524,7 +524,6 @@ function loadStore(){
 
 function newSupplyForm(){
     let list = document.getElementById('storeList');
-    list.innerHTML='';
     list.insertAdjacentHTML('beforeend',`
                                         <div class="modal fade" id="modalStore" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	                                       <div class="modal-dialog" role="document">
@@ -537,13 +536,22 @@ function newSupplyForm(){
 			                                 <div class="modal-body">
                                                 <form onsubmit='return addSuply(this);'>
 				                                <label>Nombre</label> <input type='text' name="name"><br>
-                                                <label>Formato</label><select id='supplyFormat'></select><br>
+                                                <label>Formato</label><select id='format'></select><br>
                                                 <label>Código de Barras</label><input type='text' name="barcode"><br>
-                                         
+                                                <label>Almacenable</label><input type='checkbox' name='storable' checked>
                                             <div class="modal-footer">
                                             <button type='submit' class='btn-success'>Continuar</button>
                                             </form>
                                             </div>
 			                             </div></div></div></div>`);
+    fillFormats();
 }
 
+function fillFormats(){
+    get('mesureUnities/',function(){
+        let list = document.getElementById('format');
+        for(let format of this.response){
+            list.insertAdjacentHTML('beforeend',`<option>${format.name}</option>`);
+        }
+    });
+}
