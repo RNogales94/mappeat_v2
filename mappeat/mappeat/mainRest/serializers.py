@@ -34,7 +34,7 @@ Serializadores para los modelos de mainRest
 class MesureUnitySerializer(serializers.ModelSerializer):
     class Meta:
         model = Mesure_Unity
-        fields = ('name', 'simbol')
+        fields = "__all__"
 
 class OwnerSerializer(serializers.ModelSerializer):
     class Meta:
@@ -191,7 +191,7 @@ class InventorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Inventory
         fields = "__all__"
-        
+
     def create(self, validated_data):
         manager = Staff.objects.filter(user=self.context['request'].user)[0]
         rest = manager.restaurant
