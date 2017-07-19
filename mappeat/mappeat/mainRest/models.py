@@ -339,4 +339,4 @@ class Inventory(models.Model):
     supply = models.ForeignKey(Supply, null=True)
     
     quantity = models.IntegerField(default=0)
-    avalible = models.BooleanField(default=False) #Indica si está agotado o aún queda
+    available = models.BooleanField(default=False) #Indica si está agotado o aún queda

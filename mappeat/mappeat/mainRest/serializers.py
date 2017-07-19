@@ -191,7 +191,15 @@ class InventorySerializer(serializers.ModelSerializer):
     class Meta:
         model = Inventory
         fields = "__all__"
-
+        
+    def create(self, validated_data):
+        manager = Staff.objects.filter(user=self.context['request'].user)[0]
+        rest = manager.restaurant
+        restaurant = validated_data.pop('restaurant')
+        print(rest)
+        print(validated_data)
+        new_item = Inventory.objects.create(restaurant = rest, **validated_data)
+        return new_item
 """"
 ##
 #  viewsets:

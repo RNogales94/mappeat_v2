@@ -494,8 +494,8 @@ function loadStore(){
     main.innerHTML = `<div class="container-fluid">
                         <div class="col-sm-10">
 		                      <div class="well" id="content">
-                                  <h4> Personal </h4>
-                                  <div>
+                                  <h4> Almacen </h4>
+                                  <div id='storePanel'>
                                     <table class='table'>
                                     <thead>
                                     <th></th>
@@ -519,7 +519,7 @@ function loadStore(){
         
                         for(let table of this.response){
                             get('suplies/'+table.supply,function(){
-                                list.insertAdjacentHTML('beforeend',`<tr><td><button onclick='' id='' class="glyphicon glyphicon-remove btn-danger"></button></td><td>${this.response.name}</td><td>${this.response.mesure_unity}</td><td>${this.response.barcode}</td><td>${table.quantity}</td></tr>`);}
+                                list.insertAdjacentHTML('beforeend',`<tr><td><button onclick='removeInventory(${table.id})' class="glyphicon glyphicon-remove btn-danger"></button></td><td>${this.response.name}</td><td>${this.response.mesure_unity}</td><td>${this.response.barcode}</td><td>${table.quantity}</td></tr>`);}
                                );
                         }
                          list.insertAdjacentHTML('afterend',`<tr><td><button onclick='newSupplyForm()' class="glyphicon glyphicon-plus btn-success" data-toggle="modal" data-target="#modalStore"></button></td></tr></table>`);
@@ -527,7 +527,8 @@ function loadStore(){
 }
 
 function newSupplyForm(){
-    let list = document.getElementById('storeList');
+    let list = document.getElementById('storePanel');
+    list.innerHTML='';
     list.insertAdjacentHTML('beforeend',`
                                         <div class="modal fade" id="modalStore" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	                                       <div class="modal-dialog" role="document">
@@ -538,11 +539,12 @@ function newSupplyForm(){
 				                                    <h4 class="modal-title" id="myModalLabel">Registrar Nuevo Artículo</h4>
 			                                     </div>
 			                                 <div class="modal-body">
-                                                <form id='newSupply' onsubmit='return addSupply(this)'>
+                                                <form id='newSupply' onsubmit='return addSupply(this);'>
 				                                <label>Nombre</label><input type='text'  name='name'><br>
                                                 <label>Formato</label><select name='mesure_unity' id='format'></select><br>
                                                 <label>Código de Barras</label><input type='text' name='barcode'><br>
-                                                <label>Almacenable</label><input type='checkbox' name='storable' checked>
+                                                <label>Almacenable</label><input type='checkbox' name='storable' checked><br>
+                                                <label>Cantidad</label><input type='number' name='quantity'>
                                             <div class="modal-footer">
                                             <button type='submit' class='btn-success'>Continuar</button>
                                             </form>                                            
@@ -559,22 +561,37 @@ function fillFormats(){
         let list = document.getElementById('format');
         list.innerHTML='';
         for(let format of this.response){
-            list.insertAdjacentHTML('beforeend',`<option>${format.name}</option>`);
+            list.insertAdjacentHTML('beforeend',`<option value='1'>${format.name}</option>`);
         }
     });
 }
 
 function addSupply(form){
-    var valores = new Object();
-    valores.name = form.name.value;
-    valores.is_storable = form.storable.checked;
-    valores.barcode = form.barcode.value;
-    valores.mesure_unity = form.mesure_unity.value;
-    valores.category = 2; // La categoria 2 se corresponde a 'Articulo'
-    console.log(valores);
+    var valoresSupply = new Object();
+    var valoresInventory = new Object();
     
+    valoresSupply.name = form.name.value;
+    valoresSupply.is_storable = form.storable.checked;
+    valoresSupply.barcode = form.barcode.value;
+    valoresSupply.mesure_unity = form.mesure_unity.value;
+    valoresSupply.category = 2; // La categoria 2 se corresponde a 'Articulo'
+    
+    valoresInventory.quantity = form.quantity.value;
+    valoresInventory.restaurant = 2;
+    valoresInventory.available = true;
+        
     post("suplies/", function(){
-		//crear tupla en inventory
-        loadStore();
-	}, valores, true);
+        //obtengo el id del supply creado
+		valoresInventory.supply = JSON.parse(this.response)['id'];
+	}, valoresSupply, true);
+    
+    post('inventory/',function(){ loadStore(); },valoresInventory,true);
+       
+}
+
+function removeInventory(id){
+     if (confirm('Confirme el borrado')){
+       _delete("inventory/"+id+"/",function(){loadStore();},true);
+    } 
+    return false;
 }
