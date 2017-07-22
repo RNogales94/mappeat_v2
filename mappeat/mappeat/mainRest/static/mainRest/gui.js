@@ -588,6 +588,7 @@ function addSupply(form){
 
     post('inventory/',function(){ loadStore(); },valoresInventory,true);
 
+	return false;
 }
 
 function removeInventory(id){
