@@ -228,7 +228,6 @@ function addStaff(form){
     valores.notes = form.notes.value;
 
 	post("staff/", function(){
-				recoverUser();
 				loadStaff();
 			}, valores, true);
     	return false;
@@ -473,13 +472,12 @@ function register_whithoutEmail(form){
     valores.password2 = form.passRepeated.value;
 
 	post("registration/", function(){
+		recoverUser();
 		$('#modalUser1').modal('hide');
         $('#modalUser2').modal('show');
         get("users/?username="+form.username.value,function(){document.getElementById('user').value = (this.response[0].pk);});
-        userCookie = Cookies.get('csrftoken');
 	}, valores, true, "/rest-auth/");
-
-	recoverUser();
+	
 	return false;
 }
 
