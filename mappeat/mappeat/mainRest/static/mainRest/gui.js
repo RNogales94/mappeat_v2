@@ -1,12 +1,7 @@
-var userCookie;
 var main;
 var familyWanted;
 var currentTable;
 var currentTableID;
-
-function recoverUser(){
-	Cookies.set('csrftoken', userCookie);
-}
 
 function loadSettings(){
 	main.innerHTML = `<div class="container-fluid">
@@ -454,7 +449,6 @@ function register(form){
 	valores.password = form.pass.value;
 
 	post("register/", function(){
-		userCookie = Cookies.get('csrftoken');
 		form.parentNode.innerHTML = "<p>Registro completado, comprueba tu email.</p>";
 	}, valores, true, "/accounts_api/");
 
@@ -473,7 +467,6 @@ function register_whithoutEmail(form){
     valores.password2 = form.passRepeated.value;
 
 	post("registration/", function(){
-		recoverUser();
 		$('#modalUser1').modal('hide');
         $('#modalUser2').modal('show');
         get("users/?username="+form.username.value,function(){document.getElementById('user').value = (this.response[0].pk);});
@@ -488,7 +481,6 @@ function login(form){
 	valores.password = form.pass.value;
 
 	post("login/", function(){
-		userCookie = Cookies.get('csrftoken');
 		loadApp();
 	}, valores, true, "/rest-auth/");
 
