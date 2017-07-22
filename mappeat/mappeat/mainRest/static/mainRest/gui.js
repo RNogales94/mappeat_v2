@@ -227,10 +227,16 @@ function addStaff(form){
     valores.user = form.user.value;
     valores.notes = form.notes.value;
 <<<<<<< HEAD
+<<<<<<< HEAD
 
        post("staff/", function(){
 =======
-    
+
+	post("staff/", function(){
+		recoverUser();
+>>>>>>> origin/master
+=======
+
 	post("staff/", function(){
 		recoverUser();
 >>>>>>> origin/master
