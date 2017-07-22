@@ -454,6 +454,7 @@ function register(form){
 	valores.password = form.pass.value;
 
 	post("register/", function(){
+		userCookie = Cookies.get('csrftoken');
 		form.parentNode.innerHTML = "<p>Registro completado, comprueba tu email.</p>";
 	}, valores, true, "/accounts_api/");
 
