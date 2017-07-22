@@ -479,7 +479,7 @@ function register_whithoutEmail(form){
         userCookie = Cookies.get('csrftoken');
 	}, valores, true, "/rest-auth/");
 
-
+	recoverUser();
 	return false;
 }
 
