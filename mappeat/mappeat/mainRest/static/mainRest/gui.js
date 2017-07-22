@@ -226,24 +226,12 @@ function addStaff(form){
     valores.restaurant = 2;
     valores.user = form.user.value;
     valores.notes = form.notes.value;
-<<<<<<< HEAD
-<<<<<<< HEAD
-
-       post("staff/", function(){
-=======
 
 	post("staff/", function(){
-		recoverUser();
->>>>>>> origin/master
-=======
-
-	post("staff/", function(){
-		recoverUser();
->>>>>>> origin/master
-		loadStaff();
-	}, valores, true);
+				recoverUser();
+				loadStaff();
+			}, valores, true);
     	return false;
-
 }
 
 function loadRestaurant(){
