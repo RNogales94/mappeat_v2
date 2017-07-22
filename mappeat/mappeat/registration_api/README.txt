@@ -1,0 +1,1 @@
+Este modulo se utiliza para el registro de nuevos usuarios desde formulario (como en la pagina principal)
