@@ -1,7 +1,12 @@
+var userCookie;
 var main;
 var familyWanted;
 var currentTable;
 var currentTableID;
+
+function recoverUser(){
+	Cookies.set('csrftoken', userCookie);
+}
 
 function loadSettings(){
 	main.innerHTML = `<div class="container-fluid">
@@ -471,6 +476,7 @@ function register_whithoutEmail(form){
 		$('#modalUser1').modal('hide');
         $('#modalUser2').modal('show');
         get("users/?username="+form.username.value,function(){document.getElementById('user').value = (this.response[0].pk);});
+        userCookie = Cookies.get('csrftoken');
 	}, valores, true, "/rest-auth/");
     
     
@@ -483,6 +489,7 @@ function login(form){
 	valores.password = form.pass.value;
 
 	post("login/", function(){
+		userCookie = Cookies.get('csrftoken');
 		loadApp();
 	}, valores, true, "/rest-auth/");
     
