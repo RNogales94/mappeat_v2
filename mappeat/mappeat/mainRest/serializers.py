@@ -10,15 +10,19 @@ from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.db.models import Max
 
-
-
 from django.contrib.auth.models import User
 
 # Serializers define the API representation.
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ('pk', 'username') # 'email' field can be added
+        fields = ('pk', 'username', 'password') # 'email' field can be added
+
+    def create(self, validated_data):
+        manager = Staff.objects.filter(user=self.context['request'].user)[0]
+        new_user = User.objects.create_user(**validated_data)
+        new_user.save()
+        return new_user
 
 # ViewSets define the view behavior.
 class UserViewSet(viewsets.ModelViewSet):
@@ -105,6 +109,7 @@ class StaffSerializer(serializers.ModelSerializer):
         restaurant = validated_data.pop('restaurant')
 
         new_staff = Staff.objects.create(restaurant = rest, **validated_data)
+        new_staff.save()
         return new_staff
 
     def update(self, instance, validated_data):
