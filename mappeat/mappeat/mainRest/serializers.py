@@ -70,6 +70,16 @@ class SupplySerializer(serializers.ModelSerializer):
     class Meta:
         model = Supply
         fields = "__all__"
+
+"""
+# @Debug
+    def create(self, validated_data):
+        print(validated_data)
+        return super().create()
+"""
+
+
+
 """
 # @DEPRECATED
 class Ref_Staff_RolSerializer(serializers.ModelSerializer):
@@ -90,7 +100,6 @@ class StaffSerializer(serializers.ModelSerializer):
         """
         Solo puede crearse personal asociado al restaurante del creador (manager)
         """
-
         manager = Staff.objects.filter(user=self.context['request'].user)[0]
         rest = manager.restaurant
         restaurant = validated_data.pop('restaurant')

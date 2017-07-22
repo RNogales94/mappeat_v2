@@ -15,12 +15,13 @@ Including another URLconf
 """
 from django.conf.urls import include, url
 from django.contrib import admin
+from . import views
+
+
 #from rest_framework.documentation import include_docs_urls #Default DOC
 from rest_framework_swagger.views import get_swagger_view
-
 schema_view = get_swagger_view(title='Mappeat Swagger API')
 
-from . import views
 
 app_name = 'mappeat'
 urlpatterns = [
@@ -32,5 +33,15 @@ urlpatterns = [
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     url(r'^dev/docs/', schema_view),
     url(r'^accounts_api/', include('registration_api.urls')),
-
 ]
+
+"""
+Seccion para herramienta de DEBUG:
+"""
+from django.conf import settings
+
+if settings.DEBUG:
+    import debug_toolbar
+    urlpatterns = [
+        url(r'^debug/', include(debug_toolbar.urls)),
+    ] + urlpatterns
