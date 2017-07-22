@@ -1,7 +1,12 @@
+var userCookie;
 var main;
 var familyWanted;
 var currentTable;
 var currentTableID;
+
+function recoverUser(){
+	Cookies.set('csrftoken', userCookie);
+}
 
 function loadSettings(){
 	main.innerHTML = `<div class="container-fluid">
@@ -13,27 +18,27 @@ function loadSettings(){
 		                      <button>Otros</button>
                             </div>
                        <div class="col-sm-10">
-		                  
+
 	                       <div class="well" id="content">
                            </div>
                           </div>
-                        
+
                     </div>`;
-    
+
 }
 
 function loadTables(){
      frame = document.getElementById('content');
      frame.innerHTML = `<h4> Mesas </h4>
                         <p>Mesa actual : ${currentTable} </p>
-                        
+
                         <div>
                             <label> Mesa </label> <button class='btn-success' onclick="addTable('M')">Añadir</button>
                             <label> Terraza </label> <button  class='btn-success' onclick="addTable('T')">Añadir</button>
                             <label> Barra </label> <button class='btn-success' onclick="addTable('B')">Añadir</button><br>
                             <button class='btn-danger' onclick="removeTable(${currentTable},${currentTableID})">Eliminar</button>
                         </div>
-                
+
                         <div >
                             <ul id="tableList">Cargando...</ul>
 	                    </div>`;
@@ -60,7 +65,7 @@ function addTable(type){
    valores.type_table=type;
    valores.is_avaible = true;
    valores.restaurant = 3;
-   
+
    post("tables/", function(){
 		loadTables();
 	}, valores, true);
@@ -69,7 +74,7 @@ function addTable(type){
 function removeTable(num,id){
      if (confirm('¿Esta seguro de borrar la mesa '+num+'?')){
        _delete("tables/"+id+"/",function(){loadTables();},true);
-    } 
+    }
     return false;
 }
 
@@ -112,7 +117,7 @@ function loadStaff(){
 
 function allowEditStaff(id_user){
     var rol = document.getElementById('rol'+id_user);
-    
+
     rol.innerHTML = '';
     rol.insertAdjacentHTML('beforeend',` <select id='role${id_user}'>
                                             <option value='M'>Manager</option>
@@ -120,13 +125,13 @@ function allowEditStaff(id_user){
                                             <option value='B'>Barman</option>
                                             <option value='K'>Cocinero</option>
                                 </select>`);
-    
+
     document.getElementById('first_name'+id_user).readOnly=false;
     document.getElementById('last_name'+id_user).readOnly=false;
     document.getElementById('is_active'+id_user).readOnly=false;
     document.getElementById('hourly_rate'+id_user).readOnly=false;
     document.getElementById('notes'+id_user).readOnly=false;
-    
+
     var button = document.getElementById('editButton'+id_user);
     button.innerHTML='';
     button.insertAdjacentHTML('beforeend',`<button class="btn-warning"  onclick='editStaff(${id_user})'>Editar</button>`);
@@ -134,7 +139,7 @@ function allowEditStaff(id_user){
 
 function editStaff(id_user){
     var valores = Object();
-    
+
     valores.first_name = document.getElementById('first_name'+id_user).value;
 	valores.last_name = document.getElementById('last_name'+id_user).value;
     valores.role_code =  document.getElementById('role'+id_user).value;;
@@ -142,7 +147,7 @@ function editStaff(id_user){
     valores.is_active =  document.getElementById('is_active'+id_user).checked;
     valores.notes = document.getElementById('notes'+id_user).value;
     valores.restaurant = 2;
-   
+
      put('staff/'+id_user+'/', function(){
 		loadStaff();
 	}, valores, true);
@@ -171,7 +176,7 @@ function showStaffForm(){
 				                                <label>Nombre Usuario</label> <input type='text' name="username"><br>
                                                 <label>Contraseña</label><input type='password' name="pass"><br>
                                                 <label>Repetir Contraseña</label><input type='password' name="passRepeated"><br>
-                                         
+
                                             <div class="modal-footer">
                                             <p>Nota:Estos datos deben ser facilitados al empleado para poder conectarse y podrán ser modificados.</p>
                                             <button type='submit' class='btn-success'>Continuar</button>
@@ -201,18 +206,18 @@ function showStaffForm(){
                                                 <label>Sueldo/hora</label><input type='text' placeholder='' name='hourly_rate'><br>
                                                 <label>Activo</label><input type='checkbox' name='is_active' checked><br>
                                                 <label>Anotaciones</label><input type='text' name='notes' placeholder='Notas'><br>
-                                               
+
                                             <div class="modal-footer">
                                                 <p>Nota:Estos datos podrán ser modificados en el futuro.</p>
                                                   <button type='submit' class='btn-success'>Finalizar</button>
-                                                </form>           
+                                                </form>
                                             </div>
 			                             </div></div></div></div>`);
 }
 
 function addStaff(form){
     var valores = Object();
-    
+
 	valores.first_name = form.first_name.value;
 	valores.last_name = form.last_name.value;
     valores.role_code = form.role.value;
@@ -221,8 +226,14 @@ function addStaff(form){
     valores.restaurant = 2;
     valores.user = form.user.value;
     valores.notes = form.notes.value;
-    
+<<<<<<< HEAD
+
        post("staff/", function(){
+=======
+    
+	post("staff/", function(){
+		recoverUser();
+>>>>>>> origin/master
 		loadStaff();
 	}, valores, true);
     	return false;
@@ -236,7 +247,7 @@ function loadRestaurant(){
         "use strict";
         let list = document.getElementById('restInfo');
         list.innerHTML = '';
-        
+
         for (let table of this.response){
 				list.insertAdjacentHTML('beforeend',`
                                                     <div class='row'><div class='col-md-6'><input type='hidden' id='id' value='${table.id}'>
@@ -261,7 +272,7 @@ function loadRestaurant(){
                                                         </div>`);
             initMap(table.lat,table.lng);
 			}
-         
+
     });
 }
 
@@ -280,10 +291,10 @@ function initMap(lat,long){
 
 function getLatLong(){
     var n = document.getElementById('number').value;
-    var street = document.getElementById('address').value.split(","); 
+    var street = document.getElementById('address').value.split(",");
     var city = document.getElementById('city').value;
     var prov = document.getElementById('province').value;
-    
+
     get(n+"+"+street+"+"+city+"+"+prov,function(){var coords = this.response.results[0].geometry.location;
                                                                      var lat = coords.lat;
                                                                      var lng = coords.lng;
@@ -296,8 +307,8 @@ function getLatLong(){
 function editRestaurant(id_rest){
     getLatLong();
     var n = document.getElementById('number').value;
-    var address = document.getElementById('address').value; 
-    
+    var address = document.getElementById('address').value;
+
     var valores = Object();
     valores.name = document.getElementById('name').value;
     valores.address = address;
@@ -306,7 +317,7 @@ function editRestaurant(id_rest){
     valores.city = document.getElementById('city').value;
     valores.province = document.getElementById('province').value;
     valores.owner = document.getElementById('owner').value;
-    
+
     put('restaurants/'+id_rest+'/', function(){initMap(valores.lat,valores.lng);}, valores);
 }
 
@@ -389,7 +400,7 @@ function loadTPV(){
 	</div>`;
 
 	familyWanted = '';
-    
+
 	get("families/", function(){
 			"use strict";
 			let list = document.getElementById('familiesList');
@@ -471,9 +482,10 @@ function register_whithoutEmail(form){
 		$('#modalUser1').modal('hide');
         $('#modalUser2').modal('show');
         get("users/?username="+form.username.value,function(){document.getElementById('user').value = (this.response[0].pk);});
+        userCookie = Cookies.get('csrftoken');
 	}, valores, true, "/rest-auth/");
-    
-    
+
+
 	return false;
 }
 
@@ -483,9 +495,10 @@ function login(form){
 	valores.password = form.pass.value;
 
 	post("login/", function(){
+		userCookie = Cookies.get('csrftoken');
 		loadApp();
 	}, valores, true, "/rest-auth/");
-    
+
     sessionStorage['username']= valores.username;
 	return false;
 }
@@ -503,20 +516,20 @@ function loadStore(){
                                     <th>Formato</th>
                                     <th>Código de barras</th>
                                     <th>Unidades</th>
-                                    
+
                                     <tbody id='storeList'></tbody>
                                     </table>
 	                               </div>
                               </div>
                         </div>
                      </div>`;
-    
+
     let list = document.getElementById('storeList');
     get('inventory/',function(){
                         'user strict';
-                       
+
                         list.innerHTML='';
-        
+
                         for(let table of this.response){
                             get('suplies/'+table.supply,function(){
                                 list.insertAdjacentHTML('beforeend',`<tr><td><button onclick='removeInventory(${table.id})' class="glyphicon glyphicon-remove btn-danger"></button></td><td>${this.response.name}</td><td>${this.response.mesure_unity}</td><td>${this.response.barcode}</td><td>${table.quantity}</td></tr>`);}
@@ -547,16 +560,16 @@ function newSupplyForm(){
                                                 <label>Cantidad</label><input type='number' name='quantity'>
                                             <div class="modal-footer">
                                             <button type='submit' class='btn-success'>Continuar</button>
-                                            </form>                                            
+                                            </form>
                                         </div>
-                                            
+
 
 			                             </div></div></div></div>`);
   fillFormats();
 }
 
 function fillFormats(){
-    
+
     get('mesureUnities/',function(){
         let list = document.getElementById('format');
         list.innerHTML='';
@@ -569,29 +582,32 @@ function fillFormats(){
 function addSupply(form){
     var valoresSupply = new Object();
     var valoresInventory = new Object();
-    
+
     valoresSupply.name = form.name.value;
     valoresSupply.is_storable = form.storable.checked;
     valoresSupply.barcode = form.barcode.value;
     valoresSupply.mesure_unity = form.mesure_unity.value;
     valoresSupply.category = 2; // La categoria 2 se corresponde a 'Articulo'
-    
+
     valoresInventory.quantity = form.quantity.value;
     valoresInventory.restaurant = 2;
     valoresInventory.available = true;
-        
+
+		console.log(valoresSupply);
+		console.log(valoresInventory);
+
     post("suplies/", function(){
         //obtengo el id del supply creado
 		valoresInventory.supply = JSON.parse(this.response)['id'];
 	}, valoresSupply, true);
-    
+
     post('inventory/',function(){ loadStore(); },valoresInventory,true);
-       
+
 }
 
 function removeInventory(id){
      if (confirm('Confirme el borrado')){
        _delete("inventory/"+id+"/",function(){loadStore();},true);
-    } 
+    }
     return false;
 }
