@@ -227,7 +227,8 @@ function addStaff(form){
     valores.user = form.user.value;
     valores.notes = form.notes.value;
     
-       post("staff/", function(){
+	post("staff/", function(){
+		recoverUser();
 		loadStaff();
 	}, valores, true);
     	return false;
