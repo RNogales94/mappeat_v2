@@ -167,7 +167,7 @@ function showStaffForm(){
 				                                    <h4 class="modal-title" id="myModalLabel">Usuario para el empleado:   (Paso 1 de 2)</h4>
 			                                     </div>
 			                                 <div class="modal-body">
-                                                <form onsubmit='return register_whithoutEmail(this);'>
+                                                <form onsubmit='return createUser(this);'>
 				                                <label>Nombre Usuario</label> <input type='text' name="username"><br>
                                                 <label>Contraseña</label><input type='password' name="pass"><br>
                                                 <label>Repetir Contraseña</label><input type='password' name="passRepeated"><br>
@@ -455,7 +455,7 @@ function register(form){
 	return false;
 }
 
-function register_whithoutEmail(form){
+function createUser(form){
 	if( form.pass.value != form.passRepeated.value ){
 		alert("Error: Las contraseñas deben coincidir.");
 		return false;
@@ -463,14 +463,13 @@ function register_whithoutEmail(form){
 
 	var valores = Object();
 	valores.username = form.username.value;
-	valores.password1 = form.pass.value;
-    valores.password2 = form.passRepeated.value;
+	valores.password = form.pass.value;
 
-	post("registration/", function(){
+	post("users/", function(){
 		$('#modalUser1').modal('hide');
-        $('#modalUser2').modal('show');
-        get("users/?username="+form.username.value,function(){document.getElementById('user').value = (this.response[0].pk);});
-	}, valores, true, "/rest-auth/");
+		$('#modalUser2').modal('show');
+		get("users/?username=" + form.username.value, function(){ document.getElementById('user').value = this.response[0].pk; });
+	}, valores);
 	
 	return false;
 }
