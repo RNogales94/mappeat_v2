@@ -40,6 +40,15 @@ class MesureUnitySerializer(serializers.ModelSerializer):
         model = Mesure_Unity
         fields = "__all__"
 
+class IVASerializer(serializers.ModelSerializer):
+    strTax = serializers.SerializerMethodField()
+
+    class Meta:
+        model = IVA
+        fields = ("name", "tax", "strTax")
+    def strTax(self, obj):
+        return obj.strTax()
+
 class OwnerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Owner
@@ -225,6 +234,10 @@ class MesureUnityViewSet(viewsets.ModelViewSet):
     queryset = Mesure_Unity.objects.all()
     serializer_class = MesureUnitySerializer
 
+class IVAViewSet(viewsets.ModelViewSet):
+    queryset = IVA.objects.all()
+    serializer_class = IVASerializer
+
 class OwnerViewSet(viewsets.ModelViewSet):
     queryset = Owner.objects.all()
     serializer_class = OwnerSerializer
@@ -342,6 +355,7 @@ class InventoryViewSet(viewsets.ModelViewSet):
 router = routers.DefaultRouter()
 router.register(r'users', UserViewSet)
 router.register(r'mesureUnities', MesureUnityViewSet)
+router.register(r'iva', IVAViewSet)
 router.register(r'owners', OwnerViewSet)
 router.register(r'restaurants', RestaurantViewSet)
 router.register(r'providers', ProviderViewSet)

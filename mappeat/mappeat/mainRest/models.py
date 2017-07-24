@@ -28,6 +28,9 @@ class IVA(models.Model):
     def __str__(self):
         return self.name
 
+    def strTax(self):
+        return str(self.tax)+"%"
+
 
 
 """
