@@ -326,6 +326,7 @@ class Ticket_DetailViewSet(viewsets.ModelViewSet):
 
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
+    filter_class = IngredientFilter
     serializer_class = IngredientSerializer
 
 class ServiceViewSet(viewsets.ModelViewSet):

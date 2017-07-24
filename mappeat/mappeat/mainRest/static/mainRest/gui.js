@@ -129,7 +129,7 @@ function allowEditStaff(id_user){
 
     var button = document.getElementById('editButton'+id_user);
     button.innerHTML='';
-    button.insertAdjacentHTML('beforeend',`<button class="btn-warning"  onclick='editStaff(${id_user})'>Editar</button>`);
+    button.insertAdjacentHTML('beforeend',`<button class="btn-warning"  onclick='editStaff(${id_user})'>Guardar</button>`);
 }
 
 function editStaff(id_user){
@@ -470,7 +470,7 @@ function createUser(form){
 		$('#modalUser2').modal('show');
 		get("users/?username=" + form.username.value, function(){ document.getElementById('user').value = this.response[0].pk; });
 	}, valores);
-	
+
 	return false;
 }
 

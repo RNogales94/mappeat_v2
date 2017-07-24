@@ -82,6 +82,7 @@ Los Supply (suministros) son las cosas que compra un cliente
 
 class Supply(models.Model):
     name = models.CharField(max_length=40)
+    size = models.FloatField(null=True)
     mesure_unity = models.ForeignKey(Mesure_Unity, null=True)
     is_storable = models.BooleanField(default=True)
     category = models.ForeignKey(Supply_Category, null = True)
@@ -337,6 +338,6 @@ class Inventory(models.Model):
     date = models.DateField(default=timezone.now().date(), db_index=True)
     restaurant = models.ForeignKey(Restaurant, db_index=True)
     supply = models.ForeignKey(Supply, null=True)
-    
+
     quantity = models.IntegerField(default=0)
     available = models.BooleanField(default=False) #Indica si está agotado o aún queda

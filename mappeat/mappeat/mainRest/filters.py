@@ -9,7 +9,6 @@ class UserFilter(django_filters.FilterSet):
         model = User
         fields = ('username',)
 
-
 class Product_ClassFilter(django_filters.FilterSet):
     """
     Atencion a las mayusculas en el nombre de la family
@@ -42,3 +41,9 @@ class TableFilter(django_filters.FilterSet):
     class Meta:
         model = Table
         fields = ('number', 'restaurant', 'type_table', 'is_available')
+
+class IngredientFilter(django_filters.FilterSet):
+
+    class Meta:
+        model = Ingredient
+        fields = ('product',)
