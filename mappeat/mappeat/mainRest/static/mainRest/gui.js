@@ -527,9 +527,8 @@ function loadStore(){
 
 function newSupplyForm(){
     let list = document.getElementById('storePanel');
-    list.innerHTML='';
     list.insertAdjacentHTML('beforeend',`
-                                        <div class="modal fade" id="modalStore" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal fade" id="modalStore" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	                                       <div class="modal-dialog" role="document">
 		                                      <div class="modal-content">
 			                                     <div class="modal-header">
@@ -547,7 +546,7 @@ function newSupplyForm(){
                                             <div class="modal-footer">
                                             <button type='submit' class='btn-success'>Continuar</button>
                                             </form>
-                                        </div>
+                                            </div>
 
 
 			                             </div></div></div></div>`);
@@ -560,7 +559,7 @@ function fillFormats(){
         let list = document.getElementById('format');
         list.innerHTML='';
         for(let format of this.response){
-            list.insertAdjacentHTML('beforeend',`<option value='1'>${format.name}</option>`);
+            list.insertAdjacentHTML('beforeend',`<option value='${format.id}'>${format.name}</option>`);
         }
     });
 }
@@ -579,15 +578,13 @@ function addSupply(form){
     valoresInventory.restaurant = 2;
     valoresInventory.available = true;
 
-		console.log(valoresSupply);
-		console.log(valoresInventory);
-
     post("suplies/", function(){
-        //obtengo el id del supply creado
 		valoresInventory.supply = JSON.parse(this.response)['id'];
+        post('inventory/',function(){ loadStore(); },valoresInventory,true);
+        $('#modalStore').modal('hide');
 	}, valoresSupply, true);
 
-    post('inventory/',function(){ loadStore(); },valoresInventory,true);
+    
 
 	return false;
 }
