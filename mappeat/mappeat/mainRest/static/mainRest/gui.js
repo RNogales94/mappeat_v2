@@ -600,7 +600,7 @@ function loadMenu(){
       main.innerHTML = `<div class="container-fluid">
                         <div class="col-sm-10">
 		                      <div class="well" id="content">
-                                  <h4> Menu </h4>
+                                  <h2> Menu </h2>
                                     <div id='menuPanel'>
                                     <table class='table'>
                                     <tbody id='menuList'></tbody>
@@ -609,4 +609,24 @@ function loadMenu(){
                               </div>
                         </div>
                      </div>`;
+     get('products/',function(){
+         'use strict';
+         let list = document.getElementById('menuList');
+         list.innerHTML = '';
+         
+         for (let product of this.response ){
+             console.log(product);
+             list.insertAdjacentHTML('beforeend',`<tr><h4>${product.name}</h4></tr>
+                                                  <tr>
+                                                      <td>ICON</td>
+                                                      <td><div class='well'>INGREDIENTES</div></td>
+                                                      <td><p class="bg-primary text-white">${product.price_with_tax}</p>
+                                                          <p class='bg-danger'>${product.iva_tax}</p>
+                                                          <p class='bg-success'></p>
+                                                      </td>
+                                                      <td><div class='well'>STATS</div></td>
+                                                      </tr>`);
+         }
+                        
+    });
 }
