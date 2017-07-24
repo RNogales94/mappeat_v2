@@ -97,14 +97,16 @@ function loadStaff(){
 			for (let table of this.response){
 				list.insertAdjacentHTML('beforeend', `<tr>
                                                         <td><button onclick='removeStaff(${table.id})' id='staffInput' class="glyphicon glyphicon-remove btn-danger"></button></td>
-                                                        <td><input type='text' class="form-control" name='first_name' id='first_name${table.id}' value=${table.first_name} readonly>
-                                                        <input type='text' class="form-control" name='last_name' id='last_name${table.id}' value=${table.last_name} readonly></td>
+                                                        <td><input type='text' class="form-control" name='first_name' id='first_name${table.id}' value='${table.first_name}' readonly>
+                                                        <input type='text' class="form-control" name='last_name' id='last_name${table.id}' value='${table.last_name}' readonly></td>
                                                         <td><p id='rol${table.id}'>${table.role_code}</p></td>
                                                         <td><input type='text'  class="form-control-addon"  id='hourly_rate${table.id}' name='hourly_rate' value=${table.hourly_rate} readonly>
-                                                        <td><input type='checkbox' readonly name='is_active${table.id}'  id='is_active${table.id}'  class="form-control" checked=${table.is_active}></td>
-                                                        <td><input type='text'  readonly  class="form-control-addon" id='notes${table.id}' name='notes' value=${table.notes}></td>
+                                                        <td><input type='checkbox' readonly name='is_active${table.id}'  id='is_active${table.id}'  class="form-control"></td>
+                                                        <td><input type='text'  readonly  class="form-control-addon" id='notes${table.id}' name='notes' value='${table.notes}'></td>
                                                         <td id='editButton${table.id}'><button class="glyphicon glyphicon-pencil btn-warning" onclick='allowEditStaff(${table.id})'></button></td>
                                                        </tr>`);
+                
+                document.getElementById('is_active'+table.id).checked=table.is_active;
 			}
           list.insertAdjacentHTML('beforeend',`<tr><td><button onclick='showStaffForm()' class="glyphicon glyphicon-plus btn-success" data-toggle="modal" data-target="#modalUser1"></button></td></tr></table>`);
 	});
