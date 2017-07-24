@@ -45,7 +45,7 @@ class IVASerializer(serializers.ModelSerializer):
 
     class Meta:
         model = IVA
-        fields = ("name", "tax", "strTax")
+        fields = ("id", "name", "tax", "strTax")
     def strTax(self, obj):
         return obj.strTax()
 
@@ -189,7 +189,14 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = "__all__"
-
+        
+    def create(self, validated_data):
+        manager = Staff.objects.filter(user=self.context['request'].user)[0]
+        rest = manager.restaurant
+        restaurant = validated_data.pop('restaurant')
+        new_item = Product.objects.create(restaurant = rest, **validated_data)
+        return new_item
+    
 class Ticket_ResumeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket_Resume
@@ -219,8 +226,6 @@ class InventorySerializer(serializers.ModelSerializer):
         manager = Staff.objects.filter(user=self.context['request'].user)[0]
         rest = manager.restaurant
         restaurant = validated_data.pop('restaurant')
-        print(rest)
-        print(validated_data)
         new_item = Inventory.objects.create(restaurant = rest, **validated_data)
         return new_item
 """"

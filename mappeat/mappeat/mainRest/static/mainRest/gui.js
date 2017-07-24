@@ -603,6 +603,7 @@ function loadMenu(){
                                   <h2> Menu </h2>
                                     <div id='menuPanel'>
                                     <table class='table'>
+                                    <thead></thead>
                                     <tbody id='menuList'></tbody>
                                     </table>
 	                               </div>
@@ -615,18 +616,98 @@ function loadMenu(){
          list.innerHTML = '';
          
          for (let product of this.response ){
-             console.log(product);
-             list.insertAdjacentHTML('beforeend',`<tr><h4>${product.name}</h4></tr>
+             get ('iva/'+product.iva_tax,function(){
+                            list.insertAdjacentHTML('beforeend',`<tr><td><h4>${product.name}</h4></td><td> <a href=''>Editar</a></td></tr>
                                                   <tr>
-                                                      <td>ICON</td>
-                                                      <td><div class='well'>INGREDIENTES</div></td>
-                                                      <td><p class="bg-primary text-white">${product.price_with_tax}</p>
-                                                          <p class='bg-danger'>${product.iva_tax}</p>
-                                                          <p class='bg-success'></p>
+                                                      <td><img src='' alt='icono${product.icon}'></td>
+                                                      <td><div class='well' id='ingredients${product.product}'></div></td>
+                                                      <td><p class="bg-primary text-white">${product.price_with_tax}€</p>
+                                                          <p class='bg-danger'>${this.response.strTax}</p>
+                                                          <p class='bg-success'>${product.price_as_complement_with_tax}€</p>
                                                       </td>
                                                       <td><div class='well'>STATS</div></td>
                                                       </tr>`);
-         }
-                        
+                
+                            getIngredients(product.product);    
+             })
+           }
+         list.insertAdjacentHTML('afterend',`<tr><td><button onclick='showProductForm()' class="glyphicon glyphicon-plus btn-success" data-toggle="modal" data-target="#modalMenu"></button></td></tr></table>`);           
     });
 }
+
+function getIngredients(product){
+    let frame = document.getElementById('ingredients'+product);
+    frame.innerHTML = '';
+    get('ingredients/?product='+product,function(){
+        frame.insertAdjacentHTML('beforeend',`<ul>`);
+        for (let ingredient of this.response){
+            get('suplies/'+ingredient.supply, function(){  frame.insertAdjacentHTML('beforeend',`<li></li>`);});
+        }
+        frame.insertAdjacentHTML('beforeend',`</ul>`);
+    });
+}
+
+function showProductForm(){
+    let list = document.getElementById('menuPanel');
+    list.insertAdjacentHTML('beforeend',`
+                                        <div class="modal fade" id="modalMenu" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	                                       <div class="modal-dialog" role="document">
+		                                      <div class="modal-content">
+			                                     <div class="modal-header">
+				                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					                               <span aria-hidden="true">&times;</span></button>
+				                                    <h4 class="modal-title" id="myModalLabel">Registrar Nuevo Producto</h4>
+			                                     </div>
+			                                 <div class="modal-body">
+                                                <form onsubmit='return addProduct(this);'>
+				                                    <label>Nombre</label><input type='text' class='form-group' name='name'><br>
+                                                    <label>Precio con IVA</label><input type='number' min='0.0' step="0.01"  class='form-group' name='price_with_tax'><br>
+                                                    <label>Precio</label><input type='number'  class='form-group' min='0.0' step="0.01" name='price'><br>
+                                                    <label>IVA</label><select  class='form-group' name='tax' id='iva_select'></select><br>
+                                                    <label>Principal</label><input type='checkbox'  class='form-group' name='principal'><br>
+                                                    <label>Complemento</label><input type='checkbox'  class='form-group' name='can_be_complement'><br>
+                                                    <label>Producto</label><select class='form-group' name='product' id='product_select'></select><br>
+                                            <div class="modal-footer">
+                                            <button type='submit' class='btn-success'>Continuar</button>
+                                            </form>
+                                            </div>
+			                             </div></div></div></div>`);
+    
+    get('iva/',function(){
+        let list = document.getElementById('iva_select');
+        list.innerHTML = '';
+        for(let item of this.response){
+            list.insertAdjacentHTML('beforeend',`<option value=${item.id}>${item.name}</option>`);
+        }
+    });
+    
+    get('product_classes/',function(){
+        let list = document.getElementById('product_select');
+        list.innerHTML = '';
+         for(let item of this.response){
+            list.insertAdjacentHTML('beforeend',`<option value=${item.id}>${item.name}</option>`);
+        }
+    });
+}
+
+function addProduct(form){
+    var valores = new Object();
+    valores.restaurant = 2 ;
+    valores.name = form.name.value;
+    valores.price_with_tax = form.price_with_tax.value;
+    valores.price = form.price.value;
+    valores.iva_tax = form.tax.value;
+    valores.principal = form.principal.checked;
+    valores.can_be_complement = form.can_be_complement.checked;
+    valores.product = form.product.value;
+    
+    console.log(valores);
+    
+    post('products/',function(){$('#modalMenu').modal('hide');
+                                loadMenu();},
+                            valores,true);
+    
+    return false;
+}
+       
+        
