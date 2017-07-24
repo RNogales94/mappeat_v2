@@ -97,14 +97,16 @@ function loadStaff(){
 			for (let table of this.response){
 				list.insertAdjacentHTML('beforeend', `<tr>
                                                         <td><button onclick='removeStaff(${table.id})' id='staffInput' class="glyphicon glyphicon-remove btn-danger"></button></td>
-                                                        <td><input type='text' class="form-control" name='first_name' id='first_name${table.id}' value=${table.first_name} readonly>
-                                                        <input type='text' class="form-control" name='last_name' id='last_name${table.id}' value=${table.last_name} readonly></td>
+                                                        <td><input type='text' class="form-control" name='first_name' id='first_name${table.id}' value='${table.first_name}' readonly>
+                                                        <input type='text' class="form-control" name='last_name' id='last_name${table.id}' value='${table.last_name}' readonly></td>
                                                         <td><p id='rol${table.id}'>${table.role_code}</p></td>
                                                         <td><input type='text'  class="form-control-addon"  id='hourly_rate${table.id}' name='hourly_rate' value=${table.hourly_rate} readonly>
-                                                        <td><input type='checkbox' readonly name='is_active${table.id}'  id='is_active${table.id}'  class="form-control" checked=${table.is_active}></td>
-                                                        <td><input type='text'  readonly  class="form-control-addon" id='notes${table.id}' name='notes' value=${table.notes}></td>
+                                                        <td><input type='checkbox' readonly name='is_active${table.id}'  id='is_active${table.id}'  class="form-control"></td>
+                                                        <td><input type='text'  readonly  class="form-control-addon" id='notes${table.id}' name='notes' value='${table.notes}'></td>
                                                         <td id='editButton${table.id}'><button class="glyphicon glyphicon-pencil btn-warning" onclick='allowEditStaff(${table.id})'></button></td>
                                                        </tr>`);
+                
+                document.getElementById('is_active'+table.id).checked=table.is_active;
 			}
           list.insertAdjacentHTML('beforeend',`<tr><td><button onclick='showStaffForm()' class="glyphicon glyphicon-plus btn-success" data-toggle="modal" data-target="#modalUser1"></button></td></tr></table>`);
 	});
@@ -421,7 +423,7 @@ function loadApp(){
 		</div>
 			<div class="navbar-collapse collapse navbar-right ">
 				<button onclick="loadStore()">Almacén</button>
-				<button>Menú</button>
+				<button onclick="loadMenu()">Menú</button>
 				<button onclick="loadTPV()">TPV</button>
 				<button>Informes</button>
 				<button onclick="loadSettings()">Ajustes</button>
@@ -525,9 +527,8 @@ function loadStore(){
 
 function newSupplyForm(){
     let list = document.getElementById('storePanel');
-    list.innerHTML='';
     list.insertAdjacentHTML('beforeend',`
-                                        <div class="modal fade" id="modalStore" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal fade" id="modalStore" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	                                       <div class="modal-dialog" role="document">
 		                                      <div class="modal-content">
 			                                     <div class="modal-header">
@@ -545,7 +546,7 @@ function newSupplyForm(){
                                             <div class="modal-footer">
                                             <button type='submit' class='btn-success'>Continuar</button>
                                             </form>
-                                        </div>
+                                            </div>
 
 
 			                             </div></div></div></div>`);
@@ -558,7 +559,7 @@ function fillFormats(){
         let list = document.getElementById('format');
         list.innerHTML='';
         for(let format of this.response){
-            list.insertAdjacentHTML('beforeend',`<option value='1'>${format.name}</option>`);
+            list.insertAdjacentHTML('beforeend',`<option value='${format.id}'>${format.name}</option>`);
         }
     });
 }
@@ -577,15 +578,13 @@ function addSupply(form){
     valoresInventory.restaurant = 2;
     valoresInventory.available = true;
 
-		console.log(valoresSupply);
-		console.log(valoresInventory);
-
     post("suplies/", function(){
-        //obtengo el id del supply creado
 		valoresInventory.supply = JSON.parse(this.response)['id'];
+        post('inventory/',function(){ loadStore(); },valoresInventory,true);
+        $('#modalStore').modal('hide');
 	}, valoresSupply, true);
 
-    post('inventory/',function(){ loadStore(); },valoresInventory,true);
+    
 
 	return false;
 }
@@ -595,4 +594,39 @@ function removeInventory(id){
        _delete("inventory/"+id+"/",function(){loadStore();},true);
     }
     return false;
+}
+
+function loadMenu(){
+      main.innerHTML = `<div class="container-fluid">
+                        <div class="col-sm-10">
+		                      <div class="well" id="content">
+                                  <h2> Menu </h2>
+                                    <div id='menuPanel'>
+                                    <table class='table'>
+                                    <tbody id='menuList'></tbody>
+                                    </table>
+	                               </div>
+                              </div>
+                        </div>
+                     </div>`;
+     get('products/',function(){
+         'use strict';
+         let list = document.getElementById('menuList');
+         list.innerHTML = '';
+         
+         for (let product of this.response ){
+             console.log(product);
+             list.insertAdjacentHTML('beforeend',`<tr><h4>${product.name}</h4></tr>
+                                                  <tr>
+                                                      <td>ICON</td>
+                                                      <td><div class='well'>INGREDIENTES</div></td>
+                                                      <td><p class="bg-primary text-white">${product.price_with_tax}</p>
+                                                          <p class='bg-danger'>${product.iva_tax}</p>
+                                                          <p class='bg-success'></p>
+                                                      </td>
+                                                      <td><div class='well'>STATS</div></td>
+                                                      </tr>`);
+         }
+                        
+    });
 }
