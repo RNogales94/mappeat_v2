@@ -423,7 +423,7 @@ function loadApp(){
 		</div>
 			<div class="navbar-collapse collapse navbar-right ">
 				<button onclick="loadStore()">Almacén</button>
-				<button>Menú</button>
+				<button onclick="loadMenu()">Menú</button>
 				<button onclick="loadTPV()">TPV</button>
 				<button>Informes</button>
 				<button onclick="loadSettings()">Ajustes</button>
@@ -594,4 +594,19 @@ function removeInventory(id){
        _delete("inventory/"+id+"/",function(){loadStore();},true);
     }
     return false;
+}
+
+function loadMenu(){
+      main.innerHTML = `<div class="container-fluid">
+                        <div class="col-sm-10">
+		                      <div class="well" id="content">
+                                  <h4> Menu </h4>
+                                    <div id='menuPanel'>
+                                    <table class='table'>
+                                    <tbody id='menuList'></tbody>
+                                    </table>
+	                               </div>
+                              </div>
+                        </div>
+                     </div>`;
 }
