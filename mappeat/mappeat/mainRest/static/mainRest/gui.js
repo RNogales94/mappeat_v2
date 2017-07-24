@@ -617,9 +617,9 @@ function loadMenu(){
          
          for (let product of this.response ){
              get ('iva/'+product.iva_tax,function(){
-                            list.insertAdjacentHTML('beforeend',`<tr><td><h4>${product.name}</h4></td><td> <a href=''>Editar</a></td></tr>
+                            list.insertAdjacentHTML('beforeend',`<tr><td class="active"><h4>${product.name}</h4></td><td> <a onclick='editProduct(${product})'>Editar</a></td><td><button onclick='removeProduct(${product.id})' class="glyphicon glyphicon-remove btn-danger"></button></td></tr>
                                                   <tr>
-                                                      <td><img src='' alt='icono${product.icon}'></td>
+                                                      <td><img class="img-rounded" src='' alt='icono${product.icon}'></td>
                                                       <td><div class='well' id='ingredients${product.product}'></div></td>
                                                       <td><p class="bg-primary text-white">${product.price_with_tax}€</p>
                                                           <p class='bg-danger'>${this.response.strTax}</p>
@@ -707,6 +707,13 @@ function addProduct(form){
                                 loadMenu();},
                             valores,true);
     
+    return false;
+}
+
+function removeProduct(product){
+    if (confirm('¿Desea borrar el producto?')){
+       _delete("products/"+product+"/",function(){loadMenu();},true);
+    }
     return false;
 }
        
