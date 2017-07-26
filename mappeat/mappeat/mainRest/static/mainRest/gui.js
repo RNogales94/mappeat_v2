@@ -620,7 +620,7 @@ function loadMenu(){
                             list.insertAdjacentHTML('beforeend',`<tr><td class="active"><h4>${product.name}</h4></td><td> <a onclick='editProduct(${product})'>Editar</a></td><td><button onclick='removeProduct(${product.id})' class="glyphicon glyphicon-remove btn-danger"></button></td></tr>
                                                   <tr>
                                                       <td><img class="img-rounded" src='' alt='icono${product.icon}'></td>
-                                                      <td><div class='well' id='ingredients${product.product}'></div></td>
+                                                      <td><div class='well' id='ingredients${product.id}'></div></td>
                                                       <td><p class="bg-primary text-white">${product.price_with_tax}€</p>
                                                           <p class='bg-danger'>${this.response.strTax}</p>
                                                           <p class='bg-success'>${product.price_as_complement_with_tax}€</p>
@@ -628,7 +628,7 @@ function loadMenu(){
                                                       <td><div class='well'>STATS</div></td>
                                                       </tr>`);
                 
-                            getIngredients(product.product);    
+                            getIngredients(product.id);    
              })
            }
          list.insertAdjacentHTML('afterend',`<tr><td><button onclick='showProductForm()' class="glyphicon glyphicon-plus btn-success" data-toggle="modal" data-target="#modalMenu"></button></td></tr></table>`);           
@@ -641,13 +641,13 @@ function getIngredients(product){
     get('ingredients/?product='+product,function(){
         frame.insertAdjacentHTML('beforeend',`<ul>`);
         for (let ingredient of this.response){
-            get('suplies/'+ingredient.supply, function(){  frame.insertAdjacentHTML('beforeend',`<li></li>`);});
+            get('suplies/'+ingredient.supply, function(){  frame.insertAdjacentHTML('beforeend',`<li>${this.response.name}</li>`);});
         }
         frame.insertAdjacentHTML('beforeend',`</ul>`);
     });
 }
 
-function showProductForm(){
+function showProductForm(product=null){
     let list = document.getElementById('menuPanel');
     list.insertAdjacentHTML('beforeend',`
                                         <div class="modal fade" id="modalMenu" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
@@ -662,7 +662,7 @@ function showProductForm(){
                                                 <form onsubmit='return addProduct(this);'>
 				                                    <label>Nombre</label><input type='text' class='form-group' name='name'><br>
                                                     <label>Precio con IVA</label><input type='number' min='0.0' step="0.01"  class='form-group' name='price_with_tax'><br>
-                                                    <label>Precio</label><input type='number'  class='form-group' min='0.0' step="0.01" name='price'><br>
+                                                    <label>Precio con complemento</label><input type='number'  class='form-group' min='0.0' step="0.01" name='price'><br>
                                                     <label>IVA</label><select  class='form-group' name='tax' id='iva_select'></select><br>
                                                     <label>Principal</label><input type='checkbox'  class='form-group' name='principal'><br>
                                                     <label>Complemento</label><input type='checkbox'  class='form-group' name='can_be_complement'><br>
@@ -695,7 +695,7 @@ function addProduct(form){
     valores.restaurant = 2 ;
     valores.name = form.name.value;
     valores.price_with_tax = form.price_with_tax.value;
-    valores.price = form.price.value;
+    valores.price_as_complement_with_tax = form.price.value;
     valores.iva_tax = form.tax.value;
     valores.principal = form.principal.checked;
     valores.can_be_complement = form.can_be_complement.checked;
@@ -716,5 +716,4 @@ function removeProduct(product){
     }
     return false;
 }
-       
-        
+
