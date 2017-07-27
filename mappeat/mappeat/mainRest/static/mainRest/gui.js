@@ -494,7 +494,7 @@ function loadStore(){
                         <div class="col-sm-10">
 		                      <div class="well" id="content">
                                   <h4> Almacen </h4>
-                                  <div id='storePanel'>
+                                  <div id='panel'>
                                     <table class='table'>
                                     <thead>
                                     <th></th>
@@ -526,7 +526,8 @@ function loadStore(){
 }
 
 function newSupplyForm(){
-    let list = document.getElementById('storePanel');
+    $('#modalIngredient').modal('hide');
+    let list = document.getElementById('panel');
     list.insertAdjacentHTML('beforeend',`
                                         <div class="modal fade" id="modalStore" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	                                       <div class="modal-dialog" role="document">
@@ -573,14 +574,17 @@ function addSupply(form){
     valoresSupply.barcode = form.barcode.value;
     valoresSupply.mesure_unity = form.mesure_unity.value;
     valoresSupply.category = 2; // La categoria 2 se corresponde a 'Articulo'
-
+    
     valoresInventory.quantity = form.quantity.value;
     valoresInventory.restaurant = 2;
     valoresInventory.available = true;
 
     post("suplies/", function(){
 		valoresInventory.supply = JSON.parse(this.response)['id'];
-        post('inventory/',function(){ loadStore(); },valoresInventory,true);
+        // is_storable indica si queremos almacenarlo en Inventory
+        if (valoresSupply.is_storable){
+            post('inventory/',function(){ loadStore(); },valoresInventory,true);
+        }
         $('#modalStore').modal('hide');
 	}, valoresSupply, true);
 
@@ -601,7 +605,7 @@ function loadMenu(){
                         <div class="col-sm-10">
 		                      <div class="well" id="content">
                                   <h2> Menu </h2>
-                                    <div id='menuPanel'>
+                                    <div id='panel'>
                                     <table class='table'>
                                     <thead></thead>
                                     <tbody id='menuList'></tbody>
@@ -617,19 +621,13 @@ function loadMenu(){
          
          for (let product of this.response ){
              get ('iva/'+product.iva_tax,function(){
-                            list.insertAdjacentHTML('beforeend',`<tr><td class="active"><h4>${product.name}</h4></td><td> <a onclick='editProduct(${product})'>Editar</a></td><td><button onclick='removeProduct(${product.id})' class="glyphicon glyphicon-remove btn-danger"></button></td></tr>
-                                                  <tr>
-                                                      <td><img class="img-rounded" src='' alt='icono${product.icon}'></td>
-                                                      <td><div class='well' id='ingredients${product.id}'></div></td>
-                                                      <td><p class="bg-primary text-white">${product.price_with_tax}€</p>
-                                                          <p class='bg-danger'>${this.response.strTax}</p>
-                                                          <p class='bg-success'>${product.price_as_complement_with_tax}€</p>
-                                                      </td>
-                                                      <td><div class='well'>STATS</div></td>
+                        list.insertAdjacentHTML('beforeend',`<tr><td class="active"><h4>${product.name}</h4></td><td> <a onclick='editProductForm(${product.id})' data-toggle="modal" data-target="#modalEditProduct" >Editar</a></td><td><button onclick="removeProduct(${product.id})" class="glyphicon glyphicon-remove btn-danger"></button></td></tr><tr><td><img class="img-rounded" src='' alt='icono${product.icon}'></td><td><div class='well' id='ingredients${product.id}'></div></td><td><p class="bg-primary text-white">${product.price_with_tax}€</p><p class='bg-danger'>${this.response.strTax}</p><p class='bg-success'>${product.price_as_complement_with_tax}€</p></td>
+                        <td><div class='well'>STATS</div></td>
                                                       </tr>`);
                 
-                            getIngredients(product.id);    
-             })
+                            getIngredients(product.id);  
+    });
+             
            }
          list.insertAdjacentHTML('afterend',`<tr><td><button onclick='showProductForm()' class="glyphicon glyphicon-plus btn-success" data-toggle="modal" data-target="#modalMenu"></button></td></tr></table>`);           
     });
@@ -639,16 +637,17 @@ function getIngredients(product){
     let frame = document.getElementById('ingredients'+product);
     frame.innerHTML = '';
     get('ingredients/?product='+product,function(){
-        frame.insertAdjacentHTML('beforeend',`<ul>`);
+        frame.insertAdjacentHTML('beforeend',`<ul class="list-group">`);
         for (let ingredient of this.response){
-            get('suplies/'+ingredient.supply, function(){  frame.insertAdjacentHTML('beforeend',`<li>${this.response.name}</li>`);});
+            get('suplies/'+ingredient.supply, function(){  frame.insertAdjacentHTML('beforeend',`<li class="list-group-item"><span class='glyphicon glyphicon-minus' onclick='removeIngredient(${ingredient.id})'></span>   ${this.response.name}</li>`);});
         }
-        frame.insertAdjacentHTML('beforeend',`</ul>`);
+        frame.insertAdjacentHTML('afterend',`</ul><span onclick='newIngredient(${product})' data-toggle="modal" data-target="#modalIngredient" class="glyphicon glyphicon-plus  pull-right"></span>`);
+
     });
 }
 
-function showProductForm(product=null){
-    let list = document.getElementById('menuPanel');
+function showProductForm(){
+    let list = document.getElementById('panel');
     list.insertAdjacentHTML('beforeend',`
                                         <div class="modal fade" id="modalMenu" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
 	                                       <div class="modal-dialog" role="document">
@@ -701,8 +700,6 @@ function addProduct(form){
     valores.can_be_complement = form.can_be_complement.checked;
     valores.product = form.product.value;
     
-    console.log(valores);
-    
     post('products/',function(){$('#modalMenu').modal('hide');
                                 loadMenu();},
                             valores,true);
@@ -717,3 +714,125 @@ function removeProduct(product){
     return false;
 }
 
+function newIngredient(product){
+    let frame = document.getElementById('panel');
+    frame.insertAdjacentHTML('beforeend',`
+                                        <div class="modal fade" id="modalIngredient" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	                                       <div class="modal-dialog" role="document">
+		                                      <div class="modal-content">
+			                                     <div class="modal-header">
+				                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					                               <span aria-hidden="true">&times;</span></button>
+				                                    <h4 class="modal-title" id="myModalLabel">Añadir Ingrediente</h4>
+			                                     </div>
+			                                 <div class="modal-body">
+                                                <form onsubmit='return addIngredient(this)'>
+                                                    <label>Cantidad</label><input type='number' min='0.0' class='form-group' name='quantity'><br>
+                                                    <label>Suministro</label><select  class='form-group' name='supply' id='supply_select'></select>
+                                                    <span class='btn btn-primary pull-right' onclick='newSupplyForm()' data-toggle="modal" data-target="#modalStore">Nuevo Suministro</span>
+                                                    <input type='hidden' value=${product} name='product'>
+                                                   
+                                            <div class="modal-footer">
+                                            <button type='submit' class='btn-success'>Continuar</button>
+                                            </form>
+                                            </div>
+			                             </div></div></div></div>`);
+    
+    get('suplies/',function(){
+        let list = document.getElementById('supply_select');
+        list.innerHTML = '';
+        for(let item of this.response){
+            list.insertAdjacentHTML('beforeend',`<option value=${item.id}>${item.name}</option>`);
+        }
+    });
+    
+}
+
+function addIngredient(form){
+    var valores = new Object();
+    valores.product = form.product.value;
+    valores.supply = form.supply.value;
+    valores.quantity = form.quantity.value;
+    
+    post('ingredients/',function(){$('#modalIngredient').modal('hide');
+                                    loadMenu();}
+                                    ,valores,true);
+    return false;
+}
+
+function removeIngredient(id){
+   if (confirm('Confirme el borrado')){
+       _delete("ingredients/"+id+"/",function(){loadMenu();},true);
+    }
+    return false;
+} 
+
+function editProductForm(product){
+    get('products/'+product,function(){
+        let list = document.getElementById('panel');
+    list.insertAdjacentHTML('beforeend',`
+                                        <div class="modal fade" id="modalEditProduct" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+	                                       <div class="modal-dialog" role="document">
+		                                      <div class="modal-content">
+			                                     <div class="modal-header">
+				                                   <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					                               <span aria-hidden="true">&times;</span></button>
+				                                    <h4 class="modal-title" id="myModalLabel">Editar Producto</h4>
+			                                     </div>
+			                                 <div class="modal-body">
+                                                <form onsubmit='return editProduct(this);'>
+                                                    <input type='hidden' name='id' value='${product}'>
+                                                    <input type='hidden' name='restaurant' value='${this.response.restaurant}'>
+				                                    <label>Nombre</label><input type='text' class='form-group' value='${this.response.name}' name='name'><br>
+                                                    <label>Precio con IVA</label><input type='number' min='0.0' step="0.01"  class='form-group' name='price_with_tax' value='${this.response.price_with_tax}' ><br>
+                                                    <label>Precio con complemento</label><input type='number'  class='form-group' min='0.0' step="0.01" name='price' value='${this.response.price_as_complement_with_tax}'><br>
+                                                    <label>IVA</label><select  class='form-group' name='tax' id='iva_select'></select><br>
+                                                    <label>Principal</label><input type='checkbox'  class='form-group' id='principal' name='principal'><br>
+                                                    <label>Complemento</label><input type='checkbox'  class='form-group' id='complement' name='can_be_complement'><br>
+                                                    <label>Producto</label><select class='form-group' name='product' id='product_select'></select><br>
+                                            <div class="modal-footer">
+                                            <button type='submit' class='btn-success'>Continuar</button>
+                                            </form>
+                                            </div>
+			                             </div></div></div></div>`);
+       document.getElementById('principal').checked = this.response.principal;
+       document.getElementById('complement').checked = this.response.can_be_completent;
+    
+    get('iva/',function(){
+        let list = document.getElementById('iva_select');
+        list.innerHTML = '';
+        for(let item of this.response){
+            list.insertAdjacentHTML('beforeend',`<option value=${item.id}>${item.name}</option>`);
+        }
+    });
+    
+    get('product_classes/',function(){
+        let list = document.getElementById('product_select');
+        list.innerHTML = '';
+         for(let item of this.response){
+            list.insertAdjacentHTML('beforeend',`<option value=${item.id}>${item.name}</option>`);
+        }
+    });
+    })
+    
+}
+
+function editProduct(form){
+    var valores = new Object();
+    
+    valores.restaurant = form.restaurant.value;
+    valores.name = form.name.value;
+    valores.price_with_tax = form.price_with_tax.value;
+    valores.price_as_complement_with_tax = form.price.value;
+    valores.iva_tax = form.tax.value;
+    valores.principal = form.principal.checked;
+    valores.can_be_complement = form.can_be_complement.checked;
+    valores.product = form.product.value;
+    
+      put('products/'+form.id.value+'/', function(){
+        $('#modalEditProduct').modal('hide');
+		loadMenu();
+	}, valores, true);
+    
+    return false;
+}
