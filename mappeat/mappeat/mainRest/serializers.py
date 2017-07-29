@@ -210,10 +210,18 @@ class Ticket_ResumeSerializer(serializers.ModelSerializer):
         staff = Staff.objects.filter(user=self.request.user)
         return self.queryset.filter(pk=staff[0].restaurant.pk)
 
+
+
 class Ticket_DetailSerializer(serializers.ModelSerializer):
+    product_name = serializers.SerializerMethodField()
+
     class Meta:
         model = Ticket_Detail
-        fields = "__all__"
+        fields = ('ticket', 'product', 'product_name', 'isComplement', 'quantity',\
+                    'price', 'time')
+
+    def product_name(self,obj):
+        return obj.product_name()
 
 class TicketSerializer(serializers.ModelSerializer):
     details = serializers.SerializerMethodField()
@@ -394,8 +402,6 @@ class TicketViewSet(viewsets.ModelViewSet):
         """
         staff = Staff.objects.filter(user=self.request.user)
         return self.queryset.filter(restaurant=staff[0].restaurant.pk)
-
-
 
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()

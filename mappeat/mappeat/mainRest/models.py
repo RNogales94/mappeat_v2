@@ -282,20 +282,23 @@ class Ticket_Detail(models.Model):
     isComplement = models.BooleanField(default=False)
     quantity = models.IntegerField()
     price = models.FloatField(default = 0)
-    time_of_meal = models.TimeField(default = timezone.now().time())
+    time = models.TimeField(default = timezone.now().time())
 
     def save(self, *args, **kwargs):
         #Actualiza el precio de la cuenta total:
-        self.ticket.cost_of_meal = self.ticket.cost_of_meal + self.price
+        self.ticket.cost = self.ticket.cost + self.price
         super(Ticket_Resume, self.ticket).save()
         super(Ticket_Detail, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         #Actualiza el precio de la cuenta total:
-        print("Hola, aqui borro: ", self.ticket.cost_of_meal, " - ", self.price)
-        self.ticket.cost_of_meal = self.ticket.cost_of_meal - self.price
+        print("Hola, aqui borro: ", self.ticket.cost, " - ", self.price)
+        self.ticket.cost = self.ticket.cost - self.price
         super(Ticket_Resume, self.ticket).save()
         super(Ticket_Detail, self).delete(*args, **kwargs)
+
+    def product_name(self):
+        return str(self.product.name)
 
     def __str__(self):
         return self.product.name + "  × " + str(self.quantity) +": ------  "+ str(self.price) + "€"
