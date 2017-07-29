@@ -254,12 +254,12 @@ class Product_Family(models.Model):
 
 class Ticket_Resume(models.Model):
     restaurant = models.ForeignKey(Restaurant, db_index=True)
-    table_id = models.ForeignKey(Table)
-    staff_id = models.ForeignKey(Staff)
-    date_of_meal = models.DateField(db_index=True, default=timezone.now())
-    time_of_meal = models.TimeField(db_index=True, default = timezone.now().time())
-    cost_of_meal = models.FloatField(default = 0)
-    is_closed = models.BooleanField(default = False)
+    table = models.ForeignKey(Table)
+    staff = models.ForeignKey(Staff)
+    date = models.DateField(db_index=True, default=timezone.now())
+    time = models.TimeField(db_index=True, default = timezone.now().time())
+    cost = models.FloatField(default = 0)
+    is_closed = models.BooleanField(default = False, db_index=True)
 
     #NO TESTEADO
     def close_ticket(self):
@@ -267,7 +267,7 @@ class Ticket_Resume(models.Model):
         self.save()
 
     def __str__(self):
-        return str(self.date_of_meal) + ": " + self.restaurant.name
+        return str(self.date) + ": " + self.restaurant.name
 
 
 
@@ -331,7 +331,6 @@ class Service(models.Model):
     supply = models.ForeignKey(Supply)
     provider = models.ForeignKey(Provider)
     restaurant = models.ForeignKey(Restaurant)
-
 
 """
 Inventory:

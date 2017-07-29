@@ -215,6 +215,22 @@ class Ticket_DetailSerializer(serializers.ModelSerializer):
         model = Ticket_Detail
         fields = "__all__"
 
+class TicketSerializer(serializers.ModelSerializer):
+    details = serializers.SerializerMethodField()
+
+    class Meta:
+        model = Ticket_Resume
+        #fields = ("__all__", 'details')   <-- basicamente es eso
+        fields = ('restaurant', 'table', 'staff', 'date',\
+                    'time', 'cost', 'is_closed', 'details' )
+
+    def get_details(self, ticket_resume):
+        details = Ticket_Detail.objects.filter(ticket=ticket_resume)
+        serializer = Ticket_DetailSerializer(instance=details, many=True)
+        return serializer.data
+
+
+
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingredient
@@ -351,7 +367,7 @@ class Ticket_ResumeViewSet(viewsets.ModelViewSet):
         al user de django que hace la peticion
         """
         staff = Staff.objects.filter(user=self.request.user)
-        return self.queryset.filter(pk=staff[0].restaurant.pk)
+        return self.queryset.filter(restaurant=staff[0].restaurant.pk)
 
 class Ticket_DetailViewSet(viewsets.ModelViewSet):
     queryset = Ticket_Detail.objects.all()
@@ -364,7 +380,22 @@ class Ticket_DetailViewSet(viewsets.ModelViewSet):
         al user de django que hace la peticion
         """
         staff = Staff.objects.filter(user=self.request.user)
-        return self.queryset.filter(pk=staff[0].restaurant.pk)
+        return self.queryset.filter(ticket__restaurant=staff[0].restaurant.pk)
+
+
+class TicketViewSet(viewsets.ModelViewSet):
+    queryset = Ticket_Resume.objects.all()
+    serializer_class = TicketSerializer
+    filter_class = TicketFilter
+    def get_queryset(self):
+        """
+        Se filtra por primary key del restaurante asociado al staff asociado
+        al user de django que hace la peticion
+        """
+        staff = Staff.objects.filter(user=self.request.user)
+        return self.queryset.filter(restaurant=staff[0].restaurant.pk)
+
+
 
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()
@@ -378,6 +409,8 @@ class ServiceViewSet(viewsets.ModelViewSet):
 class InventoryViewSet(viewsets.ModelViewSet):
     queryset = Inventory.objects.all()
     serializer_class = InventorySerializer
+
+
 
 
 # Routers provide an easy way of automatically determining the URL conf.
@@ -398,6 +431,7 @@ router.register(r'product_classes', Product_ClassViewSet)
 router.register(r'products', ProductViewSet)
 router.register(r'ticket_resumes', Ticket_ResumeViewSet)
 router.register(r'ticket_details', Ticket_DetailViewSet)
+router.register(r'tickets', TicketViewSet)
 router.register(r'ingredients', IngredientViewSet)
 router.register(r'services', ServiceViewSet)
 router.register(r'inventory', InventoryViewSet)
