@@ -321,12 +321,14 @@ function seeTables(){
 		list.innerHTML = '';
 
 		for (let table of this.response){
-			list.insertAdjacentHTML('beforeend', `<li onclick="loadTicket(${table.id})">${table.type_table}${table.number}</li>`);
+			list.insertAdjacentHTML('beforeend', `<li onclick="getTicket(${table.id}, '${table.type_table}${table.number}')">${table.type_table}${table.number}</li>`);
 		}
 	});
 }
 
-function loadTicket(tableId){
+function getTicket(tableID, tableName){
+	currentTableID = tableID;
+	currentTable = tableName;
 	loadTPV();
 }
 
@@ -381,7 +383,7 @@ function loadTPV(){
 		         <h4>Contexto Actual</h4>
 		         <p>Total cuenta</p>
 		         <p>Camarero:  ${sessionStorage['username']}</p>
-		         <p>Numero de Mesa</p>
+		         <p id="tableName">Numero de Mesa</p>
 		         <p>Numero de Ticket</p>
 		       </div>
 		     </div>
@@ -431,6 +433,14 @@ function loadTPV(){
 				}
 			}
 	});
+	
+	if (currentTable){
+		document.getElementById('tableName').innerText = "Mesa: " + currentTable;
+	
+		get("tickets/?table=" + currentTableID, function(){
+			// Cargar ticket
+		});	
+	}
 }
 
 function loadApp(){
