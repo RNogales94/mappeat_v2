@@ -189,18 +189,26 @@ class ProductSerializer(serializers.ModelSerializer):
     class Meta:
         model = Product
         fields = "__all__"
-        
+
     def create(self, validated_data):
         manager = Staff.objects.filter(user=self.context['request'].user)[0]
         rest = manager.restaurant
         restaurant = validated_data.pop('restaurant')
         new_item = Product.objects.create(restaurant = rest, **validated_data)
         return new_item
-    
+
 class Ticket_ResumeSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket_Resume
         fields = "__all__"
+
+    def get_queryset(self):
+        """
+        Se filtra por primary key del restaurante asociado al staff asociado
+        al user de django que hace la peticion
+        """
+        staff = Staff.objects.filter(user=self.request.user)
+        return self.queryset.filter(pk=staff[0].restaurant.pk)
 
 class Ticket_DetailSerializer(serializers.ModelSerializer):
     class Meta:
@@ -310,8 +318,6 @@ class TableViewSet(viewsets.ModelViewSet):
         print(self.request.user.username)
         return self.queryset.filter(restaurant=staff[0].restaurant).order_by('type_table')
 
-
-
 class FamilyViewSet(viewsets.ModelViewSet):
     queryset = Family.objects.all()
     serializer_class = FamilySerializer
@@ -337,10 +343,28 @@ class ProductViewSet(viewsets.ModelViewSet):
 class Ticket_ResumeViewSet(viewsets.ModelViewSet):
     queryset = Ticket_Resume.objects.all()
     serializer_class = Ticket_ResumeSerializer
+    filter_class = Ticket_ResumeFilter
+
+    def get_queryset(self):
+        """
+        Se filtra por primary key del restaurante asociado al staff asociado
+        al user de django que hace la peticion
+        """
+        staff = Staff.objects.filter(user=self.request.user)
+        return self.queryset.filter(pk=staff[0].restaurant.pk)
 
 class Ticket_DetailViewSet(viewsets.ModelViewSet):
     queryset = Ticket_Detail.objects.all()
     serializer_class = Ticket_DetailSerializer
+    filter_class = Ticket_DetailFilter
+
+    def get_queryset(self):
+        """
+        Se filtra por primary key del restaurante asociado al staff asociado
+        al user de django que hace la peticion
+        """
+        staff = Staff.objects.filter(user=self.request.user)
+        return self.queryset.filter(pk=staff[0].restaurant.pk)
 
 class IngredientViewSet(viewsets.ModelViewSet):
     queryset = Ingredient.objects.all()

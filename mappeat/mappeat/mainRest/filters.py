@@ -47,3 +47,15 @@ class IngredientFilter(django_filters.FilterSet):
     class Meta:
         model = Ingredient
         fields = ('product',)
+
+class Ticket_ResumeFilter(django_filters.FilterSet):
+
+    class Meta:
+        model = Ticket_Resume
+        fields = ('table_id', 'is_closed',)
+
+class Ticket_DetailFilter(django_filters.FilterSet):
+
+    class Meta:
+        model = Ticket_Detail
+        fields = ('ticket',)
