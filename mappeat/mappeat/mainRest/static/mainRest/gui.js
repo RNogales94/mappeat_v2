@@ -311,6 +311,25 @@ function editRestaurant(id_rest){
     put('restaurants/'+id_rest+'/', function(){initMap(valores.lat,valores.lng);}, valores);
 }
 
+function seeTables(){
+	main.innerHTML = `<h3>Mesas</h3>
+		<ul id="tablesList">Cargando...</ul>`;
+	
+	get("tables/", function(){
+		"use strict";
+		let list = document.getElementById('tablesList');
+		list.innerHTML = '';
+
+		for (let table of this.response){
+			list.insertAdjacentHTML('beforeend', `<li onclick="loadTicket(${table.id})">${table.type_table}${table.number}</li>`);
+		}
+	});
+}
+
+function loadTicket(tableId){
+	loadTPV();
+}
+
 function loadFamily(name){
 	familyWanted = name;
 	document.getElementById('productsList').innerHTML = "Cargando...";
@@ -333,7 +352,7 @@ function loadTPV(){
 		<div class="row content">
 		 <div class="col-sm-1 sidenav " style="width: 12%">
 		     <div class="btn-group-vertical" style="width: 110%">
-		     <button type="button" class="btn btn-primary">Ver Mesas</button>
+		     <button onclick="seeTables()" type="button" class="btn btn-primary">Ver Mesas</button>
 		     <button type="button" class="btn btn-warning" >Abrir Cajón</button>
 		     <button type="button" class="btn btn-success">Efectivo <span class="badge"> 12.50€</span></button>
 		     <button type="button" class="btn btn-success">Cobro Avanzado</button>
