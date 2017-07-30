@@ -437,8 +437,13 @@ function loadTPV(){
 	if (currentTable){
 		document.getElementById('tableName').innerText = "Mesa: " + currentTable;
 	
-		get("tickets/?table=" + currentTableID, function(){
-			// Cargar ticket
+		get("tickets/?is_closed=false&table=" + currentTableID, function(){
+			if (this.response.length == 0){
+				// Crear un ticket y poco más
+			}
+			else{
+				// Mostrarlo
+			}
 		});	
 	}
 }
