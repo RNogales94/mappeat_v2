@@ -350,8 +350,15 @@ function loadFamily(name){
 }
 
 function showTicket(ticket){
-	// TODO
 	console.log(ticket);
+	
+	document.getElementById('totalCost').innerText = "Total cuenta: " + ticket.cost + "€";
+	document.getElementById('ticketID').innerText = "Número de ticket: " + ticket.pk;
+	
+	var list = document.getElementById('ticketList');
+	list.innerHTML = '';
+	
+	// for...
 }
 
 function createTicket(){
@@ -360,7 +367,7 @@ function createTicket(){
 	newTicket.restaurant = sessionStorage['restaurantID'];
 	newTicket.table = currentTableID;
 	
-	post("ticket_resumes/", function(){
+	post("tickets/", function(){
 		showTicket(this.response);
 	}, newTicket);
 }
@@ -397,10 +404,10 @@ function loadTPV(){
 		     <div class="col-sm-4">
 		       <div class="well">
 		         <h4>Contexto Actual</h4>
-		         <p>Total cuenta</p>
-		         <p>Camarero:  ${sessionStorage['username']}</p>
+		         <p id="totalCost">Total cuenta</p>
+		         <p>Camarero: ${sessionStorage['username']}</p>
 		         <p id="tableName">Número de Mesa</p>
-		         <p>Número de Ticket</p>
+		         <p id="ticketID">Número de Ticket</p>
 		       </div>
 		     </div>
 		   </div>
@@ -456,7 +463,7 @@ function loadTPV(){
 	
 		get("tickets/?is_closed=false&table=" + currentTableID, function(){
 			if (this.response.length == 0) createTicket();
-			else{ showTicket(this.response); }
+			else{ showTicket(this.response[0]); }
 		});	
 	}
 }
@@ -641,7 +648,7 @@ function addSupply(form){
     valoresInventory.available = true;
 
     post("suplies/", function(){
-		valoresInventory.supply = JSON.parse(this.response)['id'];
+		valoresInventory.supply = this.response['id'];
         // is_storable indica si queremos almacenarlo en Inventory
         if (valoresSupply.is_storable){
             post('inventory/',function(){ loadStore(); },valoresInventory,true);
