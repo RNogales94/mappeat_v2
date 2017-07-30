@@ -349,6 +349,16 @@ function loadFamily(name){
 	});
 }
 
+function createTicket(){
+	newTicket = Object();
+	newTicket.staff = ${sessionStorage['username']};
+	newTicket.table = currentTableID;
+	
+	post("tickets/", function(){
+		// Poco más
+	}, newTicket);
+}
+
 function loadTPV(){
 	main.innerHTML = `<div class="container-fluid">
 		<div class="row content">
@@ -438,9 +448,7 @@ function loadTPV(){
 		document.getElementById('tableName').innerText = "Mesa: " + currentTable;
 	
 		get("tickets/?is_closed=false&table=" + currentTableID, function(){
-			if (this.response.length == 0){
-				// Crear un ticket y poco más
-			}
+			if (this.response.length == 0) createTicket();
 			else{
 				// Mostrarlo
 			}
