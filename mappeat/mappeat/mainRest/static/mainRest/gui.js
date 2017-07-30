@@ -350,15 +350,28 @@ function loadFamily(name){
 }
 
 function showTicket(ticket){
-	console.log(ticket);
-	
 	document.getElementById('totalCost').innerText = "Total cuenta: " + ticket.cost + "€";
 	document.getElementById('ticketID').innerText = "Número de ticket: " + ticket.pk;
 	
-	var list = document.getElementById('ticketList');
-	list.innerHTML = '';
+	var table = document.getElementById('ticketTable');
+	table.innerHTML = `<thead>
+		<tr>
+			<th>Producto</th>
+			<th>Cantidad</th>
+			<th>Precio</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>`;
+	table = table.lastChild;
 	
-	// for...
+	for (let line of ticket.details){
+		table.insertAdjacentHTML('beforeend', `<tr onclick="void(0)">
+			<td>${line.product_name}</td>
+			<td>${line.quantity}</td>
+			<td>${line.price}€</td>
+		</tr>`);
+	}
 }
 
 function createTicket(){
@@ -425,7 +438,7 @@ function loadTPV(){
 		     <div class="col-sm-4">
 		       <div class="well">
 		         <h4>Ticket Actual</h4>
-		         <ul id="ticketList">Contiene una lista dinámica con todos los productos del ticket actual</ul>
+		         <table id="ticketTable"></table>
 		       </div>
 		     </div>
 		   </div>
@@ -458,7 +471,7 @@ function loadTPV(){
 	});
 	
 	if (currentTable){
-		document.getElementById('ticketList').innerText = "Cargando...";
+		document.getElementById('ticketTable').innerText = "Cargando...";
 		document.getElementById('tableName').innerText = "Mesa: " + currentTable;
 	
 		get("tickets/?is_closed=false&table=" + currentTableID, function(){
