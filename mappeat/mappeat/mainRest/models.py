@@ -256,7 +256,7 @@ class Ticket_Resume(models.Model):
     restaurant = models.ForeignKey(Restaurant, db_index=True)
     table = models.ForeignKey(Table)
     staff = models.ForeignKey(Staff)
-    date = models.DateField(db_index=True, default=timezone.now())
+    date = models.DateField(db_index=True, default=timezone.now().date())
     time = models.TimeField(db_index=True, default = timezone.now().time())
     cost = models.FloatField(default = 0)
     is_closed = models.BooleanField(default = False, db_index=True)
