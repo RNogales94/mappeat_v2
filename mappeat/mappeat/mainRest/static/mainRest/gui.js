@@ -360,7 +360,7 @@ function createTicket(){
 	newTicket.restaurant = sessionStorage['restaurantID'];
 	newTicket.table = currentTableID;
 	
-	post("tickets/", function(){
+	post("ticket_resumes/", function(){
 		showTicket(this.response);
 	}, newTicket);
 }
