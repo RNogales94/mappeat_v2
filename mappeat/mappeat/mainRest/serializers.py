@@ -217,7 +217,7 @@ class Ticket_DetailSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Ticket_Detail
-        fields = ('ticket', 'product', 'product_name', 'isComplement', 'quantity',\
+        fields = ('pk', 'ticket', 'product', 'product_name', 'isComplement', 'quantity',\
                     'price', 'time')
 
     #def product_name(self,obj):
@@ -229,15 +229,13 @@ class TicketSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket_Resume
         #fields = ("__all__", 'details')   <-- basicamente es eso
-        fields = ('restaurant', 'table', 'staff', 'date',\
+        fields = ('pk', 'restaurant', 'table', 'staff', 'date',\
                     'time', 'cost', 'is_closed', 'details' )
 
     def get_details(self, ticket_resume):
         details = Ticket_Detail.objects.filter(ticket=ticket_resume)
         serializer = Ticket_DetailSerializer(instance=details, many=True)
         return serializer.data
-
-
 
 class IngredientSerializer(serializers.ModelSerializer):
     class Meta:
