@@ -399,8 +399,8 @@ function loadTPV(){
 		         <h4>Contexto Actual</h4>
 		         <p>Total cuenta</p>
 		         <p>Camarero:  ${sessionStorage['username']}</p>
-		         <p id="tableName">Numero de Mesa</p>
-		         <p>Numero de Ticket</p>
+		         <p id="tableName">Número de Mesa</p>
+		         <p>Número de Ticket</p>
 		       </div>
 		     </div>
 		   </div>
@@ -418,7 +418,7 @@ function loadTPV(){
 		     <div class="col-sm-4">
 		       <div class="well">
 		         <h4>Ticket Actual</h4>
-		         <p>Contiene una lista dinámica con todos los productos del ticket actual</p>
+		         <ul id="ticketList">Contiene una lista dinámica con todos los productos del ticket actual</ul>
 		       </div>
 		     </div>
 		   </div>
@@ -451,6 +451,7 @@ function loadTPV(){
 	});
 	
 	if (currentTable){
+		document.getElementById('ticketList').innerText = "Cargando...";
 		document.getElementById('tableName').innerText = "Mesa: " + currentTable;
 	
 		get("tickets/?is_closed=false&table=" + currentTableID, function(){
