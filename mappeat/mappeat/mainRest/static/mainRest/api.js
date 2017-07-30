@@ -20,6 +20,7 @@ function post(component, onLoad, data, handleErrors = true, baseURI = "/mainRest
 	"use strict;"
 	let request = new XMLHttpRequest();
 	request.open("POST", baseURI + component);
+	request.responseType = "json";
 	request.setRequestHeader("Content-type", "application/json");
 	request.setRequestHeader("X-CSRFToken", Cookies.get('csrftoken'));
 	
@@ -37,6 +38,7 @@ function put(component, onLoad,data, handleErrors = true, baseURI = "/mainRest/a
 	"use strict;"
 	let request = new XMLHttpRequest();
 	request.open("PUT", baseURI + component);
+	request.responseType = "json";
 	request.setRequestHeader("Content-type", "application/json");
 	request.setRequestHeader("X-CSRFToken", Cookies.get('csrftoken'));
 	
@@ -54,6 +56,7 @@ function _delete(component, onLoad, data, handleErrors = true, baseURI = "/mainR
 	"use strict;"
 	let request = new XMLHttpRequest();
 	request.open("DELETE", baseURI + component);
+	request.responseType = "json";
 	request.setRequestHeader("Content-type", "application/json");
 	request.setRequestHeader("X-CSRFToken", Cookies.get('csrftoken'));
 	
