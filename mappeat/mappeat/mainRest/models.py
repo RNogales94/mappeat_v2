@@ -278,13 +278,28 @@ asociada a esa cuenta con el tipo de producto y la cantidad.
 """
 class Ticket_Detail(models.Model):
     ticket = models.ForeignKey(Ticket_Resume, db_index=True)
-    product = models.ForeignKey(Product)
+    product = models.ForeignKey(Product, null=True)
+    product_name = models.CharField(max_length = 50, default="None")
     isComplement = models.BooleanField(default=False)
     quantity = models.IntegerField()
     price = models.FloatField(default = 0)
     time = models.TimeField(default = timezone.now().time())
 
     def save(self, *args, **kwargs):
+        """
+        Establece el nombre del producto la primera vez al crearse
+        #esto previene cambio de nombre en los tickets al cambiar el nombre
+        del producto
+
+        Lo mismo ocurre con el precio
+        """
+        if self.product_name == "None":
+            self.product_name = self.product.name
+            if self.isComplement:
+                self.price = self.product.price_as_complement_with_tax
+            else:
+                self.price = self.product.price_with_tax
+
         #Actualiza el precio de la cuenta total:
         self.ticket.cost = self.ticket.cost + self.price
         super(Ticket_Resume, self.ticket).save()
@@ -297,8 +312,6 @@ class Ticket_Detail(models.Model):
         super(Ticket_Resume, self.ticket).save()
         super(Ticket_Detail, self).delete(*args, **kwargs)
 
-    def product_name(self):
-        return str(self.product.name)
 
     def __str__(self):
         return self.product.name + "  × " + str(self.quantity) +": ------  "+ str(self.price) + "€"

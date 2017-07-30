@@ -213,15 +213,15 @@ class Ticket_ResumeSerializer(serializers.ModelSerializer):
 
 
 class Ticket_DetailSerializer(serializers.ModelSerializer):
-    product_name = serializers.SerializerMethodField()
+    #product_name = serializers.SerializerMethodField()
 
     class Meta:
         model = Ticket_Detail
         fields = ('ticket', 'product', 'product_name', 'isComplement', 'quantity',\
                     'price', 'time')
 
-    def product_name(self,obj):
-        return obj.product_name()
+    #def product_name(self,obj):
+    #    return obj.product_name()
 
 class TicketSerializer(serializers.ModelSerializer):
     details = serializers.SerializerMethodField()
