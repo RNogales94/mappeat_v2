@@ -351,6 +351,7 @@ function loadFamily(name){
 
 function showTicket(ticket){
 	// TODO
+	console.log(ticket);
 }
 
 function createTicket(){
