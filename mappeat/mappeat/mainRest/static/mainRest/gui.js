@@ -474,7 +474,7 @@ function loadTPV(){
 		document.getElementById('ticketTable').innerText = "Cargando...";
 		document.getElementById('tableName').innerText = "Mesa: " + currentTable;
 	
-		get("tickets/?is_closed=false&table=" + currentTableID, function(){
+		get("tickets/?is_closed=False&table=" + currentTableID, function(){
 			if (this.response.length == 0) createTicket();
 			else{ showTicket(this.response[0]); }
 		});	
