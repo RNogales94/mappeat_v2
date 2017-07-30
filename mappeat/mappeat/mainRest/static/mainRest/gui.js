@@ -351,11 +351,13 @@ function loadFamily(name){
 
 function createTicket(){
 	newTicket = Object();
-	newTicket.staff = ${sessionStorage['username']};
+	newTicket.staff = sessionStorage['userID'];
+	newTicket.restaurant = sessionStorage['restaurantID'];
 	newTicket.table = currentTableID;
 	
 	post("tickets/", function(){
-		// Poco más
+		// Actualizar cosillas
+		console.log(this.response);
 	}, newTicket);
 }
 
@@ -451,6 +453,7 @@ function loadTPV(){
 			if (this.response.length == 0) createTicket();
 			else{
 				// Mostrarlo
+				console.log(this.response);
 			}
 		});	
 	}
@@ -522,12 +525,25 @@ function login(form){
 	var valores = Object();
 	valores.username = form.username.value;
 	valores.password = form.pass.value;
+	
+	sessionStorage['username'] = valores.username;	
+	let pendingData = 2;
 
 	post("login/", function(){
-		loadApp();
+		get("restaurants/", function(){
+			sessionStorage['restaurant'] = this.response[0].name;
+			sessionStorage['restaurantID'] = this.response[0].id;
+			pendingData -= 1;
+			if (pendingData == 0) loadApp();
+		});
+		
+		get("users/?username=" + valores.username, function(){
+			sessionStorage['userID'] = this.response[0].pk;
+			pendingData -= 1;
+			if (pendingData == 0) loadApp();
+		});
 	}, valores, true, "/rest-auth/");
 
-    sessionStorage['username']= valores.username;
 	return false;
 }
 
