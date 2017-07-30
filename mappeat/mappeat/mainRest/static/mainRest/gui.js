@@ -537,9 +537,11 @@ function login(form){
 		});
 		
 		get("users/?username=" + valores.username, function(){
-			sessionStorage['userID'] = this.response[0].pk;
+		get("staff/?user=" + this.response[0].pk, function(){
+			sessionStorage['userID'] = this.response[0].id;
 			pendingData -= 1;
 			if (pendingData == 0) loadApp();
+		});
 		});
 	}, valores, true, "/rest-auth/");
 
