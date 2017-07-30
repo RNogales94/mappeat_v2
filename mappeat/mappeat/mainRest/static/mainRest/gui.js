@@ -531,7 +531,6 @@ function login(form){
 
 	post("login/", function(){
 		get("restaurants/", function(){
-			sessionStorage['restaurant'] = this.response[0].name;
 			sessionStorage['restaurantID'] = this.response[0].id;
 			pendingData -= 1;
 			if (pendingData == 0) loadApp();
