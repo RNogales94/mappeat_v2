@@ -349,6 +349,10 @@ function loadFamily(name){
 	});
 }
 
+function showTicket(ticket){
+	// TODO
+}
+
 function createTicket(){
 	newTicket = Object();
 	newTicket.staff = sessionStorage['userID'];
@@ -356,8 +360,7 @@ function createTicket(){
 	newTicket.table = currentTableID;
 	
 	post("tickets/", function(){
-		// Actualizar cosillas
-		console.log(this.response);
+		showTicket(this.response);
 	}, newTicket);
 }
 
@@ -451,10 +454,7 @@ function loadTPV(){
 	
 		get("tickets/?is_closed=false&table=" + currentTableID, function(){
 			if (this.response.length == 0) createTicket();
-			else{
-				// Mostrarlo
-				console.log(this.response);
-			}
+			else{ showTicket(this.response); }
 		});	
 	}
 }
