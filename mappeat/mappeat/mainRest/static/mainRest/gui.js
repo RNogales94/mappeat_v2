@@ -225,6 +225,7 @@ function addStaff(form){
     valores.notes = form.notes.value;
 
 	post("staff/", function(){
+                $('#modalUser2').modal('hide');
 				loadStaff();
 			}, valores, true);
     	return false;
