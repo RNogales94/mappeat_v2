@@ -386,6 +386,18 @@ function createTicket(){
 	}, newTicket);
 }
 
+function loadTicket(){
+	if (currentTable){
+		document.getElementById('ticketTable').innerText = "Cargando...";
+		document.getElementById('tableName').innerText = "Mesa: " + currentTable;
+	
+		get("tickets/?is_closed=False&table=" + currentTableID, function(){
+			if (this.response.length == 0) createTicket();
+			else{ showTicket(this.response[0]); }
+		});	
+	}
+}
+
 function loadTPV(){
 	main.innerHTML = `<div class="container-fluid">
 		<div class="row content">
@@ -471,15 +483,7 @@ function loadTPV(){
 			}
 	});
 	
-	if (currentTable){
-		document.getElementById('ticketTable').innerText = "Cargando...";
-		document.getElementById('tableName').innerText = "Mesa: " + currentTable;
-	
-		get("tickets/?is_closed=False&table=" + currentTableID, function(){
-			if (this.response.length == 0) createTicket();
-			else{ showTicket(this.response[0]); }
-		});	
-	}
+	loadTicket();
 }
 
 function loadApp(){
