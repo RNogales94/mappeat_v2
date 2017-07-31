@@ -350,6 +350,13 @@ function loadFamily(name){
 	});
 }
 
+function cobrar(){
+	get("tickets/?is_closed=False&table=" + currentTableID, function(){
+		// TODO
+		console.log(this.response[0]);
+	});
+}
+
 function showTicket(ticket){
 	document.getElementById('totalCost').innerText = "Total cuenta: " + ticket.cost + "€";
 	document.getElementById('ticketID').innerText = "Número de ticket: " + ticket.pk;
@@ -373,6 +380,8 @@ function showTicket(ticket){
 			<td>${line.price}€</td>
 		</tr>`);
 	}
+	
+	document.getElementById('ticketDiv').insertAdjacentHTML('beforeend', `<button onclick="cobrar()">Cobrar</button>`);
 }
 
 function createTicket(){
@@ -449,7 +458,7 @@ function loadTPV(){
 		       </div>
 		     </div>
 		     <div class="col-sm-4">
-		       <div class="well">
+		       <div id="ticketDiv" class="well">
 		         <h4>Ticket Actual</h4>
 		         <table id="ticketTable"></table>
 		       </div>
