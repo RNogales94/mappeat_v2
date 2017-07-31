@@ -351,8 +351,8 @@ function loadFamily(name){
 }
 
 function cobrar(){
+	// TODO
 	get("tickets/?is_closed=False&table=" + currentTableID, function(){
-		// TODO
 		console.log(this.response[0]);
 	});
 }
