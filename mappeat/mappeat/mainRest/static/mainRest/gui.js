@@ -25,26 +25,47 @@ function loadSettings(){
 function loadTables(){
      frame = document.getElementById('content');
      frame.innerHTML = `<h4> Mesas </h4>
-                        <p>Mesa actual : ${currentTable} </p>
+                        
+                            <div id='tablesPanel'>
+                            <table class='table'>
+                            <thead>
+                            <th>MESAS   <span class='glyphicon glyphicon-plus text-success' onclick='addTable("M")'></span></th>
+                            <th>BARRA   <span class='glyphicon glyphicon-plus text-success' onclick='addTable("B")'></span></th>
+                            <th>TERRAZA  <span class='glyphicon glyphicon-plus text-success' onclick='addTable("T")'></span></th>
+                            <tbody>
+                                <tr>
+                                    <td><div class='col-md-4' id='tables'></div></td>
+                                    <td><div class='col-md-4' id='bar'></div></td>
+                                    <td><div class='col-md-4' id='terrace'></div></td>
+                                </tr>
+                            </tbody>
+                            </table>`;
 
-                        <div>
-                            <label> Mesa </label> <button class='btn-success' onclick="addTable('M')">Añadir</button>
-                            <label> Terraza </label> <button  class='btn-success' onclick="addTable('T')">Añadir</button>
-                            <label> Barra </label> <button class='btn-success' onclick="addTable('B')">Añadir</button><br>
-                            <button class='btn-danger' onclick="removeTable(${currentTable},${currentTableID})">Eliminar</button>
-                        </div>
-
-                        <div >
-                            <ul id="tableList">Cargando...</ul>
-	                    </div>`;
+                    
      get("tables", function(){
 			"use strict";
-			let list = document.getElementById('tableList');
-			list.innerHTML = '';
+			let tables = document.getElementById('tables');
+            let terrace = document.getElementById('terrace');
+            let bar = document.getElementById('bar');
+         
+			tables.innerHTML = '';
+            terrace.innerHTML = '';
+            bar.innerHTML = '';
 
 			for (let table of this.response){
-				list.insertAdjacentHTML('beforeend', `<li onclick="selectTable(${table.number},${table.id})">${table.type_table}${table.number}</li>`);
-			}
+                switch(table.type_table) {
+                    case "B":
+                        bar.insertAdjacentHTML('beforeend',`<span class='glyphicon glyphicon-minus text-danger' onclick='removeTable(${table.id})'></span> ${table.type_table}${table.number}<br>`)   
+                        break;
+                    case "M":
+                        tables.insertAdjacentHTML('beforeend',`<span class='glyphicon glyphicon-minus text-danger' onclick='removeTable(${table.id})'></span>${table.type_table}${table.number}<br>`)   
+                        break;
+                    case "T":
+                        terrace.insertAdjacentHTML('beforeend',`<span class='glyphicon glyphicon-minus text-danger' onclick='removeTable(${table.id})'></span>${table.type_table}${table.number}<br>`)   
+                        break;
+        
+                } 
+            }
 	});
 }
 
@@ -66,8 +87,8 @@ function addTable(type){
 	}, valores, true);
 }
 
-function removeTable(num,id){
-     if (confirm('¿Esta seguro de borrar la mesa '+num+'?')){
+function removeTable(id){
+     if (confirm('¿Esta seguro de borrar la mesa ?')){
        _delete("tables/"+id+"/",function(){loadTables();},true);
     }
     return false;
@@ -259,7 +280,7 @@ function loadRestaurant(){
                                                         </div>
                                                     </div>
                                                         <div class='row' id='editRest'>
-                                                            <button class='btn pull-right' onclick='editRestaurant(${table.id})'>Editar</button>
+                                                            <button class='btn btn-warning pull-right' onclick='editRestaurant(${table.id})'>Editar</button>
                                                         </div>`);
             initMap(table.lat,table.lng);
 			}
