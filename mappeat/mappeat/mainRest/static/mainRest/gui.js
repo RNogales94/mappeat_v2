@@ -635,6 +635,7 @@ function newSupplyForm(){
 			                                 <div class="modal-body">
                                                 <form id='newSupply' onsubmit='return addSupply(this);'>
 				                                <label>Nombre</label><input type='text'  name='name'><br>
+                                                <label>Tamaño</label><input type='number' name='size'><br>
                                                 <label>Formato</label><select name='mesure_unity' id='format'></select><br>
                                                 <label>Código de Barras</label><input type='text' name='barcode'><br>
                                                 <label>Almacenable</label><input type='checkbox' name='storable' checked><br>
@@ -668,6 +669,7 @@ function addSupply(form){
     valoresSupply.is_storable = form.storable.checked;
     valoresSupply.barcode = form.barcode.value;
     valoresSupply.mesure_unity = form.mesure_unity.value;
+    valoresSupply.size = form.size.value;
     valoresSupply.category = 2; // La categoria 2 se corresponde a 'Articulo'
     
     valoresInventory.quantity = form.quantity.value;
