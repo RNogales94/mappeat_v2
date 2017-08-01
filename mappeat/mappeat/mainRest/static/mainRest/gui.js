@@ -69,11 +69,6 @@ function loadTables(){
 	});
 }
 
-function selectTable(newTable,id){
-    currentTable = newTable;
-    currentTableID = id;
-    loadTables();
-}
 
 function addTable(type){
    var valores = Object();
