@@ -284,6 +284,7 @@ class Ticket_Detail(models.Model):
     quantity = models.IntegerField()
     price = models.FloatField(default = 0)
     time = models.TimeField(default = timezone.now().time())
+    sent_kitchen = models.BooleanField(default = False)
 
     def save(self, *args, **kwargs):
         """
