@@ -360,7 +360,7 @@ function loadFamily(name){
 				list.innerHTML = '';
 
 				for (let product of this.response){
-					list.insertAdjacentHTML('beforeend', `<li onclick="void(0)">${product.name}</li>`);
+					list.insertAdjacentHTML('beforeend', `<li onclick="addTicketDetail(${currentTableID},${product.id})">${product.name}</li>`);
 				}
 			}
 	});
@@ -948,4 +948,23 @@ function editProduct(form){
 	}, valores, true);
     
     return false;
+}
+
+function addTicketDetail(table,product){
+    var valores = new Object();
+    
+    get("tickets/?is_closed=False&table=" + currentTableID, function(){
+        valores.ticket = this.response[0].pk;
+        valores.restaurant = this.response[0].restaurant;
+        valores.product = product;
+        valores.quantity = 1;
+        get("products/"+product,function(){
+            valores.name = this.response.name;
+            valores.price = this.response.price_with_tax;
+            post("ticket_details/",function(){loadTPV();},valores,true);
+        });
+        
+	});
+    
+    
 }
