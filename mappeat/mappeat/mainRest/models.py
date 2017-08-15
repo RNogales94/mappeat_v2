@@ -277,6 +277,12 @@ cuando se añade un producto a una cuenta se crea una nueva instancia de Ticket_
 asociada a esa cuenta con el tipo de producto y la cantidad.
 """
 class Ticket_Detail(models.Model):
+    """
+    IMPORTANTE:
+    
+    Al añadir aqui un campo no se añade automaticamente en la api
+    Hay que añadirlo manualmente en serializers.py
+    """
     ticket = models.ForeignKey(Ticket_Resume, db_index=True)
     product = models.ForeignKey(Product, null=True)
     product_name = models.CharField(max_length = 50, default="None")

@@ -218,7 +218,7 @@ class Ticket_DetailSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ticket_Detail
         fields = ('pk', 'ticket', 'product', 'product_name', 'isComplement', 'quantity',\
-                    'price', 'time')
+                    'price', 'time', 'sent_kitchen')
 
     #def product_name(self,obj):
     #    return obj.product_name()
