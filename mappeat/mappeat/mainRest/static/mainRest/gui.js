@@ -380,6 +380,7 @@ function showTicket(ticket){
 	var table = document.getElementById('ticketTable');
 	table.innerHTML = `<thead>
 		<tr>
+            <th></th>
 			<th>Producto</th>
 			<th>Cantidad</th>
 			<th>Precio</th>
@@ -391,7 +392,8 @@ function showTicket(ticket){
 	
 	for (let line of ticket.details){
 		table.insertAdjacentHTML('beforeend', `<tr onclick="void(0)">
-			<td>${line.product_name}</td>
+			<td><span class='glyphicon glyphicon-remove' onclick='removeTicketDetail(${line.pk})'></span> </td>
+            <td>${line.product_name}</td>
 			<td>${line.quantity}</td>
 			<td>${line.price}€</td>
 		</tr>`);
@@ -476,7 +478,7 @@ function loadTPV(){
 		     <div class="col-sm-4">
 		       <div id="ticketDiv" class="well">
 		         <h4>Ticket Actual</h4>
-		         <table id="ticketTable"></table>
+		         <table class='table' id="ticketTable"></table>
 		       </div>
 		     </div>
 		   </div>
@@ -965,6 +967,8 @@ function addTicketDetail(table,product){
         });
         
 	});
-    
-    
+}
+
+function removeTicketDetail(id){
+    _delete('ticket_details/'+id,function(){loadTPV();},true);
 }
