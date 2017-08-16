@@ -326,15 +326,33 @@ class StaffViewSet(viewsets.ModelViewSet):
     """
     Cambiar owner por manager para que los owners no sean necesarios
     """
-    def get_queryset(self):
-        owner_local = Owner.objects.filter(user=self.request.user)
 
+    def get_queryset(self):
+        staff = Staff.objects.filter(user=self.request.user)
+        print(staff)
+        restaurant = staff[0].restaurant
+        print(restaurant)
+        if staff[0].role_code=='M':
+            return self.queryset.filter(restaurant=restaurant)
+        else:
+            return self.queryset.filter(restaurant=restaurant, user=self.request.user)
+
+
+    """
+    def get_queryset(self):
+        staff = Staff.objects.filter(user=self.request.user)
+        restaurant = staff[0].restaurant
+
+        boss = Staff.objects.filter(restaurant=restaurant, role_code='M') #M = manager
+        print(boss)
         #Comprobar si len(owner_local) es cero y actuar en consecuenca
         #Esto significaria que el usuario que hace la peticion no es un propietario...
-        if(len(owner_local)>0):
-            restaurant_local = Restaurant.objects.filter(owner=owner_local[0])
+        if(len(boss)>0):
+            owner = Owner.objects.filter(user=boss[0].user)
+            print(owner)
+            restaurant_local = Restaurant.objects.filter(owner=owner[0])
             return self.queryset.filter(restaurant=restaurant_local[0])
-
+    """
 class TableViewSet(viewsets.ModelViewSet):
     queryset = Table.objects.all()
     serializer_class = TableSerializer
