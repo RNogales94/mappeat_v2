@@ -279,7 +279,7 @@ asociada a esa cuenta con el tipo de producto y la cantidad.
 class Ticket_Detail(models.Model):
     """
     IMPORTANTE:
-    
+
     Al añadir aqui un campo no se añade automaticamente en la api
     Hay que añadirlo manualmente en serializers.py
     """
@@ -300,16 +300,20 @@ class Ticket_Detail(models.Model):
 
         Lo mismo ocurre con el precio
         """
+        #Este if es True solo la primera vez para cada Ticket_Detail
         if self.product_name == "None":
             self.product_name = self.product.name
+
             if self.isComplement:
                 self.price = self.product.price_as_complement_with_tax
             else:
                 self.price = self.product.price_with_tax
 
-        #Actualiza el precio de la cuenta total:
-        self.ticket.cost = self.ticket.cost + self.price
-        super(Ticket_Resume, self.ticket).save()
+            #Actualiza el precio de la cuenta total:
+            self.ticket.cost = self.ticket.cost + self.price
+            super(Ticket_Resume, self.ticket).save()
+
+        #A partir de aqui se ejecuta cada vez que actualizamos un Ticket_Detail
         super(Ticket_Detail, self).save(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
