@@ -223,6 +223,12 @@ class Ticket_DetailSerializer(serializers.ModelSerializer):
     #def product_name(self,obj):
     #    return obj.product_name()
 
+"""
+TicketSerializer
+Es un serializador para el modelo Ticket_Resume
+que cuenta con un campo extra 'details' para ver las lineas del ticket
+directamente sin tener que hacer llamadas extra.
+"""
 class TicketSerializer(serializers.ModelSerializer):
     details = serializers.SerializerMethodField()
 

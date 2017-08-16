@@ -61,7 +61,6 @@ class TicketFilter(django_filters.FilterSet):
         fields = ('table', 'is_closed',)
 
 class Ticket_DetailFilter(django_filters.FilterSet):
-
     class Meta:
         model = Ticket_Detail
-        fields = ('ticket',)
+        fields = ('ticket','sent_kitchen')

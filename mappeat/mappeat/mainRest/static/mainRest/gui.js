@@ -25,7 +25,7 @@ function loadSettings(){
 function loadTables(){
      frame = document.getElementById('content');
      frame.innerHTML = `<h4> Mesas </h4>
-                        
+
                             <div id='tablesPanel'>
                             <table class='table'>
                             <thead>
@@ -41,13 +41,13 @@ function loadTables(){
                             </tbody>
                             </table>`;
 
-                    
+
      get("tables", function(){
 			"use strict";
 			let tables = document.getElementById('tables');
             let terrace = document.getElementById('terrace');
             let bar = document.getElementById('bar');
-         
+
 			tables.innerHTML = '';
             terrace.innerHTML = '';
             bar.innerHTML = '';
@@ -55,16 +55,16 @@ function loadTables(){
 			for (let table of this.response){
                 switch(table.type_table) {
                     case "B":
-                        bar.insertAdjacentHTML('beforeend',`<span class='glyphicon glyphicon-minus text-danger' onclick='removeTable(${table.id})'></span> ${table.type_table}${table.number}<br>`)   
+                        bar.insertAdjacentHTML('beforeend',`<span class='glyphicon glyphicon-minus text-danger' onclick='removeTable(${table.id})'></span> ${table.type_table}${table.number}<br>`)
                         break;
                     case "M":
-                        tables.insertAdjacentHTML('beforeend',`<span class='glyphicon glyphicon-minus text-danger' onclick='removeTable(${table.id})'></span>${table.type_table}${table.number}<br>`)   
+                        tables.insertAdjacentHTML('beforeend',`<span class='glyphicon glyphicon-minus text-danger' onclick='removeTable(${table.id})'></span>${table.type_table}${table.number}<br>`)
                         break;
                     case "T":
-                        terrace.insertAdjacentHTML('beforeend',`<span class='glyphicon glyphicon-minus text-danger' onclick='removeTable(${table.id})'></span>${table.type_table}${table.number}<br>`)   
+                        terrace.insertAdjacentHTML('beforeend',`<span class='glyphicon glyphicon-minus text-danger' onclick='removeTable(${table.id})'></span>${table.type_table}${table.number}<br>`)
                         break;
-        
-                } 
+
+                }
             }
 	});
 }
@@ -121,7 +121,7 @@ function loadStaff(){
                                                         <td><input type='text'  readonly  class="form-control-addon" id='notes${table.id}' name='notes' value='${table.notes}'></td>
                                                         <td id='editButton${table.id}'><button class="glyphicon glyphicon-pencil btn-warning" onclick='allowEditStaff(${table.id})'></button></td>
                                                        </tr>`);
-                
+
                 document.getElementById('is_active'+table.id).checked=table.is_active;
 			}
           list.insertAdjacentHTML('beforeend',`<tr><td><button onclick='showStaffForm()' class="glyphicon glyphicon-plus btn-success" data-toggle="modal" data-target="#modalUser1"></button></td></tr></table>`);
@@ -331,7 +331,7 @@ function editRestaurant(id_rest){
 function seeTables(){
 	main.innerHTML = `<h3>Mesas</h3>
 		<ul id="tablesList">Cargando...</ul>`;
-	
+
 	get("tables/", function(){
 		"use strict";
 		let list = document.getElementById('tablesList');
@@ -376,7 +376,7 @@ function cobrar(){
 function showTicket(ticket){
 	document.getElementById('totalCost').innerText = "Total cuenta: " + ticket.cost + "€";
 	document.getElementById('ticketID').innerText = "Número de ticket: " + ticket.pk;
-	
+
 	var table = document.getElementById('ticketTable');
 	table.innerHTML = `<thead>
 		<tr>
@@ -389,7 +389,7 @@ function showTicket(ticket){
 	<tbody>
 	</tbody>`;
 	table = table.lastChild;
-	
+
 	for (let line of ticket.details){
 		table.insertAdjacentHTML('beforeend', `<tr onclick="void(0)">
 			<td><span class='glyphicon glyphicon-remove' onclick='removeTicketDetail(${line.pk})'></span> </td>
@@ -398,7 +398,7 @@ function showTicket(ticket){
 			<td>${line.price}€</td>
 		</tr>`);
 	}
-	
+
 	document.getElementById('ticketDiv').insertAdjacentHTML('beforeend', `<button onclick="cobrar()">Cobrar</button>`);
 }
 
@@ -407,7 +407,7 @@ function createTicket(){
 	newTicket.staff = sessionStorage['userID'];
 	newTicket.restaurant = sessionStorage['restaurantID'];
 	newTicket.table = currentTableID;
-	
+
 	post("tickets/", function(){
 		showTicket(this.response);
 	}, newTicket);
@@ -417,11 +417,11 @@ function loadTicket(){
 	if (currentTable){
 		document.getElementById('ticketTable').innerText = "Cargando...";
 		document.getElementById('tableName').innerText = "Mesa: " + currentTable;
-	
+
 		get("tickets/?is_closed=False&table=" + currentTableID, function(){
 			if (this.response.length == 0) createTicket();
 			else{ showTicket(this.response[0]); }
-		});	
+		});
 	}
 }
 
@@ -509,7 +509,7 @@ function loadTPV(){
 				}
 			}
 	});
-	
+
 	loadTicket();
 }
 
@@ -579,8 +579,8 @@ function login(form){
 	var valores = Object();
 	valores.username = form.username.value;
 	valores.password = form.pass.value;
-	
-	sessionStorage['username'] = valores.username;	
+
+	sessionStorage['username'] = valores.username;
 	let pendingData = 2;
 
 	post("login/", function(){
@@ -589,7 +589,7 @@ function login(form){
 			pendingData -= 1;
 			if (pendingData == 0) loadApp();
 		});
-		
+
 		get("users/?username=" + valores.username, function(){
 		get("staff/?user=" + this.response[0].pk, function(){
 			sessionStorage['userID'] = this.response[0].id;
@@ -689,7 +689,7 @@ function addSupply(form){
     valoresSupply.mesure_unity = form.mesure_unity.value;
     valoresSupply.size = form.size.value;
     valoresSupply.category = 2; // La categoria 2 se corresponde a 'Articulo'
-    
+
     valoresInventory.quantity = form.quantity.value;
     valoresInventory.restaurant = 2;
     valoresInventory.available = true;
@@ -703,7 +703,7 @@ function addSupply(form){
         $('#modalStore').modal('hide');
 	}, valoresSupply, true);
 
-    
+
 
 	return false;
 }
@@ -733,18 +733,18 @@ function loadMenu(){
          'use strict';
          let list = document.getElementById('menuList');
          list.innerHTML = '';
-         
+
          for (let product of this.response ){
              get ('iva/'+product.iva_tax,function(){
                         list.insertAdjacentHTML('beforeend',`<tr><td class="active"><h4>${product.name}</h4></td><td> <a onclick='editProductForm(${product.id})' data-toggle="modal" data-target="#modalEditProduct" >Editar</a></td><td><button onclick="removeProduct(${product.id})" class="glyphicon glyphicon-remove btn-danger"></button></td></tr><tr><td><img class="img-rounded" src='' alt='icono${product.icon}'></td><td><div class='well' id='ingredients${product.id}'></div></td><td><p class="bg-primary text-white">${product.price_with_tax}€</p><p class='bg-danger'>${this.response.strTax}</p><p class='bg-success'>${product.price_as_complement_with_tax}€</p></td>
                         <td><div class='well'>STATS</div></td>
                                                       </tr>`);
-                
-                            getIngredients(product.id);  
+
+                            getIngredients(product.id);
     });
-             
+
            }
-         list.insertAdjacentHTML('afterend',`<tr><td><button onclick='showProductForm()' class="glyphicon glyphicon-plus btn-success" data-toggle="modal" data-target="#modalMenu"></button></td></tr></table>`);           
+         list.insertAdjacentHTML('afterend',`<tr><td><button onclick='showProductForm()' class="glyphicon glyphicon-plus btn-success" data-toggle="modal" data-target="#modalMenu"></button></td></tr></table>`);
     });
 }
 
@@ -786,7 +786,7 @@ function showProductForm(){
                                             </form>
                                             </div>
 			                             </div></div></div></div>`);
-    
+
     get('iva/',function(){
         let list = document.getElementById('iva_select');
         list.innerHTML = '';
@@ -794,7 +794,7 @@ function showProductForm(){
             list.insertAdjacentHTML('beforeend',`<option value=${item.id}>${item.name}</option>`);
         }
     });
-    
+
     get('product_classes/',function(){
         let list = document.getElementById('product_select');
         list.innerHTML = '';
@@ -814,11 +814,11 @@ function addProduct(form){
     valores.principal = form.principal.checked;
     valores.can_be_complement = form.can_be_complement.checked;
     valores.product = form.product.value;
-    
+
     post('products/',function(){$('#modalMenu').modal('hide');
                                 loadMenu();},
                             valores,true);
-    
+
     return false;
 }
 
@@ -846,13 +846,13 @@ function newIngredient(product){
                                                     <label>Suministro</label><select  class='form-group' name='supply' id='supply_select'></select>
                                                     <span class='btn btn-primary pull-right' onclick='newSupplyForm()' data-toggle="modal" data-target="#modalStore">Nuevo Suministro</span>
                                                     <input type='hidden' value=${product} name='product'>
-                                                   
+
                                             <div class="modal-footer">
                                             <button type='submit' class='btn-success'>Continuar</button>
                                             </form>
                                             </div>
 			                             </div></div></div></div>`);
-    
+
     get('suplies/',function(){
         let list = document.getElementById('supply_select');
         list.innerHTML = '';
@@ -860,7 +860,7 @@ function newIngredient(product){
             list.insertAdjacentHTML('beforeend',`<option value=${item.id}>${item.name}</option>`);
         }
     });
-    
+
 }
 
 function addIngredient(form){
@@ -868,7 +868,7 @@ function addIngredient(form){
     valores.product = form.product.value;
     valores.supply = form.supply.value;
     valores.quantity = form.quantity.value;
-    
+
     post('ingredients/',function(){$('#modalIngredient').modal('hide');
                                     loadMenu();}
                                     ,valores,true);
@@ -880,7 +880,7 @@ function removeIngredient(id){
        _delete("ingredients/"+id+"/",function(){loadMenu();},true);
     }
     return false;
-} 
+}
 
 function editProductForm(product){
     get('products/'+product,function(){
@@ -912,7 +912,7 @@ function editProductForm(product){
 			                             </div></div></div></div>`);
        document.getElementById('principal').checked = this.response.principal;
        document.getElementById('complement').checked = this.response.can_be_completent;
-    
+
     get('iva/',function(){
         let list = document.getElementById('iva_select');
         list.innerHTML = '';
@@ -920,7 +920,7 @@ function editProductForm(product){
             list.insertAdjacentHTML('beforeend',`<option value=${item.id}>${item.name}</option>`);
         }
     });
-    
+
     get('product_classes/',function(){
         let list = document.getElementById('product_select');
         list.innerHTML = '';
@@ -929,12 +929,12 @@ function editProductForm(product){
         }
     });
     })
-    
+
 }
 
 function editProduct(form){
     var valores = new Object();
-    
+
     valores.restaurant = form.restaurant.value;
     valores.name = form.name.value;
     valores.price_with_tax = form.price_with_tax.value;
@@ -943,18 +943,18 @@ function editProduct(form){
     valores.principal = form.principal.checked;
     valores.can_be_complement = form.can_be_complement.checked;
     valores.product = form.product.value;
-    
+
       put('products/'+form.id.value+'/', function(){
         $('#modalEditProduct').modal('hide');
 		loadMenu();
 	}, valores, true);
-    
+
     return false;
 }
 
 function addTicketDetail(table,product){
     var valores = new Object();
-    
+
     get("tickets/?is_closed=False&table=" + currentTableID, function(){
         valores.ticket = this.response[0].pk;
         valores.restaurant = this.response[0].restaurant;
@@ -965,7 +965,7 @@ function addTicketDetail(table,product){
             valores.price = this.response.price_with_tax;
             post("ticket_details/",function(){loadTPV();},valores,true);
         });
-        
+
 	});
 }
 
