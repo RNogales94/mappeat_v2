@@ -440,7 +440,7 @@ function loadTPV(){
 		     <button type="button" class="btn btn-info">Añadir Nota</button>
 		     <button type="button" class="btn btn-warning">Transferir Mesa</button>
 		     <button type="button" class="btn btn-primary">Buscar Ticket</button>
-		     <button type="button" class="btn btn-info">Imprimir Ticket</button>
+		     <button onclick="printTicket()" type="button" class="btn btn-info">Imprimir Ticket</button>
 		     <button type="button" class="btn btn-danger">Cancelar Ticket</button>
 		     </div><br>
 		 </div>
@@ -975,7 +975,6 @@ function removeTicketDetail(id){
 }
 
 function sendKitchen(){
-    // TODO
     get("tickets/?is_closed=False&table=" + currentTableID, function(){
         get("ticket_details/?ticket="+this.response[0].pk+"&sent_kitchen=False",function(){
             for(let line of this.response ){
@@ -984,4 +983,11 @@ function sendKitchen(){
             }
         });
     });
+}
+
+function printTicket(){
+        var mode = 'iframe'; //popup
+        var close = mode == "popup";
+        var options = { mode : mode, popClose : close};
+        $("#ticketTable").print( options );
 }
