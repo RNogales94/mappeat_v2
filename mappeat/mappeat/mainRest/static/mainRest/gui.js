@@ -505,7 +505,7 @@ function loadTPV(){
 				list.innerHTML = '';
 
 				for (let product of this.response){
-					list.insertAdjacentHTML('beforeend', `<li onclick="void(0)">${product.name}</li>`);
+					list.insertAdjacentHTML('beforeend', `<li onclick="addTicketDetail(${product.id})">${product.name}</li>`);
 				}
 			}
 	});
