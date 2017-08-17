@@ -366,8 +366,95 @@ function loadFamily(name){
 	});
 }
 
-function cobrar(){
-	// TODO
+var totalCost;
+var totalRest;
+var partialTable;
+var partialCost;
+var partialRest;
+var input;
+var customTotal;
+var customRest;
+var activeInput;
+
+function calculateSplit(){
+	totalRest.innerText = (parseFloat(input.value) - totalCost.innerText).toFixed(2);
+	partialRest.innerText = (parseFloat(input.value) - partialCost.innerText).toFixed(2);
+	customRest.innerText = (parseFloat(input.value) - customTotal.value).toFixed(2);
+}
+
+function addAmount(amount){
+	activeInput.value = (parseFloat(activeInput.value) + amount).toFixed(2);
+	calculateSplit();
+}
+
+function splitTicket(){
+	main.innerHTML = `<div>
+		<h4>Ticket completo</h4>
+		<table>
+			<thead>
+				<tr>
+					<th>Producto</th>
+					<th>Cantidad</th>
+					<th>Precio</th>
+				</tr>
+			</thead>
+			<tbody id="ticketTable">
+			</tbody>
+		</table>
+		<p>Total: <span id="totalCost">0</span>€</p>
+		<p>Resto: <span id="totalRest">0</span>€</p>
+	</div>
+	<div>
+		<h4>Cuenta parcial</h4>
+		<table>
+			<thead>
+				<tr>
+					<th>Producto</th>
+					<th>Cantidad</th>
+					<th>Precio</th>
+				</tr>
+			</thead>
+			<tbody id="partialTable">
+			</tbody>
+		</table>
+		<p>Subtotal: <span id="partialCost">0</span>€</p>
+		<p>Resto: <span id="partialRest">0</span>€</p>
+		<button onclick="partialTable.innerHTML = ''">Limpiar</button>
+	</div>
+	<div>
+		<label>Lo que te ha dado el tío:</label>
+		<input onfocus="activeInput = this" onclick="this.value = 0" oninput="calculateSplit()" value="0" id="input" type="number">
+		<label>Lo que le quieres cobrar:</label>
+		<input onfocus="activeInput = this" onclick="this.value = 0" oninput="calculateSplit()" value="0" id="customTotal" type="number">
+		<ul>
+			<li onclick="addAmount(0.01)">1 cént.</li>
+			<li onclick="addAmount(0.02)">2 cént.</li>
+			<li onclick="addAmount(0.05)">5 cént.</li>
+			<li onclick="addAmount(0.1)">10 cént.</li>
+			<li onclick="addAmount(0.2)">20 cént.</li>
+			<li onclick="addAmount(0.5)">50 cént.</li>
+			<li onclick="addAmount(1)">1€</li>
+			<li onclick="addAmount(2)">2€</li>
+			<li onclick="addAmount(5)">5€</li>
+			<li onclick="addAmount(10)">10€</li>
+			<li onclick="addAmount(20)">20€</li>
+			<li onclick="addAmount(50)">50€</li>
+			<li onclick="addAmount(100)">100€</li>
+		</ul>
+		<p>Resto: <span id="customRest">0</span>€</p>
+	</div>
+	<button onclick="loadTPV()">Volver</button>`;
+	
+	totalCost = document.getElementById("totalCost");
+	totalRest = document.getElementById("totalRest");
+	partialTable = document.getElementById("partialTable");
+	partialCost = document.getElementById("partialCost");
+	partialRest = document.getElementById("partialRest");
+	input = document.getElementById("input");
+	customTotal = document.getElementById("customTotal");
+	customRest = document.getElementById("customRest");
+	activeInput = input;
+	
 	get("tickets/?is_closed=False&table=" + currentTableID, function(){
 		console.log(this.response[0]);
 	});
@@ -382,7 +469,7 @@ function showTicket(ticket){
 	
     table.innerHTML = `<thead>
 		<tr>
-            <th></th>
+			<th></th>
 			<th>Producto</th>
 			<th>Cantidad</th>
 			<th>Precio</th>
@@ -407,8 +494,6 @@ function showTicket(ticket){
 		</tr>`);
         }
 	}
-	
-	document.getElementById('ticketDiv').insertAdjacentHTML('beforeend', `<button onclick="cobrar()">Cobrar</button>`);
 }
 
 function createTicket(){
@@ -443,7 +528,7 @@ function loadTPV(){
 		     <button type="button" class="btn btn-warning" >Abrir Cajón</button>
 		     <button type="button" class="btn btn-success">Efectivo <span class="badge"> 12.50€</span></button>
 		     <button type="button" class="btn btn-success">Cobro Avanzado</button>
-		     <button type="button" class="btn btn-primary">Dividir Ticket</button>
+		     <button onclick="splitTicket()" type="button" class="btn btn-primary">Dividir Ticket</button>
 		     <button onclick="sendKitchen()" type="button" class="btn btn-basic">Enviar a Cocina</button>
 		     <button type="button" class="btn btn-danger">Borrar Linea</button>
 		     <button type="button" class="btn btn-info">Añadir Nota</button>
