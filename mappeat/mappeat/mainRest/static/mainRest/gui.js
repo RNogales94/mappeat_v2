@@ -436,13 +436,13 @@ function splitTicket(){
 		</table>
 		<p>Subtotal: <span id="partialCost">0</span>€</p>
 		<p>Resto: <span id="partialRest">0</span>€</p>
-		<button onclick="partialTable.innerHTML = ''; partialCost.innerText = 0">Limpiar</button>
+		<button onclick="partialCost.innerText = 0; calculateSplit(); partialTable.innerHTML = ''">Limpiar</button>
 	</div>
 	<div>
 		<label>Lo que te ha dado el tío:</label>
-		<input onfocus="activeInput = this" onclick="this.value = 0" oninput="calculateSplit()" value="0" id="input" type="number">
+		<input onfocus="activeInput = this" onclick="this.value = 0; calculateSplit()" oninput="calculateSplit()" value="0" id="input" type="number">
 		<label>Lo que le quieres cobrar:</label>
-		<input onfocus="activeInput = this" onclick="this.value = 0" oninput="calculateSplit()" value="0" id="customTotal" type="number">
+		<input onfocus="activeInput = this" onclick="this.value = 0; calculateSplit()" oninput="calculateSplit()" value="0" id="customTotal" type="number">
 		<ul>
 			<li onclick="addAmount(0.01)">1 cént.</li>
 			<li onclick="addAmount(0.02)">2 cént.</li>
