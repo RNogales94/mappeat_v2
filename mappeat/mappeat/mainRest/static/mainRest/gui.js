@@ -378,7 +378,9 @@ function showTicket(ticket){
 	document.getElementById('ticketID').innerText = "Número de ticket: " + ticket.pk;
 	
 	var table = document.getElementById('ticketTable');
-	table.innerHTML = `<thead>
+    var pending = document.getElementById('kitchenTicket');
+	
+    table.innerHTML = `<thead>
 		<tr>
             <th></th>
 			<th>Producto</th>
@@ -389,14 +391,21 @@ function showTicket(ticket){
 	<tbody>
 	</tbody>`;
 	table = table.lastChild;
+	pending.innerHTML = '';
 	
-	for (let line of ticket.details){
+    for (let line of ticket.details){
 		table.insertAdjacentHTML('beforeend', `<tr onclick="void(0)">
 			<td><span class='glyphicon glyphicon-remove' onclick='removeTicketDetail(${line.pk})'></span> </td>
             <td>${line.product_name}</td>
 			<td>${line.quantity}</td>
 			<td>${line.price}€</td>
 		</tr>`);
+        if (!line.sent_kitchen){
+            pending.insertAdjacentHTML('beforeend', `<tr onclick="void(0)">
+            <td>${line.product_name}</td>
+			<td>${line.quantity}</td>
+		</tr>`);
+        }
 	}
 	
 	document.getElementById('ticketDiv').insertAdjacentHTML('beforeend', `<button onclick="cobrar()">Cobrar</button>`);
@@ -479,6 +488,8 @@ function loadTPV(){
 		       <div id="ticketDiv" class="well">
 		         <h4>Ticket Actual</h4>
 		         <table class='table' id="ticketTable"></table>
+                 <div style="display: none;">
+                 <table class='table'  id='kitchenTicket'></table></div>
 		       </div>
 		     </div>
 		   </div>
@@ -981,6 +992,7 @@ function sendKitchen(){
                 line.sent_kitchen = true;
                 put('ticket_details/'+line.pk+'/',function(){},line,true);
             }
+            printTicketKitchen();
         });
     });
 }
@@ -990,4 +1002,11 @@ function printTicket(){
         var close = mode == "popup";
         var options = { mode : mode, popClose : close};
         $("#ticketTable").print( options );
+}
+
+function printTicketKitchen(){
+    var mode = 'iframe'; //popup
+        var close = mode == "popup";
+        var options = { mode : mode, popClose : close};
+        $("#kitchenTicket").print( options );
 }
