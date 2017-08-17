@@ -387,6 +387,23 @@ function addAmount(amount){
 	calculateSplit();
 }
 
+function removeFromPartial(line, price){
+	partialCost.innerText = (parseFloat(partialCost.innerText) - price).toFixed(2);
+	calculateSplit();
+	line.parentNode.removeChild(line);
+}
+
+function addToPartial(line){
+	partialCost.innerText = (parseFloat(partialCost.innerText) + line.product.price).toFixed(2);
+	calculateSplit();
+	
+	partialTable.insertAdjacentHTML('beforeend', `<tr onclick="removeFromPartial(this, ${line.product.price})">
+		<td>${line.product.name}</td>
+		<td>1</td>
+		<td>${line.product.price}€</td>
+	</tr>`);
+}
+
 function splitTicket(){
 	main.innerHTML = `<div>
 		<h4>Ticket completo</h4>
@@ -419,7 +436,7 @@ function splitTicket(){
 		</table>
 		<p>Subtotal: <span id="partialCost">0</span>€</p>
 		<p>Resto: <span id="partialRest">0</span>€</p>
-		<button onclick="partialTable.innerHTML = ''">Limpiar</button>
+		<button onclick="partialTable.innerHTML = ''; partialCost.innerText = 0">Limpiar</button>
 	</div>
 	<div>
 		<label>Lo que te ha dado el tío:</label>
@@ -456,7 +473,18 @@ function splitTicket(){
 	activeInput = input;
 	
 	get("tickets/?is_closed=False&table=" + currentTableID, function(){
-		console.log(this.response[0]);
+		document.getElementById('totalCost').innerText = this.response[0].cost;
+		calculateSplit();
+		var table = document.getElementById('ticketTable');
+		
+		for (let line of this.response[0].details){
+			table.insertAdjacentHTML('beforeend', `<tr onclick="addToPartial(this)">
+				<td>${line.product_name}</td>
+				<td>${line.quantity}</td>
+				<td>${line.price}€</td>
+			</tr>`);
+			table.lastChild.product = { name:line.product_name, price:line.price };
+		}
 	});
 }
 
@@ -483,7 +511,7 @@ function showTicket(ticket){
     for (let line of ticket.details){
 		table.insertAdjacentHTML('beforeend', `<tr onclick="void(0)">
 			<td><span class='glyphicon glyphicon-remove' onclick='removeTicketDetail(${line.pk})'></span> </td>
-            <td>${line.product_name}</td>
+			<td>${line.product_name}</td>
 			<td>${line.quantity}</td>
 			<td>${line.price}€</td>
 		</tr>`);
