@@ -377,9 +377,9 @@ var customRest;
 var activeInput;
 
 function calculateSplit(){
-	totalRest.innerText = (parseFloat(input.value) - totalCost.innerText).toFixed(2);
-	partialRest.innerText = (parseFloat(input.value) - partialCost.innerText).toFixed(2);
-	customRest.innerText = (parseFloat(input.value) - customTotal.value).toFixed(2);
+	totalRest.innerText = (input.value - totalCost.innerText).toFixed(2);
+	partialRest.innerText = (input.value - partialCost.innerText).toFixed(2);
+	customRest.innerText = (input.value - customTotal.value).toFixed(2);
 }
 
 function addAmount(amount){
@@ -388,7 +388,7 @@ function addAmount(amount){
 }
 
 function removeFromPartial(line, price){
-	partialCost.innerText = (parseFloat(partialCost.innerText) - price).toFixed(2);
+	partialCost.innerText = (partialCost.innerText - price).toFixed(2);
 	calculateSplit();
 	line.parentNode.removeChild(line);
 }
@@ -402,6 +402,10 @@ function addToPartial(line){
 		<td>1</td>
 		<td>${line.product.price}€</td>
 	</tr>`);
+}
+
+function divide(node, divisor){
+	return (node.innerText / divisor).toFixed(2);
 }
 
 function splitTicket(){
@@ -473,8 +477,11 @@ function splitTicket(){
 	activeInput = input;
 	
 	get("tickets/?is_closed=False&table=" + currentTableID, function(){
-		document.getElementById('totalCost').innerText = this.response[0].cost;
+		var totalCost = document.getElementById('totalCost');
+		totalCost.innerText = this.response[0].cost;
+		totalRest.parentNode.insertAdjacentHTML('afterend', `<p>Divisiones: ${divide(totalCost, 2)} (2), ${divide(totalCost, 3)} (3), ${divide(totalCost, 4)} (4), ${divide(totalCost, 5)} (5), ${divide(totalCost, 6)} (6)</p>`);
 		calculateSplit();
+		
 		var table = document.getElementById('ticketTable');
 		
 		for (let line of this.response[0].details){
