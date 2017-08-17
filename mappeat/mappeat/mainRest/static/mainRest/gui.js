@@ -400,7 +400,7 @@ function addToPartial(line){
 	partialTable.insertAdjacentHTML('beforeend', `<tr onclick="removeFromPartial(this, ${line.product.price})">
 		<td>${line.product.name}</td>
 		<td>1</td>
-		<td>${line.product.price}€</td>
+		<td>${line.product.price.toFixed(2)}€</td>
 	</tr>`);
 }
 
@@ -491,7 +491,7 @@ function splitTicket(){
 				<td>${line.quantity}</td>
 				<td>${line.price}€</td>
 			</tr>`);
-			table.lastChild.product = { name:line.product_name, price:line.price };
+			table.lastChild.product = { name:line.product_name, price:line.price/line.quantity };
 		}
 	});
 }
