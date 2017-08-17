@@ -424,6 +424,7 @@ function splitTicket(){
 		</table>
 		<p>Total: <span id="totalCost">0</span>€</p>
 		<p>Resto: <span id="totalRest">0</span>€</p>
+		<p>Divisiones: <span id="divisions"></span></p>
 	</div>
 	<div>
 		<h4>Cuenta parcial</h4>
@@ -479,8 +480,8 @@ function splitTicket(){
 	get("tickets/?is_closed=False&table=" + currentTableID, function(){
 		var totalCost = document.getElementById('totalCost');
 		totalCost.innerText = this.response[0].cost;
-		totalRest.parentNode.insertAdjacentHTML('afterend', `<p>Divisiones: ${divide(totalCost, 2)} (2), ${divide(totalCost, 3)} (3), ${divide(totalCost, 4)} (4), ${divide(totalCost, 5)} (5), ${divide(totalCost, 6)} (6)</p>`);
 		calculateSplit();
+		document.getElementById("divisions").innerText = `${divide(totalCost, 2)} (2), ${divide(totalCost, 3)} (3), ${divide(totalCost, 4)} (4), ${divide(totalCost, 5)} (5), ${divide(totalCost, 6)} (6)`;
 		
 		var table = document.getElementById('ticketTable');
 		
