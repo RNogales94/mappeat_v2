@@ -526,9 +526,9 @@ function splitTicket(){
 }
 
 function showTicket(ticket){
-	document.getElementById('totalCost').innerText = "Total cuenta: " + ticket.cost + "€";
+	document.getElementById('totalCost').innerText = "Total cuenta: " + ticket.cost.toFixed(2) + "€";
 	document.getElementById('ticketID').innerText = "Número de ticket: " + ticket.pk;
-	document.getElementById('cashButton').innerText = ticket.cost + "€";
+	document.getElementById('cashButton').innerText = ticket.cost.toFixed(2) + "€";
 
 	var table = document.getElementById('ticketTable');
     var pending = document.getElementById('kitchenTicket');
@@ -551,7 +551,7 @@ function showTicket(ticket){
 			<td><span class='glyphicon glyphicon-remove' onclick='removeTicketDetail(${line.pk})'></span> </td>
 			<td>${line.product_name}</td>
 			<td>${line.quantity}</td>
-			<td>${line.price}€</td>
+			<td>${line.price.toFixed(2)}€</td>
 		</tr>`);
         if (!line.sent_kitchen){
             pending.insertAdjacentHTML('beforeend', `<tr onclick="void(0)">
