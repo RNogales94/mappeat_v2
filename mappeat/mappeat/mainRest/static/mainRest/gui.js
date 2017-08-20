@@ -596,7 +596,7 @@ function loadTPV(){
 		     <div class="btn-group-vertical" style="width: 110%">
 		     <button onclick="seeTables()" type="button" class="btn btn-primary">Ver Mesas</button>
 		     <button type="button" class="btn btn-warning" >Abrir Cajón</button>
-		     <button type="button" class="btn btn-success">Efectivo <span class="badge"> 12.50€</span></button>
+		     <button type="button" onclick="charge()" class="btn btn-success">Efectivo <span class="badge"> 12.50€</span></button>
 		     <button type="button" class="btn btn-success">Cobro Avanzado</button>
 		     <button onclick="splitTicket()" type="button" class="btn btn-primary">Dividir Ticket</button>
 		     <button onclick="sendKitchen()" type="button" class="btn btn-basic">Enviar a Cocina</button>
@@ -1165,3 +1165,25 @@ function printTicketKitchen(){
         var options = { mode : mode, popClose : close};
         $("#kitchenTicket").print( options );
 }
+
+function charge(){
+    //abrir cajon
+        // TODO
+    
+    //cierra el ticket
+    get("tickets/?is_closed=False&table=" + currentTableID,function(){
+            let ticket =this.response[0];
+            ticket.is_closed = true;
+            put("tickets/"+ ticket.pk +"/",function(){},ticket,true);
+            
+            //marca la mesa como libre
+            get('tables/'+currentTableID+'/',function(){
+                var valores = this.response;
+                valores.is_available = true;
+                put('tables/'+currentTableID+'/',function(){
+                                                currentTable = undefined;
+                                                currentTableID = undefined;
+                                                loadTPV();},valores,true)}
+               ); 
+    });
+}   
