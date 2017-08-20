@@ -330,16 +330,40 @@ function editRestaurant(id_rest){
 
 function seeTables(){
 	main.innerHTML = `<h3>Mesas</h3>
-		<ul id="tablesList">Cargando...</ul>`;
-	
+                      <div class = 'well'>
+                          <svg style="width:100%;height:600px;" id='tableMap'></svg>
+                      </div>`;
+	                   
 	get("tables/", function(){
 		"use strict";
-		let list = document.getElementById('tablesList');
-		list.innerHTML = '';
-
-		for (let table of this.response){
-			list.insertAdjacentHTML('beforeend', `<li onclick="getTicket(${table.id}, '${table.type_table}${table.number}')">${table.type_table}${table.number}</li>`);
-		}
+        let map = document.getElementById('tableMap');
+       
+        
+        let n = this.response.length;
+        let cols = 5;
+        let rows = Math.floor(n/cols)+1;
+        
+        let table;
+        let available;
+        
+        map.innerHTML = '';
+      
+        
+        for (var i = 0;  i < rows ; i += 1){
+            for (var j = 0 ; j < cols ; j += 1){
+                if( i*cols+j < n){
+                     table =  this.response[i*cols+j];
+                     available = "#00FF00";
+                        if(!table.is_available)
+                            available = "#FF0000";
+                     map.insertAdjacentHTML('beforeend',`<rect x=${map.width.baseVal.value*j/cols+1} y=${map.height.baseVal.value*i/rows} width="100" height="100" style="fill:${available}" onclick="getTicket(${table.id}, '${table.type_table}${table.number}')"></rect>
+            <text x=${map.width.baseVal.value*j/cols+50} y=${map.height.baseVal.value*i/rows+50}>${table.type_table}${table.number}</text>`);
+                }
+                else break;
+            }
+        }
+		
+        
 	});
 }
 
