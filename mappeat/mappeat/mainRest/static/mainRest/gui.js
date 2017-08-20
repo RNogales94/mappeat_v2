@@ -187,14 +187,12 @@ function showStaffForm(){
 				                                <label>Nombre Usuario</label> <input type='text' name="username"><br>
                                                 <label>Contraseña</label><input type='password' name="pass"><br>
                                                 <label>Repetir Contraseña</label><input type='password' name="passRepeated"><br>
-
                                             <div class="modal-footer">
                                             <p>Nota:Estos datos deben ser facilitados al empleado para poder conectarse y podrán ser modificados.</p>
                                             <button type='submit' class='btn-success'>Continuar</button>
                                             </form>
                                             </div>
 			                             </div></div></div></div>
-
                                          <div class="modal fade" id="modalUser2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	                                       <div class="modal-dialog" role="document">
 		                                      <div class="modal-content">
@@ -217,7 +215,6 @@ function showStaffForm(){
                                                 <label>Sueldo/hora</label><input type='text' placeholder='' name='hourly_rate'><br>
                                                 <label>Activo</label><input type='checkbox' name='is_active' checked><br>
                                                 <label>Anotaciones</label><input type='text' name='notes' placeholder='Notas'><br>
-
                                             <div class="modal-footer">
                                                 <p>Nota:Estos datos podrán ser modificados en el futuro.</p>
                                                   <button type='submit' class='btn-success'>Finalizar</button>
@@ -328,23 +325,57 @@ function editRestaurant(id_rest){
 
 function seeTables(){
 	main.innerHTML = `<h3>Mesas</h3>
-		<ul id="tablesList">Cargando...</ul>`;
+                      <div class = 'well'>
+                          <svg style="width:100%;height:600px;" id='tableMap'></svg>
+                      </div>`;
 
 	get("tables/", function(){
 		"use strict";
-		let list = document.getElementById('tablesList');
-		list.innerHTML = '';
+        let map = document.getElementById('tableMap');
 
-		for (let table of this.response){
-			list.insertAdjacentHTML('beforeend', `<li onclick="getTicket(${table.id}, '${table.type_table}${table.number}')">${table.type_table}${table.number}</li>`);
-		}
+
+        let n = this.response.length;
+        //numero de columnas
+        let cols = 5;
+        //tamaño del cuadrado
+        let size = 100;
+        let rows = Math.floor(n/cols)+1;
+
+        let table;
+        let available;
+
+        map.innerHTML = '';
+
+
+        for (var i = 0;  i < rows ; i += 1){
+            for (var j = 0 ; j < cols ; j += 1){
+                if( i*cols+j < n){
+                     table =  this.response[i*cols+j];
+                     available = "#00FF00";
+                        if(!table.is_available)
+                            available = "#FF0000";
+                     map.insertAdjacentHTML('beforeend',`<rect x=${map.width.baseVal.value*j/cols+1} y=${map.height.baseVal.value*i/rows} width=${size} height=${size} style="fill:${available}" onclick="getTicket(${table.id}, '${table.type_table}${table.number}')"></rect>
+            <text x=${map.width.baseVal.value*j/cols+40} y=${map.height.baseVal.value*i/rows+50} font-family="Verdana"
+        font-size="20">${table.type_table}${table.number}</text>`);
+                }
+                else break;
+            }
+        }
+
+
 	});
 }
 
 function getTicket(tableID, tableName){
 	currentTableID = tableID;
 	currentTable = tableName;
-	loadTPV();
+
+    //marca la mesa como ocupada
+    get('tables/'+currentTableID+'/',function(){
+         var valores = this.response;
+         valores.is_available = false;
+         put('tables/'+currentTableID+'/',function(){
+                                                loadTPV();},valores,true)});
 }
 
 function loadFamily(name){
@@ -364,10 +395,133 @@ function loadFamily(name){
 	});
 }
 
-function cobrar(){
-	// TODO
+var totalCost;
+var totalRest;
+var partialTable;
+var partialCost;
+var partialRest;
+var input;
+var customTotal;
+var customRest;
+var activeInput;
+
+function calculateSplit(){
+	totalRest.innerText = (input.value - totalCost.innerText).toFixed(2);
+	partialRest.innerText = (input.value - partialCost.innerText).toFixed(2);
+	customRest.innerText = (input.value - customTotal.value).toFixed(2);
+}
+
+function addAmount(amount){
+	activeInput.value = (parseFloat(activeInput.value) + amount).toFixed(2);
+	calculateSplit();
+}
+
+function removeFromPartial(line, price){
+	partialCost.innerText = (partialCost.innerText - price).toFixed(2);
+	calculateSplit();
+	line.parentNode.removeChild(line);
+}
+
+function addToPartial(line){
+	partialCost.innerText = (parseFloat(partialCost.innerText) + line.product.price).toFixed(2);
+	calculateSplit();
+
+	partialTable.insertAdjacentHTML('beforeend', `<tr onclick="removeFromPartial(this, ${line.product.price})">
+		<td>${line.product.name}</td>
+		<td>1</td>
+		<td>${line.product.price.toFixed(2)}€</td>
+	</tr>`);
+}
+
+function divide(node, divisor){
+	return (node.innerText / divisor).toFixed(2);
+}
+
+function splitTicket(){
+	main.innerHTML = `<div>
+		<h4>Ticket completo</h4>
+		<table>
+			<thead>
+				<tr>
+					<th>Producto</th>
+					<th>Cantidad</th>
+					<th>Precio</th>
+				</tr>
+			</thead>
+			<tbody id="ticketTable">
+			</tbody>
+		</table>
+		<p>Total: <span id="totalCost">0</span>€</p>
+		<p>Resto: <span id="totalRest">0</span>€</p>
+		<p>Divisiones: <span id="divisions"></span></p>
+	</div>
+	<div>
+		<h4>Cuenta parcial</h4>
+		<table>
+			<thead>
+				<tr>
+					<th>Producto</th>
+					<th>Cantidad</th>
+					<th>Precio</th>
+				</tr>
+			</thead>
+			<tbody id="partialTable">
+			</tbody>
+		</table>
+		<p>Subtotal: <span id="partialCost">0</span>€</p>
+		<p>Resto: <span id="partialRest">0</span>€</p>
+		<button onclick="partialCost.innerText = 0; calculateSplit(); partialTable.innerHTML = ''">Limpiar</button>
+	</div>
+	<div>
+		<label>Lo que te ha dado el tío:</label>
+		<input onfocus="activeInput = this" onclick="this.value = 0; calculateSplit()" oninput="calculateSplit()" value="0" id="input" type="number">
+		<label>Lo que le quieres cobrar:</label>
+		<input onfocus="activeInput = this" onclick="this.value = 0; calculateSplit()" oninput="calculateSplit()" value="0" id="customTotal" type="number">
+		<ul>
+			<li onclick="addAmount(0.01)">1 cént.</li>
+			<li onclick="addAmount(0.02)">2 cént.</li>
+			<li onclick="addAmount(0.05)">5 cént.</li>
+			<li onclick="addAmount(0.1)">10 cént.</li>
+			<li onclick="addAmount(0.2)">20 cént.</li>
+			<li onclick="addAmount(0.5)">50 cént.</li>
+			<li onclick="addAmount(1)">1€</li>
+			<li onclick="addAmount(2)">2€</li>
+			<li onclick="addAmount(5)">5€</li>
+			<li onclick="addAmount(10)">10€</li>
+			<li onclick="addAmount(20)">20€</li>
+			<li onclick="addAmount(50)">50€</li>
+			<li onclick="addAmount(100)">100€</li>
+		</ul>
+		<p>Resto: <span id="customRest">0</span>€</p>
+	</div>
+	<button onclick="loadTPV()">Volver</button>`;
+
+	totalCost = document.getElementById("totalCost");
+	totalRest = document.getElementById("totalRest");
+	partialTable = document.getElementById("partialTable");
+	partialCost = document.getElementById("partialCost");
+	partialRest = document.getElementById("partialRest");
+	input = document.getElementById("input");
+	customTotal = document.getElementById("customTotal");
+	customRest = document.getElementById("customRest");
+	activeInput = input;
+
 	get("tickets/?is_closed=False&table=" + currentTableID, function(){
-		console.log(this.response[0]);
+		var totalCost = document.getElementById('totalCost');
+		totalCost.innerText = this.response[0].cost;
+		calculateSplit();
+		document.getElementById("divisions").innerText = `${divide(totalCost, 2)} (2), ${divide(totalCost, 3)} (3), ${divide(totalCost, 4)} (4), ${divide(totalCost, 5)} (5), ${divide(totalCost, 6)} (6)`;
+
+		var table = document.getElementById('ticketTable');
+
+		for (let line of this.response[0].details){
+			table.insertAdjacentHTML('beforeend', `<tr onclick="addToPartial(this)">
+				<td>${line.product_name}</td>
+				<td>${line.quantity}</td>
+				<td>${line.price}€</td>
+			</tr>`);
+			table.lastChild.product = { name:line.product_name, price:line.price/line.quantity };
+		}
 	});
 }
 
@@ -376,12 +530,12 @@ function showTicket(ticket){
 	document.getElementById('ticketID').innerText = "Número de ticket: " + ticket.pk;
 	document.getElementById('cashButton').innerText = ticket.cost + "€";
 
-
-
 	var table = document.getElementById('ticketTable');
-	table.innerHTML = `<thead>
+    var pending = document.getElementById('kitchenTicket');
+
+    table.innerHTML = `<thead>
 		<tr>
-            <th></th>
+			<th></th>
 			<th>Producto</th>
 			<th>Cantidad</th>
 			<th>Precio</th>
@@ -390,17 +544,22 @@ function showTicket(ticket){
 	<tbody>
 	</tbody>`;
 	table = table.lastChild;
+	pending.innerHTML = '';
 
-	for (let line of ticket.details){
+    for (let line of ticket.details){
 		table.insertAdjacentHTML('beforeend', `<tr onclick="void(0)">
 			<td><span class='glyphicon glyphicon-remove' onclick='removeTicketDetail(${line.pk})'></span> </td>
-            <td>${line.product_name}</td>
+			<td>${line.product_name}</td>
 			<td>${line.quantity}</td>
 			<td>${line.price}€</td>
 		</tr>`);
+        if (!line.sent_kitchen){
+            pending.insertAdjacentHTML('beforeend', `<tr onclick="void(0)">
+            <td>${line.product_name}</td>
+			<td>${line.quantity}</td>
+		</tr>`);
+        }
 	}
-
-	document.getElementById('ticketDiv').insertAdjacentHTML('beforeend', `<button onclick="cobrar()">Cobrar</button>`);
 }
 
 function createTicket(){
@@ -433,9 +592,8 @@ function loadTPV(){
 		     <div class="btn-group-vertical" style="width: 110%">
 		     <button onclick="seeTables()" type="button" class="btn btn-primary">Ver Mesas</button>
 		     <button type="button" class="btn btn-warning" >Abrir Cajón</button>
-		     <button type="button" class="btn btn-success">Efectivo <span id="cashButton" class="badge">0€</span></button>
-		     <button type="button" class="btn btn-success">Cobro Avanzado</button>
-		     <button type="button" class="btn btn-primary">Dividir Ticket</button>
+   	     <button type="button" class="btn btn-success">Efectivo <span id="cashButton" class="badge">0€</span></button>
+		     <button onclick="splitTicket()" type="button" class="btn btn-primary">Dividir Ticket</button>
 		     <button onclick="sendKitchen()" type="button" class="btn btn-basic">Enviar a Cocina</button>
 		     <button type="button" class="btn btn-danger">Borrar Linea</button>
 		     <button type="button" class="btn btn-info">Añadir Nota</button>
@@ -446,7 +604,6 @@ function loadTPV(){
 		     </div><br>
 		 </div>
 		 <br>
-
 		 <div class="col-sm-10">
 		   <div class="row">
 		     <div class="col-sm-8">
@@ -480,6 +637,8 @@ function loadTPV(){
 		       <div id="ticketDiv" class="well">
 		         <h4>Ticket Actual</h4>
 		         <table class='table' id="ticketTable"></table>
+                 <div style="display: none;">
+                 <table class='table'  id='kitchenTicket'></table></div>
 		       </div>
 		     </div>
 		   </div>
@@ -616,7 +775,6 @@ function loadStore(){
                                     <th>Formato</th>
                                     <th>Código de barras</th>
                                     <th>Unidades</th>
-
                                     <tbody id='storeList'></tbody>
                                     </table>
 	                               </div>
@@ -663,8 +821,6 @@ function newSupplyForm(){
                                             <button type='submit' class='btn-success'>Continuar</button>
                                             </form>
                                             </div>
-
-
 			                             </div></div></div></div>`);
   fillFormats();
 }
@@ -982,6 +1138,7 @@ function sendKitchen(){
                 line.sent_kitchen = true;
                 put('ticket_details/'+line.pk+'/',function(){},line,true);
             }
+            printTicketKitchen();
         });
     });
 }
@@ -991,4 +1148,33 @@ function printTicket(){
         var close = mode == "popup";
         var options = { mode : mode, popClose : close};
         $("#ticketTable").print( options );
+}
+
+function printTicketKitchen(){
+    var mode = 'iframe'; //popup
+        var close = mode == "popup";
+        var options = { mode : mode, popClose : close};
+        $("#kitchenTicket").print( options );
+}
+
+function charge(){
+    //abrir cajon
+        // TODO
+
+    //cierra el ticket
+    get("tickets/?is_closed=False&table=" + currentTableID,function(){
+            let ticket =this.response[0];
+            ticket.is_closed = true;
+            put("tickets/"+ ticket.pk +"/",function(){},ticket,true);
+
+            //marca la mesa como libre
+            get('tables/'+currentTableID+'/',function(){
+                var valores = this.response;
+                valores.is_available = true;
+                put('tables/'+currentTableID+'/',function(){
+                                                currentTable = undefined;
+                                                currentTableID = undefined;
+                                                loadTPV();},valores,true)}
+               );
+    });
 }
