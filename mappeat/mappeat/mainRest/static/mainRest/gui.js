@@ -433,7 +433,7 @@ function loadTPV(){
 		     <div class="btn-group-vertical" style="width: 110%">
 		     <button onclick="seeTables()" type="button" class="btn btn-primary">Ver Mesas</button>
 		     <button type="button" class="btn btn-warning" >Abrir Cajón</button>
-		     <button type="button" class="btn btn-success">Efectivo <span id="cashButton" class="badge"></span></button>
+		     <button type="button" class="btn btn-success">Efectivo <span id="cashButton" class="badge">0€</span></button>
 		     <button type="button" class="btn btn-success">Cobro Avanzado</button>
 		     <button type="button" class="btn btn-primary">Dividir Ticket</button>
 		     <button onclick="sendKitchen()" type="button" class="btn btn-basic">Enviar a Cocina</button>
