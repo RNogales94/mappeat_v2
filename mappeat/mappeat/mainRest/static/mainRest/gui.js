@@ -374,7 +374,13 @@ function seeTables(){
 function getTicket(tableID, tableName){
 	currentTableID = tableID;
 	currentTable = tableName;
-	loadTPV();
+    
+    //marca la mesa como ocupada
+    get('tables/'+currentTableID+'/',function(){
+         var valores = this.response;
+         valores.is_available = false;
+         put('tables/'+currentTableID+'/',function(){
+                                                loadTPV();},valores,true)});
 }
 
 function loadFamily(name){
