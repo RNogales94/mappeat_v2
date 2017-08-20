@@ -340,7 +340,10 @@ function seeTables(){
        
         
         let n = this.response.length;
+        //numero de columnas
         let cols = 5;
+        //tamaño del cuadrado
+        let size = 100;
         let rows = Math.floor(n/cols)+1;
         
         let table;
@@ -356,8 +359,9 @@ function seeTables(){
                      available = "#00FF00";
                         if(!table.is_available)
                             available = "#FF0000";
-                     map.insertAdjacentHTML('beforeend',`<rect x=${map.width.baseVal.value*j/cols+1} y=${map.height.baseVal.value*i/rows} width="100" height="100" style="fill:${available}" onclick="getTicket(${table.id}, '${table.type_table}${table.number}')"></rect>
-            <text x=${map.width.baseVal.value*j/cols+50} y=${map.height.baseVal.value*i/rows+50}>${table.type_table}${table.number}</text>`);
+                     map.insertAdjacentHTML('beforeend',`<rect x=${map.width.baseVal.value*j/cols+1} y=${map.height.baseVal.value*i/rows} width=${size} height=${size} style="fill:${available}" onclick="getTicket(${table.id}, '${table.type_table}${table.number}')"></rect>
+            <text x=${map.width.baseVal.value*j/cols+40} y=${map.height.baseVal.value*i/rows+50} font-family="Verdana" 
+        font-size="20">${table.type_table}${table.number}</text>`);
                 }
                 else break;
             }
