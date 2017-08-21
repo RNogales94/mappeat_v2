@@ -585,22 +585,27 @@ function loadTicket(){
 	}
 }
 
+function cancelTicket(){
+	//TODO
+}
+
+function transferTable(){
+	//TODO
+}
+
 function loadTPV(){
 	main.innerHTML = `<div class="container-fluid">
 		<div class="row content">
-		 <div class="col-sm-1 sidenav " style="width: 12%">
+		 <div class="col-sm-1 sidenav " style="width: 12% ">
 		     <div class="btn-group-vertical" style="width: 110%">
-		     <button onclick="seeTables()" type="button" class="btn btn-primary">Ver Mesas</button>
-		     <button type="button" class="btn btn-warning" >Abrir Cajón</button>
-   	     <button type="button" class="btn btn-success">Efectivo <span id="cashButton" class="badge">0€</span></button>
-		     <button onclick="splitTicket()" type="button" class="btn btn-primary">Dividir Ticket</button>
-		     <button onclick="sendKitchen()" type="button" class="btn btn-basic">Enviar a Cocina</button>
-		     <button type="button" class="btn btn-danger">Borrar Linea</button>
-		     <button type="button" class="btn btn-info">Añadir Nota</button>
-		     <button type="button" class="btn btn-warning">Transferir Mesa</button>
-		     <button type="button" class="btn btn-primary">Buscar Ticket</button>
-		     <button onclick="printTicket()" type="button" class="btn btn-info">Imprimir Ticket</button>
-		     <button type="button" class="btn btn-danger">Cancelar Ticket</button>
+		     <button onclick="seeTables()" type="button" class="btn btn-primary" style="height: 70px">Ver Mesas</button>
+		     <button type="button" class="btn btn-warning" style="height: 70px">Abrir Cajón</button>
+   	     <button type="button" class="btn btn-success" style="height: 70px">Efectivo <span id="cashButton" class="badge">0€</span></button>
+		     <button onclick="splitTicket()" type="button" class="btn btn-primary" style="height: 70px">Dividir Ticket</button>
+		     <button onclick="sendKitchen()" type="button" class="btn btn-basic" style="height: 70px">Enviar a Cocina</button>
+		     <button onclick="transferTable()" type="button" class="btn btn-warning" style="height: 70px">Transferir Mesa</button>
+		     <button onclick="printTicket()" type="button" class="btn btn-info" style="height: 70px">Imprimir Ticket</button>
+		     <button onclick="cancelTicket()" type="button" class="btn btn-danger" style="height: 70px">Cancelar Ticket</button>
 		     </div><br>
 		 </div>
 		 <br>
@@ -627,11 +632,14 @@ function loadTPV(){
 		       <div class="well">
 		         <h4>Productos</h4>
 		         <ul id="productsList">Cargando...</ul>
-		       </div>
-		         <div class="well">
+
+					 </div>
+					 <!---
+					   <div class="well">
 		         <h4> Sugerencias de productos </h4>
 		         <p> Aqui aparece una lista de productos de varias familias que tienen una gran probabilidad de ser incluídos en el ticket</p>
 		       </div>
+					 -->
 		     </div>
 		     <div class="col-sm-4">
 		       <div id="ticketDiv" class="well">
