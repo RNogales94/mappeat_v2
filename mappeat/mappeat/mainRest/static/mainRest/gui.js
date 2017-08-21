@@ -604,14 +604,14 @@ function loadTPV(){
 		<div class="row content">
 		 <div class="col-sm-1 sidenav " style="width: 12% ">
 		     <div class="btn-group-vertical" style="width: 110%">
-		     <button onclick="seeTables()" type="button" class="btn btn-primary" style="height: 70px">Ver Mesas</button>
-		     <button type="button" class="btn btn-warning" style="height: 70px">Abrir Cajón</button>
-   	     <button type="button" onclick='charge()' class="btn btn-success" style="height: 70px">Efectivo <span id="cashButton" class="badge">0€</span></button>
-		     <button onclick="splitTicket()" type="button" class="btn btn-primary" style="height: 70px">Dividir Ticket</button>
-		     <button onclick="sendKitchen()" type="button" class="btn btn-basic" style="height: 70px">Enviar a Cocina</button>
-		     <button onclick="transferTable()" type="button" class="btn btn-warning" style="height: 70px">Transferir Mesa</button>
-		     <button onclick="printTicket()" type="button" class="btn btn-info" style="height: 70px">Imprimir Ticket</button>
-		     <button onclick="cancelTicket()" type="button" class="btn btn-danger" style="height: 70px">Cancelar Ticket</button>
+		     <button onclick="seeTables()" type="button" class="btn btn-primary btn-side" style="height: 70px">Ver Mesas</button>
+		     <button type="button" class="btn btn-warning btn-side" style="height: 70px">Abrir Cajón</button>
+   	     <button type="button" onclick='charge()' class="btn btn-success btn-side" style="height: 70px">Efectivo <span id="cashButton" class="badge">0€</span></button>
+		     <button onclick="splitTicket()" type="button" class="btn btn-primary btn-side" style="height: 70px">Dividir Ticket</button>
+		     <button onclick="sendKitchen()" type="button" class="btn btn-basic btn-side" style="height: 70px">Enviar a Cocina</button>
+		     <button onclick="transferTable()" type="button" class="btn btn-warning btn-side" style="height: 70px">Transferir Mesa</button>
+		     <button onclick="printTicket()" type="button" class="btn btn-info btn-side" style="height: 70px">Imprimir Ticket</button>
+		     <button onclick="cancelTicket()" type="button" class="btn btn-danger btn-side" style="height: 70px">Cancelar Ticket</button>
 		     </div><br>
 		 </div>
 		 <br>
@@ -620,7 +620,7 @@ function loadTPV(){
 		     <div class="col-sm-8">
 		       <div class="well">
 		         <h4>Familias</h4>
-		         <ul id="familiesList">Cargando...</ul>
+		         <ul id="familiesList" class="ul-tpv">Cargando...</ul>
 		       </div>
 		     </div>
 		     <div class="col-sm-4">
@@ -637,7 +637,7 @@ function loadTPV(){
 		     <div class="col-sm-8">
 		       <div class="well">
 		         <h4>Productos</h4>
-		         <ul id="productsList">Cargando...</ul>
+		         <ul id="productsList" class="ul-tpv">Cargando...</ul>
 
 					 </div>
 					 <!---
@@ -668,7 +668,7 @@ function loadTPV(){
 			list.innerHTML = '';
 
 			for (let family of this.response){
-				list.insertAdjacentHTML('beforeend', `<li onclick="loadFamily('${family.name}')">${family.name}</li>`);
+				list.insertAdjacentHTML('beforeend', `<li class="li-tpv" onclick="loadFamily('${family.name}')">${family.name}</li>`);
 			}
 	});
 
@@ -679,7 +679,7 @@ function loadTPV(){
 				list.innerHTML = '';
 
 				for (let product of this.response){
-					list.insertAdjacentHTML('beforeend', `<li onclick="addTicketDetail(${product.id})">${product.name}</li>`);
+					list.insertAdjacentHTML('beforeend', `<li class="li-tpv" onclick="addTicketDetail(${product.id})">${product.name}</li>`);
 				}
 			}
 	});
@@ -692,7 +692,7 @@ function loadApp(){
 	<nav id=mappeat-navbar class="navbar navbar-inverse">
 	<div class="container">
 		<div class="navbar-header">
-		  <a class="navbar-brand" href="#">Mappeat</a>
+		  <a id=mappeat-logo class="navbar-brand" href="#">Mappeat</a>
 		</div>
 			<div id=navbar-parent class="navbar-collapse collapse navbar-right center-block ">
 				<div id=navbar-buttons>
