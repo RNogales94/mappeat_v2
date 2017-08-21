@@ -591,12 +591,74 @@ function cancelTicket(){
                 _delete('tickets/'+this.response[0].pk+'/',function(){});
 
                 setTableFree();
+                loadTPV();
         });
     }
 }
 
-function transferTable(){
-	//TODO
+//mapa de mesas con onclick = cambio de mesa
+function viewTables(){
+    	main.innerHTML = `<h3>Mesas</h3>
+                      <div class = 'well'>
+                          <svg style="width:100%;height:600px;" id='tableMap'></svg>
+                      </div>`;
+
+	get("tables/", function(){
+		"use strict";
+        let map = document.getElementById('tableMap');
+
+
+        let n = this.response.length;
+        //numero de columnas
+        let cols = 5;
+        //tamaño del cuadrado
+        let size = 100;
+        let rows = Math.floor(n/cols)+1;
+
+        let table;
+        let available;
+
+        map.innerHTML = '';
+
+
+        for (var i = 0;  i < rows ; i += 1){
+            for (var j = 0 ; j < cols ; j += 1){
+                if( i*cols+j < n){
+                     table =  this.response[i*cols+j];
+                     available = "#00FF00";
+                        if(!table.is_available)
+                            available = "#FF0000";
+                     map.insertAdjacentHTML('beforeend',`<rect x=${map.width.baseVal.value*j/cols+1} y=${map.height.baseVal.value*i/rows} width=${size} height=${size} style="fill:${available}" onclick="transferTable(${table.id},'${table.type_table}${table.number}')"></rect>
+            <text x=${map.width.baseVal.value*j/cols+40} y=${map.height.baseVal.value*i/rows+50} font-family="Verdana"
+        font-size="20" onclick="transferTable(${table.id},'${table.type_table}${table.number}')">${table.type_table}${table.number}</text>`);
+                }
+                else break;
+            }
+        }
+
+
+	});
+}
+function transferTable(newTableID,newTable){
+     // libera la mesa actual
+       setTableFree();
+    
+    get("tickets/?is_closed=False&table=" + currentTableID, function(){
+       // cambiar ticket de mesa
+       var ticket = this.response[0];
+       ticket.table = newTableID;
+       put("tickets/"+ticket.pk+"/",function(){},ticket,true);
+       
+       //ocupar mesa nueva
+        get("tables/"+newTableID+"/",function(){
+           var table = this.response;
+           table.is_available = false;
+           put("tables/"+newTableID+"/",function(){ 
+                                                    currentTableID = newTableID;
+                                                    currentTable = newTable;
+                                                    loadTPV();},table,true);
+            });
+    });
 }
 
 function loadTPV(){
@@ -609,7 +671,7 @@ function loadTPV(){
    	     <button type="button" onclick='charge()' class="btn btn-success btn-side" style="height: 70px">Efectivo <span id="cashButton" class="badge">0€</span></button>
 		     <button onclick="splitTicket()" type="button" class="btn btn-primary btn-side" style="height: 70px">Dividir Ticket</button>
 		     <button onclick="sendKitchen()" type="button" class="btn btn-basic btn-side" style="height: 70px">Enviar a Cocina</button>
-		     <button onclick="transferTable()" type="button" class="btn btn-warning btn-side" style="height: 70px">Transferir Mesa</button>
+		     <button onclick="viewTables()" type="button" class="btn btn-warning btn-side" style="height: 70px">Transferir Mesa</button>
 		     <button onclick="printTicket()" type="button" class="btn btn-info btn-side" style="height: 70px">Imprimir Ticket</button>
 		     <button onclick="cancelTicket()" type="button" class="btn btn-danger btn-side" style="height: 70px">Cancelar Ticket</button>
 		     </div><br>
@@ -1188,6 +1250,7 @@ function charge(){
 
             //marca la mesa como libre
            setTableFree();
+           loadTPV();
     });
 }
 
@@ -1198,6 +1261,7 @@ function setTableFree(){
                 put('tables/'+currentTableID+'/',function(){
                                                 currentTable = undefined;
                                                 currentTableID = undefined;
-                                                loadTPV();},valores,true)}
+                                                },valores,true)}
                );
+    return false;
 }
