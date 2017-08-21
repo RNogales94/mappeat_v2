@@ -1147,6 +1147,7 @@ function sendKitchen(){
                 put('ticket_details/'+line.pk+'/',function(){},line,true);
             }
             printTicketKitchen();
+            loadTPV();
         });
     });
 }
