@@ -531,7 +531,7 @@ function showTicket(ticket){
 	document.getElementById('cashButton').innerText = ticket.cost.toFixed(2) + "€";
 
 	var table = document.getElementById('ticketTable');
-    var pending = document.getElementById('kitchenTicket');
+  var pending = document.getElementById('kitchenTicket');
 
     table.innerHTML = `<thead>
 		<tr>
@@ -1135,14 +1135,14 @@ function addTicketDetail(product){
         get("products/"+product,function(){
             valores.name = this.response.name;
             valores.price = this.response.price_with_tax;
-            post("ticket_details/",function(){loadTPV();},valores,true);
+            post("ticket_details/",function(){loadTicket();},valores,true);
         });
 
 	});
 }
 
 function removeTicketDetail(id){
-    _delete('ticket_details/'+id,function(){loadTPV();},true);
+    _delete('ticket_details/'+id,function(){loadTicket();},true);
 }
 
 function sendKitchen(){
