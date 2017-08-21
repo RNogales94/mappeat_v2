@@ -586,7 +586,20 @@ function loadTicket(){
 }
 
 function cancelTicket(){
-	//TODO
+	if(confirm("¿Estás seguro de que deseas cancelar esta cuenta?")){
+        get("tickets/?is_closed=False&table=" + currentTableID,function(){
+                _delete('tickets/'+this.response[0].pk+'/',function(){});
+            
+                get('tables/'+currentTableID+'/',function(){
+                    var valores = this.response;
+                    valores.is_available = true;
+                    put('tables/'+currentTableID+'/',function(){
+                                                currentTable = undefined;
+                                                currentTableID = undefined;
+                                                loadTPV();},valores,true)}
+               );
+        });
+    }
 }
 
 function transferTable(){
@@ -1187,3 +1200,4 @@ function charge(){
                );
     });
 }
+
