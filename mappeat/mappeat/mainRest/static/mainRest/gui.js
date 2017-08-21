@@ -589,7 +589,7 @@ function cancelTicket(){
 	if(confirm("¿Estás seguro de que deseas cancelar esta cuenta?")){
         get("tickets/?is_closed=False&table=" + currentTableID,function(){
                 _delete('tickets/'+this.response[0].pk+'/',function(){});
-                
+
                 setTableFree();
         });
     }
@@ -689,18 +689,22 @@ function loadTPV(){
 
 function loadApp(){
 	document.body.innerHTML = `<header>
-	<nav class="navbar navbar-inverse">
+	<nav id=mappeat-navbar class="navbar navbar-inverse">
 	<div class="container">
 		<div class="navbar-header">
 		  <a class="navbar-brand" href="#">Mappeat</a>
 		</div>
-			<div class="navbar-collapse collapse navbar-right ">
-				<button onclick="loadStore()">Almacén</button>
-				<button onclick="loadMenu()">Menú</button>
-				<button onclick="loadTPV()">TPV</button>
-				<button>Informes</button>
-				<button onclick="loadSettings()">Ajustes</button>
-				<button onclick="location.reload()">Salir</button>
+			<div id=navbar-parent class="navbar-collapse collapse navbar-right center-block ">
+				<div id=navbar-buttons>
+					<button type="button" class="btn btn-light" onclick="loadStore()">Almacén</button>
+					<button type="button" class="btn btn-light"onclick="loadMenu()">Menú</button>
+					<button type="button" class="btn btn-light"onclick="loadTPV()">TPV</button>
+					<!--  Aun no lo implementamos
+					<button>Informes</button>
+					-->
+					<button type="button" class="btn btn-light" onclick="loadSettings()">Ajustes</button>
+					<button type="button" class="btn btn-danger" onclick="location.reload()">Salir</button>
+				</div>
 			</div>
 	</div>
 	</nav>

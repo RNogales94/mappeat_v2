@@ -9,28 +9,31 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
         <script src="{% static "mainRest/api.js" %}"></script>
         <script src="{% static "mainRest/gui.js" %}"></script>
-        
+
+				<!-- CSS Personalizado de mainRest -->
+				<link rel="stylesheet" href="{% static "mainRest/style.css" %}">
+
         <!-- API Google Maps -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALMWzqhfq4LPJsuG07T-gaIHbEU-LnkFw" async defer></script>
-        
-        <!-- jQuery library necesary for Bootstrap -->        
+
+        <!-- jQuery library necesary for Bootstrap -->
         <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
-        
+
         <!-- Latest compiled and minified CSS -->
         <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
 
         <!-- Latest compiled and minified JavaScript -->
         <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-        
+
         <!-- Biblioteca JQuery para imprimir -->
         <script src='https://cdnjs.cloudflare.com/ajax/libs/jQuery.print/1.5.1/jQuery.print.js'></script>
-        
+
         <!-- PixiJS -->
         <script type="text/javascript" src="https://cdn.jsdelivr.net/pixi.js/3.0.7/pixi.js"></script>
 	</head>
 
-	<body>  
-        <nav class="navbar navbar-inverse">
+	<body>
+        <nav id=mappeat-navbar class="navbar navbar-inverse">
         <div class="container">
           <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target=".navbar-collapse">
@@ -59,7 +62,7 @@
                 </ul>
               </li>
             </ul>
-              
+
             <form onsubmit="return login(this)" class="navbar-form navbar-right">
                 <div class="form-group">
                   <input type="text" name="username" placeholder="Usuario" class="form-control">
@@ -69,10 +72,10 @@
                 </div>
                 <button type="submit" class="btn btn-success">Entrar</button>
             </form>
-              
+
           </div><!--/.nav-collapse -->
         </div>
-      </nav>   
+      </nav>
 		<div class="jumbotron">
 			<form id="formRegistro" class="formulario" onsubmit="return register(this)">
 				<input type="text" name="username" placeholder="Nombre de usuario" required />
