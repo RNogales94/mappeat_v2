@@ -356,7 +356,7 @@ function seeTables(){
                             available = "#FF0000";
                      map.insertAdjacentHTML('beforeend',`<rect x=${map.width.baseVal.value*j/cols+1} y=${map.height.baseVal.value*i/rows} width=${size} height=${size} style="fill:${available}" onclick="getTicket(${table.id}, '${table.type_table}${table.number}')"></rect>
             <text x=${map.width.baseVal.value*j/cols+40} y=${map.height.baseVal.value*i/rows+50} font-family="Verdana"
-        font-size="20">${table.type_table}${table.number}</text>`);
+        font-size="20" onclick="getTicket(${table.id}, '${table.type_table}${table.number}')">${table.type_table}${table.number}</text>`);
                 }
                 else break;
             }
