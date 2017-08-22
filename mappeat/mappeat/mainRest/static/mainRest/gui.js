@@ -438,9 +438,11 @@ function divide(node, divisor){
 }
 
 function splitTicket(){
-	main.innerHTML = `<div>
-		<h4>Ticket completo</h4>
-		<table>
+	main.innerHTML = `<h3>Dividir Ticket</h3>
+                        <div class='well row'>
+		  <div class='well col-sm-4'  style="width:32%;">               
+          <h4>Ticket completo</h4>
+		  <table class='table'>
 			<thead>
 				<tr>
 					<th>Producto</th>
@@ -455,7 +457,7 @@ function splitTicket(){
 		<p>Resto: <span id="totalRest">0</span>€</p>
 		<p>Divisiones: <span id="divisions"></span></p>
 	</div>
-	<div>
+	<div class='well col-sm-4'>
 		<h4>Cuenta parcial</h4>
 		<table>
 			<thead>
@@ -472,7 +474,7 @@ function splitTicket(){
 		<p>Resto: <span id="partialRest">0</span>€</p>
 		<button onclick="partialCost.innerText = 0; calculateSplit(); partialTable.innerHTML = ''">Limpiar</button>
 	</div>
-	<div>
+	<div class='well  col-sm-4'>
 		<label>Lo que te ha dado el tío:</label>
 		<input onfocus="activeInput = this" onclick="this.value = 0; calculateSplit()" oninput="calculateSplit()" value="0" id="input" type="number">
 		<label>Lo que le quieres cobrar:</label>
@@ -494,8 +496,11 @@ function splitTicket(){
 		</ul>
 		<p>Resto: <span id="customRest">0</span>€</p>
 	</div>
-	<button onclick="loadTPV()">Volver</button>`;
-
+    <div class='row'>
+	<button onclick="loadTPV()">Volver</button>
+    </div>
+    </div>`;
+    
 	totalCost = document.getElementById("totalCost");
 	totalRest = document.getElementById("totalRest");
 	partialTable = document.getElementById("partialTable");
@@ -1249,16 +1254,18 @@ function charge(){
     //abrir cajon
         // TODO
 
-    //cierra el ticket
+    
     get("tickets/?is_closed=False&table=" + currentTableID,function(){
+            // marca la mesa como libre
+                setTableFree();
             let ticket =this.response[0];
+            //cierra el ticket
             ticket.is_closed = true;
-            put("tickets/"+ ticket.pk +"/",function(){},ticket,true);
-
-            //marca la mesa como libre
-           setTableFree();
-           loadTPV();
+            put("tickets/"+ ticket.pk +"/",function(){
+                loadTPV();
+            },ticket,true);
     });
+     
 }
 
 function setTableFree(){
@@ -1268,7 +1275,7 @@ function setTableFree(){
                 put('tables/'+currentTableID+'/',function(){
                                                 currentTable = undefined;
                                                 currentTableID = undefined;
+                                                    
                                                 },valores,true)}
                );
-    return false;
 }
