@@ -324,7 +324,12 @@ function editRestaurant(id_rest){
 }
 
 function seeTables(){
-	main.innerHTML = `<h3>Mesas</h3>
+	main.innerHTML = `<div class="btn-toolbar" role="toolbar">
+                            <button type="button" class="btn btn-default btn-lg"  onclick='loadTPV()'>
+                            <span class='glyphicon glyphicon-arrow-left'></span>
+                            </button>
+                            <h3 class="text-center">Mesas</h3>
+                        </div>
                       <div class = 'well'>
                           <svg style="width:100%;height:600px;" id='tableMap'></svg>
                       </div>`;
@@ -438,9 +443,14 @@ function divide(node, divisor){
 }
 
 function splitTicket(){
-	main.innerHTML = `<h3>Dividir Ticket</h3>
-                        <div class='well row'>
-		  <div class='well col-sm-4'  style="width:32%;">               
+	main.innerHTML = `
+            <div class="btn-toolbar" role="toolbar">
+            <button type="button" class="btn btn-default btn-lg"  onclick='loadTPV()'>
+                <span class='glyphicon glyphicon-arrow-left'></span>
+            </button>
+            <h3 class="text-center" >Dividir Ticket</h3></div>       
+          <div class='well row'>
+		  <div class='well col-sm-4'>               
           <h4>Ticket completo</h4>
 		  <table class='table'>
 			<thead>
@@ -459,7 +469,7 @@ function splitTicket(){
 	</div>
 	<div class='well col-sm-4'>
 		<h4>Cuenta parcial</h4>
-		<table>
+		<table class='table'>
 			<thead>
 				<tr>
 					<th>Producto</th>
@@ -496,9 +506,6 @@ function splitTicket(){
 		</ul>
 		<p>Resto: <span id="customRest">0</span>€</p>
 	</div>
-    <div class='row'>
-	<button onclick="loadTPV()">Volver</button>
-    </div>
     </div>`;
     
 	totalCost = document.getElementById("totalCost");
@@ -603,7 +610,12 @@ function cancelTicket(){
 
 //mapa de mesas con onclick = cambio de mesa
 function viewTables(){
-    	main.innerHTML = `<h3>Mesas</h3>
+    	main.innerHTML = `<div class="btn-toolbar" role="toolbar">
+                            <button type="button" class="btn btn-default btn-lg"  onclick='loadTPV()'>
+                            <span class='glyphicon glyphicon-arrow-left'></span>
+                            </button>
+                            <h3 class="text-center">Mesas</h3>
+                        </div>
                       <div class = 'well'>
                           <svg style="width:100%;height:600px;" id='tableMap'></svg>
                       </div>`;
