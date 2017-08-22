@@ -625,12 +625,19 @@ function viewTables(){
             for (var j = 0 ; j < cols ; j += 1){
                 if( i*cols+j < n){
                      table =  this.response[i*cols+j];
-                     available = "#00FF00";
-                        if(!table.is_available)
-                            available = "#FF0000";
-                     map.insertAdjacentHTML('beforeend',`<rect x=${map.width.baseVal.value*j/cols+1} y=${map.height.baseVal.value*i/rows} width=${size} height=${size} style="fill:${available}" onclick="transferTable(${table.id},'${table.type_table}${table.number}')"></rect>
+                     
+                        if(table.is_available){
+                            available = "#00FF00";
+                             map.insertAdjacentHTML('beforeend',`<rect x=${map.width.baseVal.value*j/cols+1} y=${map.height.baseVal.value*i/rows} width=${size} height=${size} style="fill:${available}" onclick="transferTable(${table.id},'${table.type_table}${table.number}')"></rect>
             <text x=${map.width.baseVal.value*j/cols+40} y=${map.height.baseVal.value*i/rows+50} font-family="Verdana"
         font-size="20" onclick="transferTable(${table.id},'${table.type_table}${table.number}')">${table.type_table}${table.number}</text>`);
+                        }
+                        else{
+                            available = "#FF0000";
+                             map.insertAdjacentHTML('beforeend',`<rect x=${map.width.baseVal.value*j/cols+1} y=${map.height.baseVal.value*i/rows} width=${size} height=${size} style="fill:${available}" onclick="void(0)"></rect>
+            <text x=${map.width.baseVal.value*j/cols+40} y=${map.height.baseVal.value*i/rows+50} font-family="Verdana"
+        font-size="20" onclick="void(0)">${table.type_table}${table.number}</text>`);
+                        }
                 }
                 else break;
             }
