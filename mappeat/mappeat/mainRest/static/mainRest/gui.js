@@ -572,6 +572,7 @@ function showTicket(ticket){
 		</tr>`);
         }
 	}
+    table.insertAdjacentHTML('beforeend',`<tr><td></td><td><strong>Total:</strong><td></td><td><strong>${ticket.cost.toFixed(2)}€</strong></td></tr>`);
 }
 
 function createTicket(){
