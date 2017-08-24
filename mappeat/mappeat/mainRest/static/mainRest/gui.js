@@ -520,7 +520,7 @@ function splitTicket(){
 
 	get("tickets/?is_closed=False&table=" + currentTableID, function(){
 		var totalCost = document.getElementById('totalCost');
-		totalCost.innerText = this.response[0].cost;
+		totalCost.innerText = this.response[0].cost.toFixed(2);
 		calculateSplit();
 		document.getElementById("divisions").innerText = `${divide(totalCost, 2)} (2), ${divide(totalCost, 3)} (3), ${divide(totalCost, 4)} (4), ${divide(totalCost, 5)} (5), ${divide(totalCost, 6)} (6)`;
 
@@ -530,7 +530,7 @@ function splitTicket(){
 			table.insertAdjacentHTML('beforeend', `<tr onclick="addToPartial(this)">
 				<td>${line.product_name}</td>
 				<td>${line.quantity}</td>
-				<td>${line.price}€</td>
+				<td>${line.price.toFixed(2)}€</td>
 			</tr>`);
 			table.lastChild.product = { name:line.product_name, price:line.price/line.quantity };
 		}
