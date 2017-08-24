@@ -8,7 +8,7 @@ function get(component, onLoad, handleErrors = true, baseURI = "/mainRest/api/v1
     }
 	request.onload = function(){
 		if (this.status >= 400 && handleErrors)
-			alert("Error: " + this.statusText + "\n\n" + this.responseText);
+			alert("Error: " + this.statusText + "\n\n" + JSON.stringify(this.response));
 		else
 			onLoad.call(this);
 	};
@@ -26,7 +26,7 @@ function post(component, onLoad, data, handleErrors = true, baseURI = "/mainRest
 	
 	request.onload = function(){
 		if (this.status >= 400 && handleErrors)
-			alert("Error: " + this.statusText + "\n\n" + this.responseText);
+			alert("Error: " + this.statusText + "\n\n" + JSON.stringify(this.response));
 		else
 			onLoad.call(this);
 	};
@@ -44,7 +44,7 @@ function put(component, onLoad,data, handleErrors = true, baseURI = "/mainRest/a
 	
 	request.onload = function(){
 		if (this.status >= 400 && handleErrors)
-			alert("Error: " + this.statusText + "\n\n" + this.responseText);
+			alert("Error: " + this.statusText + "\n\n" + JSON.stringify(this.response));
 		else
 			onLoad.call(this);
 	};
@@ -62,7 +62,7 @@ function _delete(component, onLoad, data, handleErrors = true, baseURI = "/mainR
 	
 	request.onload = function(){
 		if (this.status >= 400 && handleErrors)
-			alert("Error: " + this.statusText + "\n\n" + this.responseText);
+			alert("Error: " + this.statusText + "\n\n" + JSON.stringify(this.response));
 		else
 			onLoad.call(this);
 	};
