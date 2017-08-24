@@ -76,14 +76,34 @@
           </div><!--/.nav-collapse -->
         </div>
       </nav>
-		<div class="jumbotron">
-			<form id="formRegistro" class="formulario" onsubmit="return register(this)">
-				<input type="text" name="username" placeholder="Nombre de usuario" required />
-				<input type="email" name="mail" placeholder="Correo electrónico" required />
-				<input type="password" name="pass" placeholder="Contraseña nueva" required />
-				<input type="password" name="passRepeated" placeholder="Repetir contraseña" required />
-				<input type="submit" value="Registrarse">
-			</form>
-		</div>
+        <div class='container'>
+            <div class="col-md-4"></div>
+		    <div class="col-md-4 text-center">
+                <form id="formRegistro" class="form-horizonral" onsubmit="return register(this)">
+                       <legend>Registrate</legend>
+                       <div class="input-group form-group">
+                            <span class="glyphicon glyphicon-user"></span>
+                            <input type="text" name="username" placeholder="Nombre de usuario" required />
+                        </div>
+                        <div class="input-group form-group">
+                            <span class="glyphicon glyphicon-envelope"></span>
+                            <input type="email" name="mail" placeholder="Correo electrónico" required />
+                        </div>
+                        <div class="input-group form-group">
+                            <span class="glyphicon glyphicon-lock"></span>
+                            <input type="password" name="pass" placeholder="Contraseña nueva" required />
+                        </div>
+                        <div class="input-group form-group">
+                            <span class="glyphicon glyphicon-lock"></span>
+                            <input type="password" name="passRepeated" placeholder="Repetir contraseña" required />
+                        </div>
+				
+                        <div class='input-group form-group'>
+                            <input class='btn btn-primary' type="submit" value="Registrarse">
+                        </div>
+			 </form>
+		    </div>
+            <div class="col-md-4"></div>
+        </div>
 	</body>
 </html>
