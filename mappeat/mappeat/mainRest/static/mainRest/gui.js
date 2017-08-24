@@ -538,7 +538,6 @@ function splitTicket(){
 }
 
 function showTicket(ticket){
-	document.getElementById('totalCost').innerText = "Total cuenta: " + ticket.cost.toFixed(2) + "€";
 	document.getElementById('ticketID').innerText = "Número de ticket: " + ticket.pk;
 	document.getElementById('cashButton').innerText = ticket.cost.toFixed(2) + "€";
 
@@ -713,7 +712,6 @@ function loadTPV(){
 		     <div class="col-sm-4">
 		       <div class="well">
 		         <h4>Contexto Actual</h4>
-		         <p id="totalCost">Total cuenta</p>
 		         <p>Camarero: ${sessionStorage['username']}</p>
 		         <p id="tableName">Número de Mesa</p>
 		         <p id="ticketID">Número de Ticket</p>
