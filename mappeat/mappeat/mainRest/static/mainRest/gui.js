@@ -892,9 +892,12 @@ function loadStore(){
                         list.innerHTML='';
 
                         for(let table of this.response){
-                            get('suplies/'+table.supply,function(){
-                                list.insertAdjacentHTML('beforeend',`<tr><td><button onclick='removeInventory(${table.id})' class="glyphicon glyphicon-remove btn-danger"></button></td><td>${this.response.name}</td><td>${this.response.mesure_unity}</td><td>${this.response.barcode}</td><td>${table.quantity}</td></tr>`);}
-                               );
+                            //evita llamadas con supply null
+                            if(table.supply){
+                                get('suplies/'+table.supply,function(){
+                                    list.insertAdjacentHTML('beforeend',`<tr><td><button onclick='removeInventory(${table.id})' class="glyphicon glyphicon-remove btn-danger"></button></td><td>${this.response.name}</td><td>${this.response.mesure_unity}</td><td>${this.response.barcode}</td><td>${table.quantity}</td></tr>`);}
+                                    );
+                            }
                         }
                          list.insertAdjacentHTML('afterend',`<tr><td><button onclick='newSupplyForm()' class="glyphicon glyphicon-plus btn-success" data-toggle="modal" data-target="#modalStore"></button></td></tr></table>`);
     });
