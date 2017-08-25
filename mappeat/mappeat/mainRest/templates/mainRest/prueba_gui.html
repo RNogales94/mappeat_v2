@@ -6,12 +6,16 @@
 		<meta charset="utf-8">
 		<title>GUI de Mappeat</title>
 		<meta name="author" content="Luis Castro Martín & Rafael Nogales Vaquero">
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
+		    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/2.1.4/js.cookie.min.js"></script>
         <script src="{% static "mainRest/api.js" %}"></script>
         <script src="{% static "mainRest/gui.js" %}"></script>
 
 				<!-- CSS Personalizado de mainRest -->
 				<link rel="stylesheet" href="{% static "mainRest/style.css" %}">
+
+				<!-- Favicon -->
+				<link rel="icon" type="image/png" href="{% static 'mainRest/favicon-16x16.png' %}" />
+
 
         <!-- API Google Maps -->
         <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyALMWzqhfq4LPJsuG07T-gaIHbEU-LnkFw" async defer></script>
@@ -97,7 +101,7 @@
                             <span class="glyphicon glyphicon-lock"></span>
                             <input type="password" name="passRepeated" placeholder="Repetir contraseña" required />
                         </div>
-				
+
                         <div class='input-group form-group'>
                             <input class='btn btn-primary' type="submit" value="Registrarse">
                         </div>

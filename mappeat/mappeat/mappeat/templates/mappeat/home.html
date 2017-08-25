@@ -12,6 +12,7 @@
   <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet" type="text/css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.0/jquery.min.js"></script>
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="icon" type="image/png" href="{% static 'mainRest/favicon-16x16.png' %}" />
   <link rel="stylesheet" type="text/css" href="{% static "mappeat/home.css" %}">
 </head>
 <body id="myPage" data-spy="scroll" data-target=".navbar" data-offset="60">
@@ -22,7 +23,7 @@
       <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
-        <span class="icon-bar"></span>                        
+        <span class="icon-bar"></span>
       </button>
       <a class="navbar-brand" href="#myPage">MAPPEAT</a>
     </div>
@@ -39,8 +40,8 @@
 </nav>
 
 <div class="jumbotron text-center">
-  <h1>MAPPEAT</h1> 
-  <p>Hostelería inteligente</p> 
+  <h1>MAPPEAT</h1>
+  <p>Hostelería inteligente</p>
   <form>
     <div class="input-group">
       <input type="email" class="form-control" size="50" placeholder="Dirección de Email" required>
@@ -151,7 +152,7 @@
       </div>
     </div>
   </div><br>
-  
+
   <h2>What our customers say</h2>
   <div id="myCarousel" class="carousel slide text-center" data-ride="carousel">
     <!-- Indicators -->
@@ -210,8 +211,8 @@
           <h4>per month</h4>
           <button class="btn btn-lg">Sign Up</button>
         </div>
-      </div>      
-    </div>     
+      </div>
+    </div>
     <div class="col-sm-4 col-xs-12">
       <div class="panel panel-default text-center">
         <div class="panel-heading">
@@ -229,8 +230,8 @@
           <h4>per month</h4>
           <button class="btn btn-lg">Sign Up</button>
         </div>
-      </div>      
-    </div>       
+      </div>
+    </div>
     <div class="col-sm-4 col-xs-12">
       <div class="panel panel-default text-center">
         <div class="panel-heading">
@@ -248,8 +249,8 @@
           <h4>per month</h4>
           <button class="btn btn-lg">Sign Up</button>
         </div>
-      </div>      
-    </div>    
+      </div>
+    </div>
   </div>
 </div>
 
@@ -323,13 +324,13 @@ $(document).ready(function(){
       $('html, body').animate({
         scrollTop: $(hash).offset().top
       }, 900, function(){
-   
+
         // Add hash (#) to URL when done scrolling (default click behavior)
         window.location.hash = hash;
       });
     } // End if
   });
-  
+
   $(window).scroll(function() {
     $(".slideanim").each(function(){
       var pos = $(this).offset().top;

@@ -1,0 +1,46 @@
+#mappeat-logo {
+    font-style: bold;
+}
+
+
+#navbar-parent {
+    float: right;
+    /*height: 50%;
+    width: 70%; */
+    margin-bottom: -50px;
+    padding: 10px 10px;
+}
+#navbar-buttons {
+  float: right;
+}
+
+#mappeat-navbar {
+  border-radius: 0px;
+}
+
+.btn-side{
+     align-self: center;
+     font-family: "Arial", sans-serif;
+     font-style: bold;
+     font-size: 15px ! important; //to make fontsize bigger
+}
+
+.ul-tpv {
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+/*  background-color: #333333; */
+}
+
+.li-tpv {
+    float: left;
+    display: block;
+    text-align: center;
+    padding: 16px;
+    text-decoration: none;
+}
+
+.li-tpv:hover {
+    background-color: #EEE;
+}
