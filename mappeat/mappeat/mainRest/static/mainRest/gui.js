@@ -999,7 +999,7 @@ function loadMenu(){
 
          for (let product of this.response ){
              get ('iva/'+product.iva_tax,function(){
-                        list.insertAdjacentHTML('beforeend',`<tr><td class="active"><h4>${product.name}</h4></td><td> <a onclick='editProductForm(${product.id})' data-toggle="modal" data-target="#modalEditProduct" >Editar</a></td><td><button onclick="removeProduct(${product.id})" class="glyphicon glyphicon-remove btn-danger"></button></td></tr><tr><td><img class="img-rounded" src='' alt='icono${product.icon}'></td><td><div class='well' id='ingredients${product.id}'></div></td><td><p class="bg-primary text-white">${product.price_with_tax}€</p><p class='bg-danger'>${this.response.strTax}</p><p class='bg-success'>${product.price_as_complement_with_tax}€</p></td>
+                        list.insertAdjacentHTML('beforeend',`<tr><td class="active"><h4>${product.name}</h4></td><td> <a onclick='editProductForm(${product.id})' data-toggle="modal" data-target="#modalEditProduct" >Editar</a></td><td></td><td><button onclick="removeProduct(${product.id},'${product.name}')" class="glyphicon glyphicon-remove btn-danger"></button></td></tr><tr><td><img class="img-rounded" src='' alt='icono${product.icon}'></td><td><div class='well' id='ingredients${product.id}'></div></td><td><p class="bg-primary text-white">${product.price_with_tax}€</p><p class='bg-danger'>${this.response.strTax}</p><p class='bg-success'>${product.price_as_complement_with_tax}€</p></td>
                         <td><div class='well'>STATS</div></td>
                                                       </tr>`);
 
@@ -1085,8 +1085,8 @@ function addProduct(form){
     return false;
 }
 
-function removeProduct(product){
-    if (confirm('¿Desea borrar el producto?')){
+function removeProduct(product,product_name){
+    if (confirm('¿Desea eliminar '+ product_name + ' ?')){
        _delete("products/"+product+"/",function(){loadMenu();},true);
     }
     return false;
