@@ -8,6 +8,13 @@ from rest_framework.response import Response
 from registration_api import utils
 from registration_api.serializers import UserSerializer
 
+"""
+Extension propia para asociar un Staff al nuevo usuario registrado
+Este Staff será un Manager por defecto
+"""
+from mainRest.models import Staff
+
+
 
 VALID_USER_FIELDS = utils.get_valid_user_fields()
 
@@ -22,7 +29,12 @@ def register(request):
     serialized = UserSerializer(data=request.data)
     if serialized.is_valid():
         user_data = utils.get_user_data(request.data)
-        utils.create_inactive_user(**user_data)
+        new_user = utils.create_inactive_user(**user_data)
+
+        #Crear el staff
+        new_staff = Staff(user=new_user, first_name=new_user.username)
+        new_staff.save()
+
         return Response(utils.USER_CREATED_RESPONSE_DATA,
                         status=status.HTTP_201_CREATED)
     else:

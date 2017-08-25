@@ -124,10 +124,10 @@ class Ref_Staff_Rol(models.Model):
 
 class Staff(models.Model):
     user = models.OneToOneField(User, db_index=True, on_delete=models.SET_NULL, null=True)
-    restaurant = models.ForeignKey(Restaurant, db_index=True)
+    restaurant = models.ForeignKey(Restaurant, db_index=True, null=True)
     #staff_role_code = models.ForeignKey(Ref_Staff_Rol) #@DEPRECATED
-    first_name = models.CharField(max_length=20)
-    last_name = models.CharField(max_length=50)
+    first_name = models.CharField(max_length=20, default="")
+    last_name = models.CharField(max_length=50, default="")
     is_active  = models.BooleanField(default=True)
     hourly_rate = models.FloatField(null=True, default=None, blank=True)
     notes = models.TextField(null=True, blank=True, default="")
@@ -138,7 +138,7 @@ class Staff(models.Model):
         ('B', 'Barman'),
         ('M', 'Manager'),
     )
-    role_code = models.CharField(max_length=1, choices=STAFF_ROLES, default = 'W')
+    role_code = models.CharField(max_length=1, choices=STAFF_ROLES, default = 'M')
 
     """
     Mejoras a tener en cuenta:
