@@ -817,6 +817,7 @@ function register(form){
 	valores.username = form.username.value;
 	valores.email = form.mail.value;
 	valores.password = form.pass.value;
+    valores.restaurant = form.restaurant.value;
 
 	post("register/", function(){
 		form.parentNode.innerHTML = "<p>Registro completado, comprueba tu email.</p>";
