@@ -336,10 +336,15 @@ function seeTables(){
 
 	get("tables/", function(){
 		"use strict";
-        let map = document.getElementById('tableMap');
+			let map = document.getElementById('tableMap');
+			let n = this.response.length;
+			map.innerHTML = '';
 
+			if (n<=0){
+				map.insertAdjacentHTML('beforebegin', `<p>Estás apollardado. Obviamente, antes de poder ver mesas tienes que crearlas en Ajustes -> Mesas. La cuota de servicio técnico acaba de subirte 20€ na más que por esto.</p>
+				<button onclick="loadSettings(); loadTables()">Ir a ajustes de mesas</button>`);
+			}
 
-        let n = this.response.length;
         //numero de columnas
         let cols = 5;
         //tamaño del cuadrado
@@ -348,9 +353,6 @@ function seeTables(){
 
         let table;
         let available;
-
-        map.innerHTML = '';
-
 
         for (var i = 0;  i < rows ; i += 1){
             for (var j = 0 ; j < cols ; j += 1){
