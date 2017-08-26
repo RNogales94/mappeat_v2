@@ -598,18 +598,21 @@ function loadTicket(){
 }
 
 function cancelTicket(){
-	if(confirm("¿Estás seguro de que deseas cancelar esta cuenta?")){
-        get("tickets/?is_closed=False&table=" + currentTableID,function(){
-                _delete('tickets/'+this.response[0].pk+'/',function(){});
-
+    if(currentTableID){
+	   if(confirm("¿Estás seguro de que deseas cancelar esta cuenta?")){
+           get("tickets/?is_closed=False&table=" + currentTableID,function(){
                 setTableFree();
+                _delete('tickets/'+this.response[0].pk+'/',function(){});
                 loadTPV();
-        });
+            });
+           
+        }
     }
 }
 
 //mapa de mesas con onclick = cambio de mesa
 function viewTables(){
+    if(currentTableID){
     	main.innerHTML = `<div class="btn-toolbar" role="toolbar">
                             <button type="button" class="btn btn-default btn-lg"  onclick='loadTPV()'>
                             <span class='glyphicon glyphicon-arrow-left'></span>
@@ -662,8 +665,11 @@ function viewTables(){
 
 
 	});
+    }
+    else{alert('No hay ninguna mesa seleccionada');}
 }
 function transferTable(newTableID,newTable){
+    
      // libera la mesa actual
        setTableFree();
     
@@ -1238,23 +1244,27 @@ function removeTicketDetail(id){
 }
 
 function sendKitchen(){
-    get("tickets/?is_closed=False&table=" + currentTableID, function(){
-        get("ticket_details/?ticket="+this.response[0].pk+"&sent_kitchen=False",function(){
-            for(let line of this.response ){
-                line.sent_kitchen = true;
-                put('ticket_details/'+line.pk+'/',function(){},line,true);
-            }
-            printTicketKitchen();
-            loadTPV();
+    if (currentTableID){
+        get("tickets/?is_closed=False&table=" + currentTableID, function(){
+            get("ticket_details/?ticket="+this.response[0].pk+"&sent_kitchen=False",function(){
+                for(let line of this.response ){
+                    line.sent_kitchen = true;
+                    put('ticket_details/'+line.pk+'/',function(){},line,true);
+                }
+                printTicketKitchen();
+                loadTPV();
+            });
         });
-    });
+    }
 }
 
 function printTicket(){
+    if(currentTableID){
         var mode = 'iframe'; //popup
         var close = mode == "popup";
         var options = { mode : mode, popClose : close};
         $("#ticketTable").print( options );
+    }
 }
 
 function printTicketKitchen(){
@@ -1265,21 +1275,21 @@ function printTicketKitchen(){
 }
 
 function charge(){
+    if(currentTableID){
     //abrir cajon
         // TODO
 
-    
-    get("tickets/?is_closed=False&table=" + currentTableID,function(){
-            // marca la mesa como libre
+        get("tickets/?is_closed=False&table=" + currentTableID,function(){
+                // marca la mesa como libre
                 setTableFree();
-            let ticket =this.response[0];
-            //cierra el ticket
-            ticket.is_closed = true;
-            put("tickets/"+ ticket.pk +"/",function(){
-                loadTPV();
-            },ticket,true);
-    });
-     
+                let ticket =this.response[0];
+                //cierra el ticket
+                ticket.is_closed = true;
+                put("tickets/"+ ticket.pk +"/",function(){
+                    loadTPV();
+                },ticket,true);
+        });
+    }
 }
 
 function setTableFree(){
