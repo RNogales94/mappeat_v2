@@ -1280,12 +1280,11 @@ function charge(){
         // TODO
 
         get("tickets/?is_closed=False&table=" + currentTableID,function(){
-                // marca la mesa como libre
-                setTableFree();
                 let ticket =this.response[0];
                 //cierra el ticket
                 ticket.is_closed = true;
                 put("tickets/"+ ticket.pk +"/",function(){
+                    setTableFree();
                     loadTPV();
                 },ticket,true);
         });
