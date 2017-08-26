@@ -81,33 +81,40 @@
         </div>
       </nav>
         <div class='container'>
-            <div class="col-md-4"></div>
-		    <div class="col-md-4 text-center">
+            <div class="col-md-3"></div>
+		    <div class="col-md-6  panel panel-default">
                 <form id="formRegistro" class="form-horizonral" onsubmit="return register(this)">
-                       <legend>Registrate</legend>
-                       <div class="input-group form-group">
-                            <span class="glyphicon glyphicon-user"></span>
-                            <input type="text" name="username" placeholder="Nombre de usuario" required />
+                       <legend class='text-center'>Registrate</legend>
+                       <div class="input-group form-group ">
+                            <span class="input-group-addon glyphicon glyphicon-user"></span>
+                            <input type="text" class='form-control' name="username" placeholder="Nombre de usuario" required />
+                        </div>
+                         <div class='input-group form-group'>
+                            <span class = 'input-group-addon glyphicon glyphicon-cutlery'></span>
+                            <input type="text" class='form-control' name="restaurant" placeholder="Restaurante" required />
                         </div>
                         <div class="input-group form-group">
-                            <span class="glyphicon glyphicon-envelope"></span>
-                            <input type="email" name="mail" placeholder="Correo electrónico" required />
+                            <span class="input-group-addon glyphicon glyphicon-envelope"></span>
+                            <input type="email" class='form-control' name="mail" placeholder="Correo electrónico" required />
                         </div>
                         <div class="input-group form-group">
-                            <span class="glyphicon glyphicon-lock"></span>
-                            <input type="password" name="pass" placeholder="Contraseña nueva" required />
+                            <span class="input-group-addon glyphicon glyphicon-lock"></span>
+                            <input type="password" class='form-control' name="pass" placeholder="Contraseña nueva" required />
                         </div>
                         <div class="input-group form-group">
-                            <span class="glyphicon glyphicon-lock"></span>
-                            <input type="password" name="passRepeated" placeholder="Repetir contraseña" required />
+                            <span class="input-group-addon glyphicon glyphicon-lock"></span>
+                            <input type="password" class='form-control' name="passRepeated" placeholder="Repetir contraseña" required />
                         </div>
-
-                        <div class='input-group form-group'>
-                            <input class='btn btn-primary' type="submit" value="Registrarse">
+                        <div class="form-group ">
+				            <input type="checkbox" tabindex="3" class="" name="terms" id="terms" required>
+				            <label for="terms">He leido y acepto las condiciones (<a href='#'>Privacy Policy</a>)</label>
+									</div>
+                        <div class='form-group'>
+                            <input class='btn btn-primary btn-round-lg btn-lg btn-block' type="submit" value="Registrarse">
                         </div>
 			 </form>
 		    </div>
-            <div class="col-md-4"></div>
+            <div class="col-md-3"></div>
         </div>
 	</body>
 </html>
