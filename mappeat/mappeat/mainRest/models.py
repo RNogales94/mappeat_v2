@@ -43,13 +43,13 @@ class Owner(models.Model):
     surname = models.CharField(max_length=40)
     location = models.CharField(max_length=30, blank=True)
     birth_date = models.DateField(null=True, blank=True)
-    phone_number = models.CharField(max_length=12)
+    phone_number = models.CharField(max_length=12, blank=True)
 
     def __str__(self):
         return self.name + " " + self.surname
 
 class Restaurant(models.Model):
-    owner = models.ForeignKey(Owner, db_index=True)
+    owner = models.OneToOneField(Owner, db_index=True)
     name =  models.CharField(max_length=40)
     address = models.CharField(max_length=90)
     city = models.CharField(max_length=90)
@@ -59,6 +59,11 @@ class Restaurant(models.Model):
 
     def __str__(self):
         return self.name
+
+    def delete(self):
+        owner = self.owner
+        owner.delete()
+        super(Restaurant, self).delete()
 
 class Provider(models.Model):
     name = models.CharField(max_length=40)

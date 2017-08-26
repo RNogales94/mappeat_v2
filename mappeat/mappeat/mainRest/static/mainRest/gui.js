@@ -448,9 +448,9 @@ function splitTicket(){
             <button type="button" class="btn btn-default btn-lg"  onclick='loadTPV()'>
                 <span class='glyphicon glyphicon-arrow-left'></span>
             </button>
-            <h3 class="text-center" >Dividir Ticket</h3></div>       
+            <h3 class="text-center" >Dividir Ticket</h3></div>
           <div class='well row'>
-		  <div class='well col-sm-4'>               
+		  <div class='well col-sm-4'>
           <h4>Ticket completo</h4>
 		  <table class='table'>
 			<thead>
@@ -507,7 +507,7 @@ function splitTicket(){
 		<p>Resto: <span id="customRest">0</span>€</p>
 	</div>
     </div>`;
-    
+
 	totalCost = document.getElementById("totalCost");
 	totalRest = document.getElementById("totalRest");
 	partialTable = document.getElementById("partialTable");
@@ -605,7 +605,7 @@ function cancelTicket(){
                 _delete('tickets/'+this.response[0].pk+'/',function(){});
                 loadTPV();
             });
-           
+
         }
     }
 }
@@ -645,7 +645,7 @@ function viewTables(){
             for (var j = 0 ; j < cols ; j += 1){
                 if( i*cols+j < n){
                      table =  this.response[i*cols+j];
-                     
+
                         if(table.is_available){
                             available = "#00FF00";
                              map.insertAdjacentHTML('beforeend',`<rect x=${map.width.baseVal.value*j/cols+1} y=${map.height.baseVal.value*i/rows} width=${size} height=${size} style="fill:${available}" onclick="transferTable(${table.id},'${table.type_table}${table.number}')"></rect>
@@ -669,21 +669,21 @@ function viewTables(){
     else{alert('No hay ninguna mesa seleccionada');}
 }
 function transferTable(newTableID,newTable){
-    
+
      // libera la mesa actual
        setTableFree();
-    
+
     get("tickets/?is_closed=False&table=" + currentTableID, function(){
        // cambiar ticket de mesa
        var ticket = this.response[0];
        ticket.table = newTableID;
        put("tickets/"+ticket.pk+"/",function(){},ticket,true);
-       
+
        //ocupar mesa nueva
         get("tables/"+newTableID+"/",function(){
            var table = this.response;
            table.is_available = false;
-           put("tables/"+newTableID+"/",function(){ 
+           put("tables/"+newTableID+"/",function(){
                                                     currentTableID = newTableID;
                                                     currentTable = newTable;
                                                     loadTPV();},table,true);
@@ -817,7 +817,7 @@ function register(form){
 	valores.username = form.username.value;
 	valores.email = form.mail.value;
 	valores.password = form.pass.value;
-    valores.restaurant = form.restaurant.value;
+  valores.restaurant = form.restaurant.value;
 
 	post("register/", function(){
 		form.parentNode.innerHTML = "<p>Registro completado, comprueba tu email.</p>";
@@ -1299,7 +1299,7 @@ function setTableFree(){
                 put('tables/'+currentTableID+'/',function(){
                                                 currentTable = undefined;
                                                 currentTableID = undefined;
-                                                    
+
                                                 },valores,true)}
                );
 }
