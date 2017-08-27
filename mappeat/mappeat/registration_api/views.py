@@ -1,4 +1,6 @@
 from django.http import HttpResponseRedirect
+from django.shortcuts import render
+
 
 from rest_framework import status
 from rest_framework.decorators import api_view, permission_classes
@@ -65,4 +67,4 @@ def activate(request, activation_key=None):
     # if not activated
     success_url = utils.get_settings('REGISTRATION_API_ACTIVATION_SUCCESS_URL')
     if success_url is not None:
-        return Response(data={"message": "User activated"}, status=status.HTTP_200_OK)
+        return render(request, 'registration_api/activation.html', status=status.HTTP_200_OK)
