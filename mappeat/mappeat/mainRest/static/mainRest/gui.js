@@ -266,7 +266,7 @@ function loadRestaurant(){
                                                             <div><label>Lat:</label><input id='lat' value='${table.lat}' readonly>
                                                                  <label>Long:</label><input id='long' value='${table.lng}' readonly>
                                                             </div>
-                                                            <div id='map' style="height:300px"></div>
+                                                            <div id='map'></div>
                                                         </div>
                                                     </div>
                                                         <div class='row' id='editRest'>
@@ -331,7 +331,7 @@ function seeTables(){
                             <h3 class="text-center">Mesas</h3>
                         </div>
                       <div class = 'well'>
-                          <svg style="width:100%;height:600px;" id='tableMap'></svg>
+                          <svg id='tableMap'></svg>
                       </div>`;
 
 	get("tables/", function(){
@@ -622,7 +622,7 @@ function viewTables(){
                             <h3 class="text-center">Mesas</h3>
                         </div>
                       <div class = 'well'>
-                          <svg style="width:100%;height:600px;" id='tableMap'></svg>
+                          <svg id='tableMap'></svg>
                       </div>`;
 
 	get("tables/", function(){
@@ -822,7 +822,7 @@ function register(form){
   valores.restaurant = form.restaurant.value;
 
 	post("register/", function(){
-		form.parentNode.innerHTML = "<p>Registro completado, comprueba tu email.</p>";
+		form.parentNode.innerHTML = "<h4>Registro completado!</h4><p>Recibirá un correo de verificación de creación de una cuenta. Haga clic en el enlace del correo electrónico para finalizar el proceso de configuración y activar su cuenta.</p><p>Asegúrese de revisar la carpeta de SPAM. En caso de no recibir el mensaje, <a>Reenviar correo</a></p>";
 	}, valores, true, "/accounts_api/");
 
 	return false;

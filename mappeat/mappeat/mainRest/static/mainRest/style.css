@@ -63,3 +63,14 @@ body{
 #register_form{
     border: 1px solid #959595;
 }
+
+/* mapa de mesas*/
+#tableMap{
+    width:100%;
+    height:600px;
+}
+
+/* mapa del restaurante*/
+#map{
+    height: 300px;
+}
