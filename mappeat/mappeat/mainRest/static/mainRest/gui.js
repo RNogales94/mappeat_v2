@@ -472,6 +472,7 @@ function splitTicket(){
 		<p>Resto: <span id="totalRest">0</span>€</p>
 		<p>Divisiones: <span id="divisions"></span></p>
 	</div>
+    
 	<div class='well col-sm-4'>
 		<h4>Cuenta parcial</h4>
 		<table class='table'>
@@ -511,6 +512,10 @@ function splitTicket(){
 		</ul>
 		<p>Resto: <span id="customRest">0</span>€</p>
 	</div>
+
+<div class='row text-center'>
+    <button class='btn btn-success btn-lg' onclick='charge()'>Cobrar</button>
+</div>
     </div>`;
 
 	totalCost = document.getElementById("totalCost");
