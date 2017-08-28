@@ -350,7 +350,10 @@ function seeTables(){
         //tamaño del cuadrado
         let size = 100;
         let rows = Math.floor(n/cols)+1;
-
+        
+        //ajusta altura 
+        map.setAttribute('height',rows*1.2*size);
+        
         let table;
         let available;
 
@@ -636,6 +639,9 @@ function viewTables(){
         //tamaño del cuadrado
         let size = 100;
         let rows = Math.floor(n/cols)+1;
+        
+        //ajusta altura
+        map.setAttribute('height',rows*1.2*size);
 
         let table;
         let available;
