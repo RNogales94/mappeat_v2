@@ -67,4 +67,4 @@ def activate(request, activation_key=None):
     # if not activated
     success_url = utils.get_settings('REGISTRATION_API_ACTIVATION_SUCCESS_URL')
     if success_url is not None:
-        return render(request, 'registration_api/activation.html', status=status.HTTP_200_OK)
+        return render(request, 'mainRest/activation.html', status=status.HTTP_200_OK)
