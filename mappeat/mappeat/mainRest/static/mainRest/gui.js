@@ -568,7 +568,7 @@ function showTicket(ticket){
 	document.getElementById('cashButton').innerText = ticket.cost.toFixed(2) + "€";
 
 	var table = document.getElementById('ticketTable');
-  var pending = document.getElementById('kitchenTicket');
+    var pending = document.getElementById('kitchenTicket');
 
     table.innerHTML = `<thead>
 		<tr>
@@ -585,7 +585,7 @@ function showTicket(ticket){
 
     for (let line of ticket.details){
 		table.insertAdjacentHTML('beforeend', `<tr onclick="void(0)">
-			<td><span class='glyphicon glyphicon-remove' onclick='removeTicketDetail(${line.pk})'></span> </td>
+			<td><span class='glyphicon glyphicon-remove remove_button' onclick='removeTicketDetail(${line.pk})'></span> </td>
 			<td>${line.product_name}</td>
 			<td>${line.quantity}</td>
 			<td>${line.price.toFixed(2)}€</td>
@@ -770,8 +770,10 @@ function loadTPV(){
 		     <div class="col-sm-4">
 		       <div id="ticketDiv" class="well">
 		         <h4>Ticket Actual</h4>
+                 <h4 id='ticketRest'>RestName</h4>
+                 <p id='ticketTime'>Hora:</p>
 		         <table class='table' id="ticketTable"></table>
-                 <div style="display: none;">
+                 <div>
                  <table class='table'  id='kitchenTicket'></table></div>
 		       </div>
 		     </div>
@@ -1293,7 +1295,7 @@ function printTicket(){
         var mode = 'iframe'; //popup
         var close = mode == "popup";
         var options = { mode : mode, popClose : close};
-        $("#ticketTable").print( options );
+        $("#ticketDiv").print( options );
     }
 }
 

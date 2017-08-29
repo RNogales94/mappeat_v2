@@ -148,3 +148,17 @@ body{
   padding: 20px 50px;
   background: #91b287;
 }
+
+@media print
+{
+   #kitchenTicket { display: block; }
+   #ticketTime {display:block; }
+    .remove_button{display: none !important; }
+}
+
+@media screen
+{
+   #kitchenTicket {display: none; }
+   #ticketRest {display: none;}
+   #ticketTime {display:none; }
+}
