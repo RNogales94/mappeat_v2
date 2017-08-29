@@ -77,28 +77,74 @@ body{
 
 /* monedas y billetes */
 
+
+.billete {
+  float: left;
+  display: block;
+  text-align: center;
+  margin-left: 10px;
+  margin-top: 10px;
+}
+
 .moneda {
      float: left;
      display: block;
      text-align: center;
-     padding: 45px 20px;
+     margin-left: 10px;
+     margin-top: 10px;
      -moz-border-radius: 50%;
      -webkit-border-radius: 50%;
      border-radius: 50%;
-     background: #B87333;
-
 }
 
 .cobre {
+  padding: 13px 18px;
   background: #B87333;
 }
 
 .oro {
+  padding: 17px 18px;
   background: #EABE3F
 }
 
-.euro {
-  border:1px solid #ccc;
-  padding:2px;
-  background:#eee;
+.euro1 {
+  border:10px solid rgb(234, 190, 63);
+  padding: 16px 17px;
+  background: rgb(192, 192, 192);
+}
+
+.euro2 {
+  border:10px solid rgb(192, 192, 192);
+  padding: 16px 17px;
+  background: rgb(234, 190, 63);
+}
+
+.euro5 {
+  border:2px solid rgb(192, 192, 192);
+  padding: 20px 50px;
+  background: #b1c9cd;
+}
+
+.euro10 {
+  border:2px solid rgb(192, 192, 192);
+  padding: 20px 50px;
+  background: #f17c94;
+}
+
+.euro20 {
+  border:2px solid rgb(192, 192, 192);
+  padding: 20px 50px;
+  background: #949cdc;
+}
+
+.euro50 {
+  border:2px solid rgb(192, 192, 192);
+  padding: 20px 50px;
+  background: #da8b6c;
+}
+
+.euro100 {
+  border:2px solid rgb(192, 192, 192);
+  padding: 20px 50px;
+  background: #91b287;
 }

@@ -435,7 +435,7 @@ function removeFromPartial(line){
 function addToPartial(line){
 	partialCost.innerText = (parseFloat(partialCost.innerText) + line.product.price).toFixed(2);
 	calculateSplit();
-	
+
 	if (partialTable.lastChild && 'querySelector' in partialTable.lastChild && partialTable.lastChild.querySelector("[name=name]").innerText == line.product.name){
 		let quantity = partialTable.lastChild.querySelector("[name=quantity]");
 		let price = partialTable.lastChild.querySelector("[name=price]");
@@ -504,19 +504,25 @@ function splitTicket(){
 		<label>Lo que le quieres cobrar:</label>
 		<input onfocus="activeInput = this" onclick="this.value = 0; calculateSplit()" oninput="calculateSplit()" value="0" id="customTotal" type="number">
 		<ul clas="ul-tpv">
-			<li class='moneda' onclick="addAmount(0.01)">1 cént.</li>
-			<li class='moneda' onclick="addAmount(0.02)">2 cént.</li>
-			<li class='moneda' onclick="addAmount(0.05)">5 cént.</li>
-			<li class='moneda' onclick="addAmount(0.1)">10 cént.</li>
-			<li class='moneda' onclick="addAmount(0.2)">20 cént.</li>
-			<li class='moneda' onclick="addAmount(0.5)">50 cént.</li>
-			<li class='moneda' onclick="addAmount(1)">1€</li>
-			<li class='moneda' onclick="addAmount(2)">2€</li>
-			<li class='moneda' onclick="addAmount(5)">5€</li>
-			<li class='moneda' onclick="addAmount(10)">10€</li>
-			<li class='moneda' onclick="addAmount(20)">20€</li>
-			<li class='moneda' onclick="addAmount(50)">50€</li>
-			<li class='moneda' onclick="addAmount(100)">100€</li>
+			<ul clas="ul-tpv">
+				<li class='moneda euro2' onclick="addAmount(2)">2€</li>
+				<li class='moneda euro1' onclick="addAmount(1)">1€</li>
+			</ul>
+			<ul clas="ul-tpv">
+				<li class='moneda oro' onclick="addAmount(0.5)">50</li>
+				<li class='moneda oro' onclick="addAmount(0.2)">20</li>
+				<li class='moneda oro' onclick="addAmount(0.1)">10</li>
+			</ul>
+			<ul clas="ul-tpv">
+				<li class='moneda cobre' onclick="addAmount(0.05)">5</li>
+				<li class='moneda cobre' onclick="addAmount(0.02)">2</li>
+				<li class='moneda cobre' onclick="addAmount(0.01)">1</li>
+			</ul>
+			<li class='billete euro5' onclick="addAmount(5)">5€</li>
+			<li class='billete euro10' onclick="addAmount(10)">10€</li>
+			<li class='billete euro20' onclick="addAmount(20)">20€</li>
+			<li class='billete euro50' onclick="addAmount(50)">50€</li>
+			<li class='billete euro100' onclick="addAmount(100)">100€</li>
 		</ul>
 		<p>Resto: <span id="customRest">0</span>€</p>
 	</div>
