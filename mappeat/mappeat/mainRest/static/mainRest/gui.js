@@ -350,10 +350,10 @@ function seeTables(){
         //tamaño del cuadrado
         let size = 100;
         let rows = Math.floor(n/cols)+1;
-        
-        //ajusta altura 
+
+        //ajusta altura
         map.setAttribute('height',rows*1.2*size);
-        
+
         let table;
         let available;
 
@@ -480,7 +480,7 @@ function splitTicket(){
 		<p>Resto: <span id="totalRest">0</span>€</p>
 		<p>Divisiones: <span id="divisions"></span></p>
 	</div>
-    
+
 	<div class='well col-sm-4'>
 		<h4>Cuenta parcial</h4>
 		<table class='table'>
@@ -503,20 +503,20 @@ function splitTicket(){
 		<input onfocus="activeInput = this" onclick="this.value = 0; calculateSplit()" oninput="calculateSplit()" value="0" id="input" type="number">
 		<label>Lo que le quieres cobrar:</label>
 		<input onfocus="activeInput = this" onclick="this.value = 0; calculateSplit()" oninput="calculateSplit()" value="0" id="customTotal" type="number">
-		<ul>
-			<li onclick="addAmount(0.01)">1 cént.</li>
-			<li onclick="addAmount(0.02)">2 cént.</li>
-			<li onclick="addAmount(0.05)">5 cént.</li>
-			<li onclick="addAmount(0.1)">10 cént.</li>
-			<li onclick="addAmount(0.2)">20 cént.</li>
-			<li onclick="addAmount(0.5)">50 cént.</li>
-			<li onclick="addAmount(1)">1€</li>
-			<li onclick="addAmount(2)">2€</li>
-			<li onclick="addAmount(5)">5€</li>
-			<li onclick="addAmount(10)">10€</li>
-			<li onclick="addAmount(20)">20€</li>
-			<li onclick="addAmount(50)">50€</li>
-			<li onclick="addAmount(100)">100€</li>
+		<ul clas="ul-tpv">
+			<li class='moneda' onclick="addAmount(0.01)">1 cént.</li>
+			<li class='moneda' onclick="addAmount(0.02)">2 cént.</li>
+			<li class='moneda' onclick="addAmount(0.05)">5 cént.</li>
+			<li class='moneda' onclick="addAmount(0.1)">10 cént.</li>
+			<li class='moneda' onclick="addAmount(0.2)">20 cént.</li>
+			<li class='moneda' onclick="addAmount(0.5)">50 cént.</li>
+			<li class='moneda' onclick="addAmount(1)">1€</li>
+			<li class='moneda' onclick="addAmount(2)">2€</li>
+			<li class='moneda' onclick="addAmount(5)">5€</li>
+			<li class='moneda' onclick="addAmount(10)">10€</li>
+			<li class='moneda' onclick="addAmount(20)">20€</li>
+			<li class='moneda' onclick="addAmount(50)">50€</li>
+			<li class='moneda' onclick="addAmount(100)">100€</li>
 		</ul>
 		<p>Resto: <span id="customRest">0</span>€</p>
 	</div>
@@ -652,7 +652,7 @@ function viewTables(){
         //tamaño del cuadrado
         let size = 100;
         let rows = Math.floor(n/cols)+1;
-        
+
         //ajusta altura
         map.setAttribute('height',rows*1.2*size);
 

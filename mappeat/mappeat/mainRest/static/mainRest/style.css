@@ -73,3 +73,32 @@ body{
 #map{
     height: 300px;
 }
+
+
+/* monedas y billetes */
+
+.moneda {
+     float: left;
+     display: block;
+     text-align: center;
+     padding: 45px 20px;
+     -moz-border-radius: 50%;
+     -webkit-border-radius: 50%;
+     border-radius: 50%;
+     background: #B87333;
+
+}
+
+.cobre {
+  background: #B87333;
+}
+
+.oro {
+  background: #EABE3F
+}
+
+.euro {
+  border:1px solid #ccc;
+  padding:2px;
+  background:#eee;
+}
