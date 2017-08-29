@@ -1,7 +1,6 @@
 from django.conf.urls import url, include
 from . import views
 from . import serializers
-
 app_name = 'mainRest'
 urlpatterns = [
     # Index

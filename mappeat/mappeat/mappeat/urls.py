@@ -22,6 +22,10 @@ from . import views
 from rest_framework_swagger.views import get_swagger_view
 schema_view = get_swagger_view(title='Mappeat Swagger API')
 
+#Recuperar contraseña y demás cosas de /accounts
+from django.contrib.auth.views import password_reset, password_reset_done, \
+                                password_reset_confirm, password_reset_complete
+
 
 app_name = 'mappeat'
 urlpatterns = [
@@ -33,6 +37,14 @@ urlpatterns = [
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     url(r'^dev/docs/', schema_view),
     url(r'^accounts_api/', include('registration_api.urls')),
+
+    #accounts section:
+    url(r'^', include('django.contrib.auth.urls')),
+    url(r'^accounts/password/reset/$', password_reset, {'post_reset_redirect' : '/accounts/password/reset/done/'}),
+    url(r'^accounts/password/reset/done/$', password_reset_done),
+    url(r'^accounts/password/reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', password_reset_confirm,
+     {'post_reset_redirect' : '/accounts/password/done/'}),
+    url(r'^accounts/password/done/$', password_reset_complete),
 ]
 
 """
