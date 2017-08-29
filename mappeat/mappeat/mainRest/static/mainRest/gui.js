@@ -5,18 +5,20 @@ var currentTableID;
 
 function loadSettings(){
 	main.innerHTML = `<div class="container-fluid">
-                            <div class="col-sm-1 sidenav " style="width: 12%">
-		                      <h3>Ajustes</h3>
-		                      <button onclick="loadTables()">Mesas</button>
-		                      <button onclick="loadStaff()">Personal</button>
-		                      <button  onclick="loadRestaurant()">Restaurante</button>
-		                      <button>Otros</button>
+                       	<div class="col-md-2 sidebar">
+                            <div class="list-group text-center">
+                            <span><h3>Ajustes</h3></span>
+                               <a class="list-group-item" onclick='loadTables()'> Mesas</a>
+                               <a class="list-group-item" onclick='loadStaff()'> Personal</a>
+                               <a class="list-group-item" onclick='loadRestaurant()'> Restaurante</a>
+                               <a class="list-group-item" onclick='void(0)'>Otros</a>     
                             </div>
+                        </div>
                        <div class="col-sm-10">
 	                       <div class="well" id="content">
                            </div>
-                          </div>
-                    </div>`;
+                        </div>
+                      </div>`;
 
 }
 
