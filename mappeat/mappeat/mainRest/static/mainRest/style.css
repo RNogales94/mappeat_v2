@@ -153,7 +153,10 @@ body{
 {
    #kitchenTicket { display: block; }
    #ticketTime {display:block; }
-    .remove_button{display: none !important; }
+   .remove_button{display: none !important; }
+    #ticketBarman{display: block;}
+    #ticketTableName{display: block;}
+    #ticketTitle{display: none;}
 }
 
 @media screen
@@ -161,4 +164,6 @@ body{
    #kitchenTicket {display: none; }
    #ticketRest {display: none;}
    #ticketTime {display:none; }
+    #ticketBarman{display: none;}
+    #ticketTableName{display: none;}
 }
