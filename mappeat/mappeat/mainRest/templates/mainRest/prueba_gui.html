@@ -46,78 +46,34 @@
               <span class="icon-bar"></span>
               <span class="icon-bar"></span>
             </button>
-            <a class="navbar-brand" href="#">Mappeat</a>
-          </div>
-          <div class="navbar-collapse collapse">
-            <ul class="nav navbar-nav">
-              <li class="active"><a href="#">Home</a></li>
-              <li><a href="#about">About</a></li>
-              <li><a href="#contact">Contact</a></li>
-              <li class="dropdown">
-                <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>
-                <ul class="dropdown-menu">
-                  <li><a href="#">Action</a></li>
-                  <li><a href="#">Another action</a></li>
-                  <li><a href="#">Something else here</a></li>
-                  <li role="separator" class="divider"></li>
-                  <li class="dropdown-header">Nav header</li>
-                  <li><a href="#">Separated link</a></li>
-                  <li><a href="#">One more separated link</a></li>
-                </ul>
-              </li>
-            </ul>
+                  <a class="navbar-brand" href="#myPage">MAPPEAT</a>
 
-            <form onsubmit="return login(this)" class="navbar-form navbar-right">
-                <div class="form-group">
-                  <input type="text" name="username" placeholder="Usuario" class="form-control">
-                </div>
-                <div class="form-group">
-                  <input type="password" name="pass" placeholder="Contraseña" class="form-control">
-                </div>
-                <button type="submit" class="btn btn-success">Entrar</button>
-                <div>
-                <a href='#'>Olvide mi contraseña</a>
-                </div>
-            </form>
-        
-          </div><!--/.nav-collapse -->
+          </div>
         </div>
       </nav>
         <div class='container'>
-            <div class="col-md-3"></div>
-		    <div class="col-md-6  panel panel-default" id='register_form'>
-                <form id="formRegistro" class="form-horizonral" autocomplete="off" onsubmit="return register(this)">
-                       <legend class='text-center'>Registrate</legend>
+            <div class="col-md-4"></div>
+		    <div class="col-md-4  panel panel-default" id='register_form'>
+                <form id="formRegistro" class="form-horizonral" autocomplete="off" onsubmit="return login(this)">
+                       <legend class='text-center'></legend>
                        <div class="input-group form-group ">
                             <span class="input-group-addon glyphicon glyphicon-user"></span>
                             <input type="text" class='form-control' name="username" placeholder="Nombre de usuario" required />
                         </div>
-                         <div class='input-group form-group'>
-                            <span class = 'input-group-addon glyphicon glyphicon-cutlery'></span>
-                            <input type="text" class='form-control' name="restaurant" placeholder="Restaurante" required />
-                        </div>
-                        <div class="input-group form-group">
-                            <span class="input-group-addon glyphicon glyphicon-envelope"></span>
-                            <input type="email" class='form-control' name="mail" placeholder="Correo electrónico" required />
-                        </div>
                         <div class="input-group form-group">
                             <span class="input-group-addon glyphicon glyphicon-lock"></span>
-                            <input type="password" class='form-control' name="pass" placeholder="Contraseña nueva" required />
+                            <input type="password" class='form-control' name="pass" placeholder="Contraseña" required />
                         </div>
-                        <div class="input-group form-group">
-                            <span class="input-group-addon glyphicon glyphicon-lock"></span>
-                            <input type="password" class='form-control' name="passRepeated" placeholder="Repetir contraseña" required />
-                        </div>
-                        <div class="form-group ">
-				            <input type="checkbox" tabindex="3" class="" name="terms" id="terms" required>
-				            <label for="terms">He leido y acepto las condiciones (<a href='#'>Privacy Policy</a>)</label>
-									</div>
+    
                         <div class='form-group'>
-                            <input class='btn btn-primary btn-round-lg btn-lg btn-block' type="submit" value="Registrarse">
+                            <input class='btn btn-success btn-round-lg btn-lg btn-block' type="submit" value="Entrar">
+                        </div>
+                        <div class="form-group">
+                            <a href='#'>¿Has olvidado tu contraseña?</a>
                         </div>
 			 </form>
 		    </div>
-            <div class="col-md-3"></div>
+            <div class="col-md-4"></div>
         </div>
 	</body>
 </html>
