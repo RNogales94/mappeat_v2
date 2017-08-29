@@ -427,7 +427,7 @@ function addAmount(amount){
 }
 
 function removeFromPartial(line, price){
-	partialCost.innerText = (partialCost.innerText - price).toFixed(2);
+	partialCost.innerText = (partialCost.innerText - line.querySelector("[name=price]").innerText).toFixed(2);
 	calculateSplit();
 	line.parentNode.removeChild(line);
 }
@@ -439,11 +439,11 @@ function addToPartial(line){
 	if (partialTable.lastChild && 'querySelector' in partialTable.lastChild && partialTable.lastChild.querySelector("[name=name]").innerText == line.product.name){
 		let quantity = partialTable.lastChild.querySelector("[name=quantity]");
 		let price = partialTable.lastChild.querySelector("[name=price]");
-		price.innerText = ( (price.innerText / quantity.innerText) * (parseInt(quantity.innerText) + 1) ).toFixed(2);
 		quantity.innerText = parseInt(quantity.innerText) + 1;
+		price.innerText = (line.product.price * quantity.innerText).toFixed(2);
 	}
 	else{
-		partialTable.insertAdjacentHTML('beforeend', `<tr onclick="removeFromPartial(this, ${line.product.price})">
+		partialTable.insertAdjacentHTML('beforeend', `<tr onclick="removeFromPartial(this)">
 			<td name="name">${line.product.name}</td>
 			<td name="quantity">1</td>
 			<td><span name="price">${line.product.price.toFixed(2)}</span>€</td>
