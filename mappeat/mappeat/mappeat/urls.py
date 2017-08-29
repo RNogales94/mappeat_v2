@@ -24,7 +24,7 @@ schema_view = get_swagger_view(title='Mappeat Swagger API')
 
 #Recuperar contraseña y demás cosas de /accounts
 from django.contrib.auth.views import password_reset, password_reset_done, \
-                                password_reset_confirm, password_reset_complete
+                                password_reset_confirm, password_reset_complete, login
 
 
 app_name = 'mappeat'
@@ -40,7 +40,9 @@ urlpatterns = [
 
     #accounts section:
     url(r'^', include('django.contrib.auth.urls')),
-    url(r'^accounts/password/reset/$', password_reset, {'post_reset_redirect' : '/accounts/password/reset/done/'}),
+    url(r'^accounts/login/$', login, {'template_name': 'mappeat/login.html'}, name='login'),
+    url(r'^accounts/password/reset/$', password_reset,
+    {'post_reset_redirect' : '/accounts/password/reset/done/'}),
     url(r'^accounts/password/reset/done/$', password_reset_done),
     url(r'^accounts/password/reset/(?P<uidb36>[0-9A-Za-z]+)-(?P<token>.+)/$', password_reset_confirm,
      {'post_reset_redirect' : '/accounts/password/done/'}),
