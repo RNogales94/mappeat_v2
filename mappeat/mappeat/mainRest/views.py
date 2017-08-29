@@ -5,14 +5,5 @@ from django.shortcuts import render
 
 from .models import *
 
-def index(request):
-    return render(request, 'mainRest/index.html')
-
-def prueba_api(request):
-    return render(request, 'mainRest/prueba_api.html')
-
-def prueba_gui(request):
-    return render(request, 'mainRest/prueba_gui.html')
-
-def prueba_acceso(request):
-    return render(request, 'mainRest/prueba_acceso.html')
+def mappeatlogin(request):
+    return render(request, 'mainRest/login.html')

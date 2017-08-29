@@ -40,7 +40,7 @@ urlpatterns = [
 
     #accounts section:
     url(r'^', include('django.contrib.auth.urls')),
-    url(r'^accounts/login/$', login, {'template_name': 'mappeat/login.html'}, name='login'),
+    url(r'^accounts/login/$', login, {'template_name': '../mainRest/prueba_gui.html'}, name='login'),
     url(r'^accounts/password/reset/$', password_reset,
     {'post_reset_redirect' : '/accounts/password/reset/done/'}),
     url(r'^accounts/password/reset/done/$', password_reset_done),
