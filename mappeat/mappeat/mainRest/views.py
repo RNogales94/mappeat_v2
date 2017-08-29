@@ -5,5 +5,5 @@ from django.shortcuts import render
 
 from .models import *
 
-def mappeatlogin(request):
-    return render(request, 'mainRest/login.html')
+def index(request):
+    return render(request, 'mainRest/index.html')
