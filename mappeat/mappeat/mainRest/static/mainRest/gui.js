@@ -426,7 +426,7 @@ function addAmount(amount){
 	calculateSplit();
 }
 
-function removeFromPartial(line, price){
+function removeFromPartial(line){
 	partialCost.innerText = (partialCost.innerText - line.querySelector("[name=price]").innerText).toFixed(2);
 	calculateSplit();
 	line.parentNode.removeChild(line);
