@@ -814,7 +814,7 @@ function loadApp(){
 					<!--  Aun no lo implementamos
 					<button>Informes</button>
 					-->
-					<button type="button" class="btn btn-light" onclick="loadSettings()">Ajustes</button>
+					<button type="button" class="btn btn-light" onclick="loadSettings();loadTables()">Ajustes</button>
 					<button type="button" class="btn btn-danger" onclick="location.reload()">Salir</button>
 				</div>
 			</div>
