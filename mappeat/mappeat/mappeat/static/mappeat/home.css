@@ -6,7 +6,7 @@
   h1 {
     font: Montserrat, sans-serif;
     letter-spacing: 4px;
-    
+
   }
   h2 {
       font-size: 24px;
@@ -21,7 +21,7 @@
       color: #303030;
       font-weight: 400;
       margin-bottom: 30px;
-  }  
+  }
   .jumbotron {
       background-color: #f4511e;
       color: #fff;
@@ -73,7 +73,7 @@
       font-style: normal;
   }
   .panel {
-      border: 1px solid #f4511e; 
+      border: 1px solid #f4511e;
       border-radius:0 !important;
       transition: box-shadow 0.5s;
   }
@@ -132,6 +132,16 @@
       border-color: transparent;
       color: #fff !important;
   }
+
+  .glyphicon {
+    top: 0px;
+  }
+
+  #registration-legend{
+    color: white;
+  }
+
+
   footer .glyphicon {
       font-size: 20px;
       margin-bottom: 20px;
@@ -149,7 +159,7 @@
     0% {
       opacity: 0;
       transform: translateY(70%);
-    } 
+    }
     100% {
       opacity: 1;
       transform: translateY(0%);
@@ -159,7 +169,7 @@
     0% {
       opacity: 0;
       -webkit-transform: translateY(70%);
-    } 
+    }
     100% {
       opacity: 1;
       -webkit-transform: translateY(0%);
