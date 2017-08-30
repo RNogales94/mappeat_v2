@@ -771,20 +771,19 @@ function loadTPV(){
 		     <div class="col-sm-4">
 		       <div id="ticketDiv" class="well">
 		         <h4 id='ticketTitle'>Ticket Actual</h4>
-                 <h4 id='ticketRest'>RestName</h4>
+                 <h4 id='ticketRest'>${sessionStorage['restaurantName']}</h4>
                  <p id='ticketTime'>Fecha:</p>
                  <p id='ticketBarman'>Camarero: ${sessionStorage['username']}</p>
                  <p id='ticketTableName'>Mesa: ${currentTable}</p>
 		         <table class='table' id="ticketTable"></table>
-                
-                 <div>
+                </div>
+                <div>
                  <table class='table'  id='kitchenTicket'></table>
                  </div>
 		       </div>
 		     </div>
 		   </div>
 		 </div>
-	  </div>
 	</div>`;
 
 	familyWanted = '';
@@ -886,12 +885,12 @@ function login(form){
 	valores.username = form.username.value;
 	valores.password = form.pass.value;
 
-	sessionStorage['username'] = valores.username;
 	let pendingData = 2;
 
 	post("login/", function(){
 		get("restaurants/", function(){
 			sessionStorage['restaurantID'] = this.response[0].id;
+            sessionStorage['restaurantName'] = this.response[0].name;
 			pendingData -= 1;
 			if (pendingData == 0) loadApp();
 		});
@@ -899,6 +898,7 @@ function login(form){
 		get("users/?username=" + valores.username, function(){
 		get("staff/?user=" + this.response[0].pk, function(){
 			sessionStorage['userID'] = this.response[0].id;
+            sessionStorage['username'] = this.response[0].first_name;
 			pendingData -= 1;
 			if (pendingData == 0) loadApp();
 		});
