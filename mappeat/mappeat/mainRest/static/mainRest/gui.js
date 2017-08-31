@@ -11,7 +11,7 @@ function loadSettings(){
                                <a class="list-group-item" onclick='loadTables()'> Mesas</a>
                                <a class="list-group-item" onclick='loadStaff()'> Personal</a>
                                <a class="list-group-item" onclick='loadRestaurant()'> Restaurante</a>
-                               <a class="list-group-item" onclick='void(0)'>Otros</a>     
+                               <a class="list-group-item" onclick='void(0)'>Otros</a>
                             </div>
                         </div>
                        <div class="col-sm-10">
@@ -567,7 +567,7 @@ function showTicket(ticket){
 	document.getElementById('ticketID').innerText = "Número de ticket: " + ticket.pk;
 	document.getElementById('cashButton').innerText = ticket.cost.toFixed(2) + "€";
     document.getElementById('ticketTime').innerText = ticket.time + "  " + ticket.date;
-    
+
 	var table = document.getElementById('ticketTable');
     var pending = document.getElementById('kitchenTicket');
 
@@ -616,7 +616,7 @@ function loadTicket(){
 	if (currentTable){
 		document.getElementById('ticketTable').innerText = "Cargando...";
 		document.getElementById('tableName').innerText = "Mesa: " + currentTable;
-        
+
 		get("tickets/?is_closed=False&table=" + currentTableID, function(){
 			if (this.response.length == 0) createTicket();
 			else{ showTicket(this.response[0]); }
@@ -771,13 +771,13 @@ function loadTPV(){
 		     <div class="col-sm-4">
 		       <div id="ticketDiv" class="well">
 		         <h4 id='ticketTitle'>Ticket Actual</h4>
-                 <h4 id='ticketRest'>${sessionStorage['restaurantName']}</h4>
+                <h4 id='ticketRest'>${sessionStorage['restaurantName']}</h4>
                  <p id='ticketTime'>Fecha:</p>
                  <p id='ticketBarman'>Camarero: ${sessionStorage['username']}</p>
                  <p id='ticketTableName'>Mesa: ${currentTable}</p>
 		         <table class='table' id="ticketTable"></table>
-                </div>
-                <div>
+                 </div>
+                 <div>
                  <table class='table'  id='kitchenTicket'></table>
                  </div>
 		       </div>
