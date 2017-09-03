@@ -16,6 +16,8 @@ Including another URLconf
 from django.conf.urls import include, url
 from django.contrib import admin
 from . import views
+from mainRest import serializers
+
 
 
 #from rest_framework.documentation import include_docs_urls #Default DOC
@@ -37,6 +39,8 @@ urlpatterns = [
     url(r'^rest-auth/registration/', include('rest_auth.registration.urls')),
     url(r'^dev/docs/', schema_view),
     url(r'^accounts_api/', include('registration_api.urls')),
+    url(r'^api/v1/', include(serializers.router.urls)),
+
 
     #accounts section:
     url(r'^', include('django.contrib.auth.urls')),
