@@ -796,6 +796,7 @@ function loadTPV(){
 			for (let family of this.response){
 				list.insertAdjacentHTML('beforeend', `<li class="li-tpv" onclick="loadFamily('${family.name}')">${family.name}</li>`);
 			}
+            list.insertAdjacentHTML('beforeend', `<li class="li-tpv" onclick="loadFamily('')">Todos</li>`);
 	});
 
 	get("products/", function(){
