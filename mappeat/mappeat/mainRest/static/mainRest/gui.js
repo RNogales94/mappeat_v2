@@ -413,6 +413,7 @@ var ticketTable;
 var partialTable;
 var partialCost;
 var partialRest;
+var divisions;
 var input;
 var customTotal;
 var customRest;
@@ -426,6 +427,7 @@ function calculateSplit(){
 	totalRest.innerText = (input.value - totalCost.innerText).toFixed(2);
 	partialRest.innerText = (input.value - partialCost.innerText).toFixed(2);
 	customRest.innerText = (input.value - customTotal.value).toFixed(2);
+	divisions.innerText = `${divide(totalCost, 2)} (2), ${divide(totalCost, 3)} (3), ${divide(totalCost, 4)} (4), ${divide(totalCost, 5)} (5), ${divide(totalCost, 6)} (6)`;
 }
 
 function addAmount(amount){
@@ -460,11 +462,11 @@ function addToPartial(line){
 		line.parentNode.removeChild(line);
 	else {
 		lineQuantity.innerText = parseInt(lineQuantity.innerText) - 1;
-		linePrice.innerText = ( parseFloat(linePrice.innerText) - unitPrice ).toFixed(2);
+		linePrice.innerText = (linePrice.innerText - unitPrice).toFixed(2);
 	}
 	
 	totalCost.innerText = (totalCost.innerText - unitPrice).toFixed(2);
-	partialCost.innerText = (parseFloat(partialCost.innerText) + parseFloat(linePrice.innerText)).toFixed(2);
+	partialCost.innerText = (parseFloat(partialCost.innerText) + parseFloat(unitPrice)).toFixed(2);
 	calculateSplit();
 
 	if (partialTable.lastChild && 'querySelector' in partialTable.lastChild && partialTable.lastChild.querySelector("[name=name]").innerText == lineName){
@@ -565,6 +567,7 @@ function splitTicket(){
 	partialTable = document.getElementById("partialTable");
 	partialCost = document.getElementById("partialCost");
 	partialRest = document.getElementById("partialRest");
+	divisions = document.getElementById("divisions");
 	input = document.getElementById("input");
 	customTotal = document.getElementById("customTotal");
 	customRest = document.getElementById("customRest");
@@ -574,7 +577,6 @@ function splitTicket(){
 		var totalCost = document.getElementById('totalCost');
 		totalCost.innerText = this.response[0].cost.toFixed(2);
 		calculateSplit();
-		document.getElementById("divisions").innerText = `${divide(totalCost, 2)} (2), ${divide(totalCost, 3)} (3), ${divide(totalCost, 4)} (4), ${divide(totalCost, 5)} (5), ${divide(totalCost, 6)} (6)`;
 
 		var table = document.getElementById('ticketTable');
 
