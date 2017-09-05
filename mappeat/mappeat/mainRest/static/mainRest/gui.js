@@ -343,8 +343,8 @@ function seeTables(){
 			map.innerHTML = '';
 
 			if (n<=0){
-				map.insertAdjacentHTML('beforebegin', `<p>Estás apollardado. Obviamente, antes de poder ver mesas tienes que crearlas en Ajustes -> Mesas. La cuota de servicio técnico acaba de subirte 20€ na más que por esto.</p>
-				<button onclick="loadSettings(); loadTables()">Ir a ajustes de mesas</button>`);
+				map.insertAdjacentHTML('beforebegin', `<p>Antes de poder ver mesas tienes que crearlas en Ajustes -> Mesas.</p>
+				<button onclick="loadSettings(); loadTables()">Ir directamente a ajustes de mesas (Ajustes -> Mesas)</button>`);
 			}
 
         //numero de columnas

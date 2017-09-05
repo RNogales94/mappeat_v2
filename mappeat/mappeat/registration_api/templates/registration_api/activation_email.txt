@@ -3,7 +3,6 @@
 Tu cuenta mappeat está lista.
 
 Por favor pulsa el siguiente enlace para activarla:
-http://{{site}}/accounts_api/activate/{{activation_key}}/
+http://www.mappeat.com/accounts_api/activate/{{activation_key}}/
 
 Este enlace caducará en {{expiration_days}} días.
-
