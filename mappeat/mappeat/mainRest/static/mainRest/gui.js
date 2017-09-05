@@ -418,6 +418,10 @@ var customTotal;
 var customRest;
 var activeInput;
 
+function divide(node, divisor){
+	return (node.innerText / divisor).toFixed(2);
+}
+
 function calculateSplit(){
 	totalRest.innerText = (input.value - totalCost.innerText).toFixed(2);
 	partialRest.innerText = (input.value - partialCost.innerText).toFixed(2);
@@ -435,45 +439,47 @@ function removeFromPartial(line){
 	let price = line.querySelector("[name=price]").innerText;
 	
 	ticketTable.insertAdjacentHTML('beforeend', `<tr onclick="addToPartial(this)">
-		<td>${name}</td>
+		<td name="name">${name}</td>
 		<td name="quantity">${quantity}</td>
-		<td>${price}€</td>
+		<td><span name="price">${price}</span>€</td>
 	</tr>`);
-	ticketTable.lastChild.product = { name:name, price:price/quantity };
 	
+	totalCost.innerText = ( parseFloat(totalCost.innerText) + parseFloat(price) ).toFixed(2);
 	partialCost.innerText = (partialCost.innerText - price).toFixed(2);
 	calculateSplit();
 	line.parentNode.removeChild(line);
 }
 
 function addToPartial(line){
+	let lineName = line.querySelector("[name=name]").innerText;
 	let lineQuantity = line.querySelector("[name=quantity]");
+	let linePrice = line.querySelector("[name=price]");
+	let unitPrice = linePrice.innerText / lineQuantity.innerText;
 	
 	if (parseInt(lineQuantity.innerText) == 1)
 		line.parentNode.removeChild(line);
-	else
+	else {
 		lineQuantity.innerText = parseInt(lineQuantity.innerText) - 1;
-
-	partialCost.innerText = (parseFloat(partialCost.innerText) + line.product.price).toFixed(2);
+		linePrice.innerText = ( parseFloat(linePrice.innerText) - unitPrice ).toFixed(2);
+	}
+	
+	totalCost.innerText = (totalCost.innerText - unitPrice).toFixed(2);
+	partialCost.innerText = (parseFloat(partialCost.innerText) + parseFloat(linePrice.innerText)).toFixed(2);
 	calculateSplit();
 
-	if (partialTable.lastChild && 'querySelector' in partialTable.lastChild && partialTable.lastChild.querySelector("[name=name]").innerText == line.product.name){
+	if (partialTable.lastChild && 'querySelector' in partialTable.lastChild && partialTable.lastChild.querySelector("[name=name]").innerText == lineName){
 		let quantity = partialTable.lastChild.querySelector("[name=quantity]");
 		let price = partialTable.lastChild.querySelector("[name=price]");
 		quantity.innerText = parseInt(quantity.innerText) + 1;
-		price.innerText = (line.product.price * quantity.innerText).toFixed(2);
+		price.innerText = (unitPrice * quantity.innerText).toFixed(2);
 	}
 	else{
 		partialTable.insertAdjacentHTML('beforeend', `<tr onclick="removeFromPartial(this)">
-			<td name="name">${line.product.name}</td>
+			<td name="name">${lineName}</td>
 			<td name="quantity">1</td>
-			<td><span name="price">${line.product.price.toFixed(2)}</span>€</td>
+			<td><span name="price">${(unitPrice).toFixed(2)}</span>€</td>
 		</tr>`);
 	}
-}
-
-function divide(node, divisor){
-	return (node.innerText / divisor).toFixed(2);
 }
 
 function splitTicket(){
@@ -574,11 +580,10 @@ function splitTicket(){
 
 		for (let line of this.response[0].details){
 			ticketTable.insertAdjacentHTML('beforeend', `<tr onclick="addToPartial(this)">
-				<td>${line.product_name}</td>
+				<td name="name">${line.product_name}</td>
 				<td name="quantity">${line.quantity}</td>
-				<td>${line.price.toFixed(2)}€</td>
+				<td><span name="price">${line.price.toFixed(2)}</span>€</td>
 			</tr>`);
-			ticketTable.lastChild.product = { name:line.product_name, price:line.price/line.quantity };
 		}
 	});
 }
