@@ -258,13 +258,46 @@ class Product_Family(models.Model):
 
 
 class Ticket_Resume(models.Model):
+
+    def defaultTime(self):
+        timezone.now().time()
+
+    def defaultDate(self):
+        timezone.now().date()
+
     restaurant = models.ForeignKey(Restaurant, db_index=True)
     table = models.ForeignKey(Table)
     staff = models.ForeignKey(Staff)
-    date = models.DateField(db_index=True, default=timezone.now().date())
-    time = models.TimeField(db_index=True, default = timezone.now().time())
+    date = models.DateField(db_index=True, default=defaultDate)
+    time = models.TimeField(db_index=True, default =defaultTime)
     cost = models.FloatField(default = 0)
     is_closed = models.BooleanField(default = False, db_index=True)
+
+    def addTicketDetail(self, product_id, quantity=1, isComplement=False):
+        #Sacamos el ultimo ticket_detail de este ticket
+        details = Ticket_Detail.objects.all().filter(ticket=self)
+        print(details)
+        
+        lastDetail = details.order_by('-time')[0]
+        print(lastDetail)
+        product_local = Product.objects.all().filter(pk=product_id)[0]
+        mismoProducto = product_local == lastDetail.product
+        if not len(details) == 0 and mismoProducto:
+            lastDetail.quantity += 1
+            lastDetail.save()
+        else:
+            if not isComplement:
+                price = product_local.price_with_tax
+            else:
+                price = product_local.price_as_complement_with_tax
+
+            new_detail = Ticket_Detail(ticket = self,
+                          product = product_local,
+                          product_name = product_local.name,
+                          isComplement = isComplement,
+                          quantity = quantity,
+                          price = price)
+            new_detail.save()
 
     #NO TESTEADO
     def close_ticket(self):
@@ -288,13 +321,16 @@ class Ticket_Detail(models.Model):
     Al añadir aqui un campo no se añade automaticamente en la api
     Hay que añadirlo manualmente en serializers.py
     """
+    def defaultTime(self):
+        timezone.now().time()
+
     ticket = models.ForeignKey(Ticket_Resume, db_index=True)
     product = models.ForeignKey(Product, null=True)
     product_name = models.CharField(max_length = 50, default="None")
     isComplement = models.BooleanField(default=False)
     quantity = models.IntegerField()
     price = models.FloatField(default = 0)
-    time = models.TimeField(default = timezone.now().time())
+    time = models.TimeField(default = defaultTime)
     sent_kitchen = models.BooleanField(default = False)
 
     def save(self, *args, **kwargs):
@@ -369,7 +405,10 @@ Inventory:
 Representa las existencias en el almacen de un determinado suministro un determinado día
 """
 class Inventory(models.Model):
-    date = models.DateField(default=timezone.now().date(), db_index=True)
+    def defaultDate(self):
+        timezone.now().date()
+
+    date = models.DateField(default=defaultDate, db_index=True)
     restaurant = models.ForeignKey(Restaurant, db_index=True)
     supply = models.ForeignKey(Supply, null=True)
 
