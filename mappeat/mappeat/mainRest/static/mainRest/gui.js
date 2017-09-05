@@ -409,6 +409,7 @@ function loadFamily(name){
 
 var totalCost;
 var totalRest;
+var ticketTable;
 var partialTable;
 var partialCost;
 var partialRest;
@@ -429,12 +430,30 @@ function addAmount(amount){
 }
 
 function removeFromPartial(line){
-	partialCost.innerText = (partialCost.innerText - line.querySelector("[name=price]").innerText).toFixed(2);
+	let name = line.querySelector("[name=name]").innerText;
+	let quantity = line.querySelector("[name=quantity]").innerText;
+	let price = line.querySelector("[name=price]").innerText;
+	
+	ticketTable.insertAdjacentHTML('beforeend', `<tr onclick="addToPartial(this)">
+		<td>${name}</td>
+		<td name="quantity">${quantity}</td>
+		<td>${price}€</td>
+	</tr>`);
+	ticketTable.lastChild.product = { name:name, price:price/quantity };
+	
+	partialCost.innerText = (partialCost.innerText - price).toFixed(2);
 	calculateSplit();
 	line.parentNode.removeChild(line);
 }
 
 function addToPartial(line){
+	let lineQuantity = line.querySelector("[name=quantity]");
+	
+	if (parseInt(lineQuantity.innerText) == 1)
+		line.parentNode.removeChild(line);
+	else
+		lineQuantity.innerText = parseInt(lineQuantity.innerText) - 1;
+
 	partialCost.innerText = (parseFloat(partialCost.innerText) + line.product.price).toFixed(2);
 	calculateSplit();
 
@@ -466,7 +485,7 @@ function splitTicket(){
             <h3 class="text-center" >Dividir Ticket</h3></div>
           <div class='well row'>
 		  <div class='well col-sm-4'>
-          <h4>Ticket completo</h4>
+          <h4>Cuenta restante</h4>
 		  <table class='table'>
 			<thead>
 				<tr>
@@ -536,6 +555,7 @@ function splitTicket(){
 
 	totalCost = document.getElementById("totalCost");
 	totalRest = document.getElementById("totalRest");
+	ticketTable = document.getElementById("ticketTable");
 	partialTable = document.getElementById("partialTable");
 	partialCost = document.getElementById("partialCost");
 	partialRest = document.getElementById("partialRest");
@@ -553,12 +573,12 @@ function splitTicket(){
 		var table = document.getElementById('ticketTable');
 
 		for (let line of this.response[0].details){
-			table.insertAdjacentHTML('beforeend', `<tr onclick="addToPartial(this)">
+			ticketTable.insertAdjacentHTML('beforeend', `<tr onclick="addToPartial(this)">
 				<td>${line.product_name}</td>
-				<td>${line.quantity}</td>
+				<td name="quantity">${line.quantity}</td>
 				<td>${line.price.toFixed(2)}€</td>
 			</tr>`);
-			table.lastChild.product = { name:line.product_name, price:line.price/line.quantity };
+			ticketTable.lastChild.product = { name:line.product_name, price:line.price/line.quantity };
 		}
 	});
 }
