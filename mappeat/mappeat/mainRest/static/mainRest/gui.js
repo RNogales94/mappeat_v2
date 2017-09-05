@@ -473,13 +473,13 @@ function addToPartial(line){
 		let quantity = partialTable.lastChild.querySelector("[name=quantity]");
 		let price = partialTable.lastChild.querySelector("[name=price]");
 		quantity.innerText = parseInt(quantity.innerText) + 1;
-		price.innerText = (unitPrice * quantity.innerText).toFixed(2);
+		price.innerText = ( parseFloat(price.innerText) + parseFloat(unitPrice) ).toFixed(2);
 	}
 	else{
 		partialTable.insertAdjacentHTML('beforeend', `<tr onclick="removeFromPartial(this)">
 			<td name="name">${lineName}</td>
 			<td name="quantity">1</td>
-			<td><span name="price">${(unitPrice).toFixed(2)}</span>€</td>
+			<td><span name="price">${unitPrice.toFixed(2)}</span>€</td>
 		</tr>`);
 	}
 }
