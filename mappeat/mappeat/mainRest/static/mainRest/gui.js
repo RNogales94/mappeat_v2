@@ -75,7 +75,7 @@ function addTable(type){
    valores.number=0;
    valores.type_table=type;
    valores.is_avaible = true;
-   valores.restaurant = 3;
+   valores.restaurant = sessionStorage['restaurantID'];
 
    post("tables/", function(){
 		loadTables();
@@ -159,7 +159,7 @@ function editStaff(id_user){
     valores.hourly_rate = document.getElementById('hourly_rate'+id_user).value;
     valores.is_active =  document.getElementById('is_active'+id_user).checked;
     valores.notes = document.getElementById('notes'+id_user).value;
-    valores.restaurant = 2;
+    valores.restaurant = sessionStorage['restaurantID'];
 
      put('staff/'+id_user+'/', function(){
 		loadStaff();
@@ -233,7 +233,7 @@ function addStaff(form){
     valores.role_code = form.role.value;
     valores.hourly_rate = form.hourly_rate.value;
     valores.is_active = form.is_active.checked;
-    valores.restaurant = 2;
+    valores.restaurant = sessionStorage['restaurantID'];
     valores.user = form.user.value;
     valores.notes = form.notes.value;
 
@@ -980,7 +980,7 @@ function addSupply(form){
     valoresSupply.category = 2; // La categoria 2 se corresponde a 'Articulo'
 
     valoresInventory.quantity = form.quantity.value;
-    valoresInventory.restaurant = 2;
+    valoresInventory.restaurant = sessionStorage['restaurantID'];
     valoresInventory.available = true;
 
     post("suplies/", function(){
@@ -1095,7 +1095,7 @@ function showProductForm(){
 
 function addProduct(form){
     var valores = new Object();
-    valores.restaurant = 2 ;
+    valores.restaurant = sessionStorage['restaurantID'] ;
     valores.name = form.name.value;
     valores.price_with_tax = form.price_with_tax.value;
     valores.price_as_complement_with_tax = form.price.value;
