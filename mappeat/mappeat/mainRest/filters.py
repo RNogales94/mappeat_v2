@@ -58,7 +58,7 @@ class TicketFilter(django_filters.FilterSet):
 
     class Meta:
         model = Ticket_Resume
-        fields = ('table', 'is_closed',)
+        fields = ('table', 'is_closed','date')
 
 class Ticket_DetailFilter(django_filters.FilterSet):
     class Meta:
