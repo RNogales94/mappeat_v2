@@ -226,6 +226,7 @@ class Ticket_DetailSerializer(serializers.ModelSerializer):
         iC = validated_data['isComplement']
 
         ticket.addTicketDetail(product_id = p, quantity=q, isComplement = iC )
+        return Response('Ticket Detail successfully created', status=status.HTTP_201_CREATED)
 
 
 
