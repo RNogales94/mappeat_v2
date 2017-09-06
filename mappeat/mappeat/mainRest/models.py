@@ -282,6 +282,7 @@ class Ticket_Resume(models.Model):
         if not len(details) == 0 and mismoProducto:
             lastDetail.quantity += quantity
             lastDetail.save()
+            return lastDetail
         else:
             if not isComplement:
                 price = product_local.price_with_tax
@@ -295,6 +296,7 @@ class Ticket_Resume(models.Model):
                           quantity = quantity,
                           price = price)
             new_detail.save()
+            return new_detail
 
     #NO TESTEADO
     def close_ticket(self):

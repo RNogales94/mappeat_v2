@@ -6,6 +6,7 @@ from rest_framework import routers, serializers, viewsets
 from django_filters import rest_framework as filters
 from .filters import *
 from .models import *
+from rest_framework import status
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from django.db.models import Max
@@ -219,14 +220,17 @@ class Ticket_DetailSerializer(serializers.ModelSerializer):
                     'price', 'time', 'sent_kitchen')
 
     def create(self, validated_data):
-        ticket_id = validated_data['ticket_id']
-        ticket = Ticket_Resume.objects.filter(pk=ticket_id)[0]
-        p = validated_data['product_id']
+        ticket = validated_data['ticket']
+        p = validated_data['product']
         q = validated_data['quantity']
         iC = validated_data['isComplement']
+        print("#####################")
+        print(ticket)
+        print("#####################")
+        print(p)
+        print("#####################")
+        return ticket.addTicketDetail(product_id = p.pk, quantity=q, isComplement = iC )
 
-        ticket.addTicketDetail(product_id = p, quantity=q, isComplement = iC )
-        return Response('Ticket Detail successfully created', status=status.HTTP_201_CREATED)
 
 
 
