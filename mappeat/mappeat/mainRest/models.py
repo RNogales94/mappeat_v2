@@ -258,18 +258,15 @@ class Product_Family(models.Model):
 
 
 class Ticket_Resume(models.Model):
-
-    def defaultTime(self):
-        timezone.now().time()
-
-    def defaultDate(self):
-        timezone.now().date()
-
+    def defaultTime():
+        return timezone.now().time().replace(microsecond=0)
+    def defaultDate():
+        return timezone.now().date()
     restaurant = models.ForeignKey(Restaurant, db_index=True)
     table = models.ForeignKey(Table)
     staff = models.ForeignKey(Staff)
     date = models.DateField(db_index=True, default=defaultDate)
-    time = models.TimeField(db_index=True, default =defaultTime)
+    time = models.TimeField(db_index=True, default=defaultTime)
     cost = models.FloatField(default = 0)
     is_closed = models.BooleanField(default = False, db_index=True)
 
@@ -277,7 +274,7 @@ class Ticket_Resume(models.Model):
         #Sacamos el ultimo ticket_detail de este ticket
         details = Ticket_Detail.objects.all().filter(ticket=self)
         print(details)
-        
+
         lastDetail = details.order_by('-time')[0]
         print(lastDetail)
         product_local = Product.objects.all().filter(pk=product_id)[0]
@@ -321,8 +318,8 @@ class Ticket_Detail(models.Model):
     Al añadir aqui un campo no se añade automaticamente en la api
     Hay que añadirlo manualmente en serializers.py
     """
-    def defaultTime(self):
-        timezone.now().time()
+    def defaultTime():
+        return timezone.now().time().replace(microsecond=0)
 
     ticket = models.ForeignKey(Ticket_Resume, db_index=True)
     product = models.ForeignKey(Product, null=True)
@@ -330,7 +327,7 @@ class Ticket_Detail(models.Model):
     isComplement = models.BooleanField(default=False)
     quantity = models.IntegerField()
     price = models.FloatField(default = 0)
-    time = models.TimeField(default = defaultTime)
+    time = models.TimeField(default=defaultTime)
     sent_kitchen = models.BooleanField(default = False)
 
     def save(self, *args, **kwargs):
@@ -343,6 +340,7 @@ class Ticket_Detail(models.Model):
         """
         #Este if es True solo la primera vez para cada Ticket_Detail
         if self.product_name == "None":
+            print("Entra por None")
             self.product_name = self.product.name
 
             if self.isComplement:
@@ -355,7 +353,10 @@ class Ticket_Detail(models.Model):
             super(Ticket_Resume, self.ticket).save()
 
         #A partir de aqui se ejecuta cada vez que actualizamos un Ticket_Detail
-        super(Ticket_Detail, self).save(*args, **kwargs)
+        print("Ticket Detail")
+        print(self.time)
+        super(Ticket_Detail, self).save()
+        #super(Ticket_Detail, self).save(self, *args, **kwargs)
 
     def delete(self, *args, **kwargs):
         #Actualiza el precio de la cuenta total:
@@ -405,8 +406,8 @@ Inventory:
 Representa las existencias en el almacen de un determinado suministro un determinado día
 """
 class Inventory(models.Model):
-    def defaultDate(self):
-        timezone.now().date()
+    def defaultDate():
+        return timezone.now().date()
 
     date = models.DateField(default=defaultDate, db_index=True)
     restaurant = models.ForeignKey(Restaurant, db_index=True)
