@@ -280,7 +280,7 @@ class Ticket_Resume(models.Model):
         product_local = Product.objects.all().filter(pk=product_id)[0]
         mismoProducto = product_local == lastDetail.product
         if not len(details) == 0 and mismoProducto:
-            lastDetail.quantity += 1
+            lastDetail.quantity += quantity
             lastDetail.save()
         else:
             if not isComplement:

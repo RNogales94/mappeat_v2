@@ -213,15 +213,21 @@ class Ticket_ResumeSerializer(serializers.ModelSerializer):
 
 
 class Ticket_DetailSerializer(serializers.ModelSerializer):
-    #product_name = serializers.SerializerMethodField()
-
     class Meta:
         model = Ticket_Detail
         fields = ('pk', 'ticket', 'product', 'product_name', 'isComplement', 'quantity',\
                     'price', 'time', 'sent_kitchen')
 
-    #def product_name(self,obj):
-    #    return obj.product_name()
+    def create(self, validated_data):
+        ticket_id = validated_data['ticket_id']
+        ticket = Ticket_Resume.objects.filter(pk=ticket_id)[0]
+        p = validated_data['product_id']
+        q = validated_data['quantity']
+        iC = validated_data['isComplement']
+
+        ticket.addTicketDetail(product_id = p, quantity=q, isComplement = iC )
+
+
 
 """
 TicketSerializer
