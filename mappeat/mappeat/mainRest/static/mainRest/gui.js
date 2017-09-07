@@ -853,6 +853,7 @@ function loadApp(){
 					<button type="button" class="btn btn-light" onclick="loadStore()">Almacén</button>
 					<button type="button" class="btn btn-light"onclick="loadMenu()">Menú</button>
 					<button type="button" class="btn btn-light"onclick="loadTPV()">TPV</button>
+                    <button type="button" class="btn btn-light" onclick="loadHistory()">Historial</button>
 					<!--  Aun no lo implementamos
 					<button>Informes</button>
 					-->
@@ -1359,4 +1360,27 @@ function setTableFree(){
 
                                                 },valores,true)}
                );
+}
+
+function loadHistory(){
+    main.innerHTML = `<div class="container-fluid">
+                      <div class='col-md-12 well'>
+                        <ul id='ticketList'></ul>
+                      </div>
+                      </div>`;
+    
+    // 'zh-Hans-CN' para obtener formato yyyy/mm/dd
+    var today = new Date().toLocaleDateString('zh-Hans-CN');
+    // cambia / por -
+    var currentDate = today.replace(new RegExp('/', 'g'),'-');
+    
+    get("tickets/?is_closed=True&date="+currentDate,function(){
+      
+       var list = document.getElementById('ticketList');
+       list.innerHTML='';
+      
+       for( let ticket of this.response){
+           list.insertAdjacentHTML('beforeend',`<li onclick='void(0)'>${ticket.pk}</li>`);
+       } 
+    });
 }
