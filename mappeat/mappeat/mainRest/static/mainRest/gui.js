@@ -2,6 +2,7 @@ var main;
 var familyWanted;
 var currentTable;
 var currentTableID;
+var currentTicketID;
 
 function loadSettings(){
 	main.innerHTML = `<div class="container-fluid">
@@ -646,7 +647,10 @@ function loadTicket(){
 
 		get("tickets/?is_closed=False&table=" + currentTableID, function(){
 			if (this.response.length == 0) createTicket();
-			else{ showTicket(this.response[0]); }
+			else{ 
+                 currentTicketID = this.response[0].pk;
+                 showTicket(this.response[0]); 
+                }
 		});
 	}
 }
@@ -814,7 +818,9 @@ function loadTPV(){
 	</div>`;
 
 	familyWanted = '';
-
+    
+    loadTicket();
+    
 	get("families/", function(){
 			"use strict";
 			let list = document.getElementById('familiesList');
@@ -838,7 +844,7 @@ function loadTPV(){
 			}
 	});
 
-	loadTicket();
+	
 }
 
 function loadApp(){
@@ -1292,7 +1298,8 @@ function addTicketDetail(product){
 */
 
 //Asume que hay un ticket creado
-function addTicketDetail(ticket, product, quantity=1, isComplement=false){
+function addTicketDetail(product,ticket=currentTicketID, quantity=1, isComplement=false){
+    var valores = new Object();
 	valores.ticket = ticket;
 	valores.product = product;
 	valores.quantity = quantity;
