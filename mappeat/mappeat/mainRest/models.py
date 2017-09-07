@@ -287,18 +287,19 @@ class Ticket_Resume(models.Model):
 
 
         if len(details) != 0:  #Si ya hay lineas:
-            print("Caso 1")
             lastDetail = details.order_by('-time')[0]
             mismoProducto = product_local == lastDetail.product
             mismoTipo = isComplement == lastDetail.isComplement
             nuevaLinea = mismoProducto and mismoTipo
             if nuevaLinea: #Si la ultima linea del mismo producto / complemento:
-                print("Caso 1.5")
+                #CASO 1
                 lastDetail.quantity += quantity
                 lastDetail.price += unit_price * quantity
+                self.cost += unit_price * quantity
                 lastDetail.save()
                 return lastDetail
             else: #Si hay que crear una nueva linea (linea anterior diferente)
+                #CASO 2
                 new_detail = Ticket_Detail(ticket = self,
                               product = product_local,
                               product_name = product_local.name,
@@ -306,14 +307,17 @@ class Ticket_Resume(models.Model):
                               quantity = quantity,
                               price = unit_price * quantity)
                 new_detail.save()
+                self.cost += unit_price * quantity
                 return new_detail
         else: #Si hay que crear una nueva linea (no hay lineas previas)
+            #CASO 3
             new_detail = Ticket_Detail(ticket = self,
                           product = product_local,
                           product_name = product_local.name,
                           isComplement = isComplement,
                           quantity = quantity,
                           price = unit_price * quantity)
+            self.cost += unit_price * quantity
             new_detail.save()
             return new_detail
 
