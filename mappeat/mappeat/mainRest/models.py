@@ -302,7 +302,7 @@ class Ticket_Resume(models.Model):
                           product_name = product_local.name,
                           isComplement = isComplement,
                           quantity = quantity,
-                          price = price * quantity)
+                          price = unit_price * quantity)
             new_detail.save()
             return new_detail
 
