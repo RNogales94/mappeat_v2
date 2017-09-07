@@ -2,6 +2,7 @@ var main;
 var familyWanted;
 var currentTable;
 var currentTableID;
+var currentTicketID;
 
 function loadSettings(){
 	main.innerHTML = `<div class="container-fluid">
@@ -646,7 +647,10 @@ function loadTicket(){
 
 		get("tickets/?is_closed=False&table=" + currentTableID, function(){
 			if (this.response.length == 0) createTicket();
-			else{ showTicket(this.response[0]); }
+			else{ 
+                 currentTicketID = this.response[0].pk;
+                 showTicket(this.response[0]); 
+                }
 		});
 	}
 }
@@ -798,7 +802,7 @@ function loadTPV(){
 		     <div class="col-sm-4">
 		       <div id="ticketDiv" class="well">
 		         <h4 id='ticketTitle'>Ticket Actual</h4>
-                <h4 id='ticketRest'>${sessionStorage['restaurantName']}</h4>
+                 <h4 id='ticketRest'>${sessionStorage['restaurantName']}</h4>
                  <p id='ticketTime'>Fecha:</p>
                  <p id='ticketBarman'>Camarero: ${sessionStorage['username']}</p>
                  <p id='ticketTableName'>Mesa: ${currentTable}</p>
@@ -814,7 +818,9 @@ function loadTPV(){
 	</div>`;
 
 	familyWanted = '';
-
+    
+    loadTicket();
+    
 	get("families/", function(){
 			"use strict";
 			let list = document.getElementById('familiesList');
@@ -838,7 +844,7 @@ function loadTPV(){
 			}
 	});
 
-	loadTicket();
+	
 }
 
 function loadApp(){
@@ -1279,6 +1285,8 @@ function addTicketDetail(product){
         valores.restaurant = this.response[0].restaurant;
         valores.product = product;
         valores.quantity = 1;
+        // ?
+        valores.isComplement = false;
         get("products/"+product,function(){
             valores.name = this.response.name;
             valores.price = this.response.price_with_tax;
@@ -1290,7 +1298,8 @@ function addTicketDetail(product){
 */
 
 //Asume que hay un ticket creado
-function addTicketDetail(ticket, product, quantity=1, isComplement=false){
+function addTicketDetail(product,ticket=currentTicketID, quantity=1, isComplement=false){
+    var valores = new Object();
 	valores.ticket = ticket;
 	valores.product = product;
 	valores.quantity = quantity;
@@ -1318,12 +1327,11 @@ function sendKitchen(){
 }
 
 function printTicket(){
-    if(currentTableID){
         var mode = 'iframe'; //popup
         var close = mode == "popup";
         var options = { mode : mode, popClose : close};
         $("#ticketDiv").print( options );
-    }
+    
 }
 
 function printTicketKitchen(){
@@ -1365,7 +1373,7 @@ function setTableFree(){
 function loadHistory(){
     main.innerHTML = `<div class="container-fluid">
                       <div class='col-md-12 well'>
-                        <ul id='ticketList'></ul>
+                        <ul class="list-group" id='ticketList'></ul>
                       </div>
                       </div>`;
 
@@ -1379,8 +1387,64 @@ function loadHistory(){
        var list = document.getElementById('ticketList');
        list.innerHTML='';
 
+       for( var ticket of this.response){
+           list.insertAdjacentHTML('beforeend',`<li  class="list-group-item" onclick='seeTicket(${ticket.pk})'>${ticket.time}<span class='pull-right'>${ticket.cost}</span></li>`);
+       } 
+
+
        for( let ticket of this.response){
            list.insertAdjacentHTML('beforeend',`<li onclick='void(0)'>${ticket.pk}</li>`);
        }
+    });
+}
+
+function seeTicket(ticket){
+     main.innerHTML = `<div class="container-fluid">
+<div class="btn-toolbar" role="toolbar">
+                            <button type="button" class="btn btn-default btn-lg"  onclick='loadTPV()'>
+                            <span class='glyphicon glyphicon-arrow-left'></span>
+                            </button>
+                            <h3 class="text-center"></h3>
+                        </div>
+                      <div class='col-md-12 well'>
+                        <div id="ticketDiv" class="well">
+                          <h4 id='ticketRest'>${sessionStorage['restaurantName']}</h4>
+                          <p id='ticketTime'>Fecha:</p>
+                          <p id='ticketBarman'>Camarero: </p>
+                          <p id='ticketTableName'>Mesa: </p>
+		                  <table class='table' id="ticketTable"></table>
+                        </div>
+                         <div class='text-center'>
+                         <button class='btn btn-success btn-lg' onclick='printTicket()'>Imprimir Ticket</button>
+                        </div>
+                      </div>
+                      </div>`;
+    
+    get('tickets/'+ticket+'/',function(){
+        var table = document.getElementById('ticketTable');
+        var ticket = this.response;
+        
+        document.getElementById('ticketTime').innerText = ticket.time + "  " + ticket.date;
+        
+        table.innerHTML = `<thead>
+		                  <tr>
+			<th>Producto</th>
+			<th>Cantidad</th>
+			<th>Precio</th>
+		</tr>
+	</thead>
+	<tbody>
+	</tbody>`;
+	table = table.lastChild;
+    
+    for (let line of ticket.details){
+		table.insertAdjacentHTML('beforeend', `<tr onclick="void(0)">
+			<td>${line.product_name}</td>
+			<td>${line.quantity}</td>
+			<td>${line.price.toFixed(2)}€</td>
+		</tr>`);
+     }
+        
+    table.insertAdjacentHTML('beforeend',`<tr><td><strong>Total:</strong><td></td><td><strong>${ticket.cost.toFixed(2)}€</strong></td></tr>`);
     });
 }
