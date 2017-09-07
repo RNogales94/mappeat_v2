@@ -56,6 +56,7 @@ class Restaurant(models.Model):
     province = models.CharField(max_length=90,blank=True)
     lat = models.FloatField(null=True, blank=True)
     lng = models.FloatField(null=True, blank=True)
+    nif = models.CharField(max_length=12)
 
     def __str__(self):
         return self.name

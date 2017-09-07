@@ -158,9 +158,12 @@ body{
    #kitchenTicket { display: block; }
    #ticketTime {display:block; }
    .remove_button{display: none !important; }
-    #ticketBarman{display: block;}
-    #ticketTableName{display: block;}
-    #ticketTitle{display: none;}
+   #ticketBarman{display: block;}
+   #ticketTableName{display: block;}
+   #ticketTitle{display: none;}
+   #n_ticket{display: block;}
+   #RestInfo{display: block;}
+   #nif{display: block;}
 }
 
 @media screen
@@ -168,6 +171,9 @@ body{
    #kitchenTicket {display: none; }
    #ticketRest {display: none;}
    #ticketTime {display:none; }
-    #ticketBarman{display: none;}
-    #ticketTableName{display: none;}
+   #ticketBarman{display: none;}
+   #ticketTableName{display: none;}
+   #n_ticket{display: none;}
+   #RestInfo{display: none;}
+   #nif{display: none;}
 }

@@ -257,6 +257,7 @@ function loadRestaurant(){
 				list.insertAdjacentHTML('beforeend',`
                                                     <div class='row'><div class='col-md-6'><input type='hidden' id='id' value='${table.id}'>
                                                             <label>Nombre</label><input type='text' class="form-group" id='name' value='${table.name}'><br>
+                                                            <label>NIF</label><input type='text' class='form-group' id='nif_input' value='${table.nif}'><br>
                                                             <input type='hidden' id='owner' value='${table.owner}'><br>
                                                             <fielset>
                                                                 <legend>Dirección</legend>
@@ -322,7 +323,8 @@ function editRestaurant(id_rest){
     valores.city = document.getElementById('city').value;
     valores.province = document.getElementById('province').value;
     valores.owner = document.getElementById('owner').value;
-
+    valores.nif = document.getElementById('nif_input').value;
+    
     put('restaurants/'+id_rest+'/', function(){initMap(valores.lat,valores.lng);}, valores);
 }
 
@@ -801,8 +803,14 @@ function loadTPV(){
 		     </div>
 		     <div class="col-sm-4">
 		       <div id="ticketDiv" class="well">
-		         <h4 id='ticketTitle'>Ticket Actual</h4>
+                 <div class='text-center'>
+		         <h4  id='ticketTitle'>Ticket Actual</h4>
                  <h4 id='ticketRest'>${sessionStorage['restaurantName']}</h4>
+                 <h5 id='RestInfo'></h5>
+                 <p id='nif'> NIF: </p>
+                 </div>
+                 <p id='n_ticket'>Factura simplificada n: </p>
+                
                  <p id='ticketTime'>Fecha:</p>
                  <p id='ticketBarman'>Camarero: ${sessionStorage['username']}</p>
                  <p id='ticketTableName'>Mesa: ${currentTable}</p>
@@ -1391,11 +1399,6 @@ function loadHistory(){
        for( var ticket of this.response){
            list.insertAdjacentHTML('beforeend',`<li  class="list-group-item" onclick='seeTicket(${ticket.pk})'>${ticket.time}<span class='pull-right'>${ticket.cost}</span></li>`);
        } 
-
-
-       for( let ticket of this.response){
-           list.insertAdjacentHTML('beforeend',`<li onclick='void(0)'>${ticket.pk}</li>`);
-       }
     });
 }
 
@@ -1409,7 +1412,12 @@ function seeTicket(ticket){
                         </div>
                       <div class='col-md-12 well'>
                         <div id="ticketDiv" class="well">
-                          <h4 id='ticketRest'>${sessionStorage['restaurantName']}</h4>
+                          <div class='text-center'>
+                            <h4 id='ticketRest'>${sessionStorage['restaurantName']}</h4>
+                            <h5 id='RestInfo'></h5>
+                            <p id='nif'> NIF: </p>
+                          </div>
+                          <p id='n_ticket'>Factura simplificada n: </p>
                           <p id='ticketTime'>Fecha:</p>
                           <p id='ticketBarman'>Camarero: </p>
                           <p id='ticketTableName'>Mesa: </p>
@@ -1424,14 +1432,19 @@ function seeTicket(ticket){
     get('tickets/'+ticket+'/',function(){
         var table = document.getElementById('ticketTable');
         var ticket = this.response;
-        
-        document.getElementById('ticketTime').innerText = ticket.time + "  " + ticket.date;
-        
+        get ('restaurants/'+ticket.restaurant+'/',function(){
+            var rest = this.response;
+            document.getElementById('RestInfo').innerText = rest.address +"  "+rest.city;
+            document.getElementById('nif').insertAdjacentHTML('beforeend',rest.nif);
+        })
+        document.getElementById('ticketTime').insertAdjacentHTML('beforeend',`${ticket.time}  ${ticket.date}`);
+        document.getElementById('n_ticket').insertAdjacentHTML('beforeend',`${ticket.pk}`);
         table.innerHTML = `<thead>
 		                  <tr>
+            <th>Cantidad</th>
 			<th>Producto</th>
-			<th>Cantidad</th>
-			<th>Precio</th>
+			<th>Precio Unidad</th>
+			<th>Importe</th>
 		</tr>
 	</thead>
 	<tbody>
@@ -1440,12 +1453,13 @@ function seeTicket(ticket){
     
     for (let line of ticket.details){
 		table.insertAdjacentHTML('beforeend', `<tr onclick="void(0)">
-			<td>${line.product_name}</td>
 			<td>${line.quantity}</td>
+            <td>${line.product_name}</td>
 			<td>${line.price.toFixed(2)}€</td>
+            <td>${(line.price*line.quantity).toFixed(2)}€</td>
 		</tr>`);
      }
         
-    table.insertAdjacentHTML('beforeend',`<tr><td><strong>Total:</strong><td></td><td><strong>${ticket.cost.toFixed(2)}€</strong></td></tr>`);
+    table.insertAdjacentHTML('beforeend',`<tr><td><strong>Total:</strong></td><td><strong>${ticket.cost.toFixed(2)}€</strong></td></tr>`);
     });
 }
