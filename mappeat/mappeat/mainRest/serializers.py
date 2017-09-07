@@ -229,6 +229,9 @@ class Ticket_DetailSerializer(serializers.ModelSerializer):
         print("#####################")
         print(p)
         print("#####################")
+        #Probablemente ticket sea el ticketID
+        # en ese caso descomentar linea de abajo:
+        #ticket = Ticket_Resume.objects.all().filter(pk=ticket)
         return ticket.addTicketDetail(product_id = p.pk, quantity=q, isComplement = iC )
 
 
