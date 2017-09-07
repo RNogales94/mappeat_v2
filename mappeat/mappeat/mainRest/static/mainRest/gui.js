@@ -1386,17 +1386,15 @@ function loadHistory(){
 
        var list = document.getElementById('ticketList');
        list.innerHTML='';
-<<<<<<< HEAD
-      
+
        for( var ticket of this.response){
            list.insertAdjacentHTML('beforeend',`<li  class="list-group-item" onclick='seeTicket(${ticket.pk})'>${ticket.time}<span class='pull-right'>${ticket.cost}</span></li>`);
        } 
-=======
+
 
        for( let ticket of this.response){
            list.insertAdjacentHTML('beforeend',`<li onclick='void(0)'>${ticket.pk}</li>`);
        }
->>>>>>> e5cbabce58b7539a3b29f204c58cf84833b890e0
     });
 }
 
