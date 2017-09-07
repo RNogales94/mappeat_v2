@@ -439,13 +439,13 @@ function removeFromPartial(line){
 	let name = line.querySelector("[name=name]").innerText;
 	let quantity = line.querySelector("[name=quantity]").innerText;
 	let price = line.querySelector("[name=price]").innerText;
-	
+
 	ticketTable.insertAdjacentHTML('beforeend', `<tr onclick="addToPartial(this)">
 		<td name="name">${name}</td>
 		<td name="quantity">${quantity}</td>
 		<td><span name="price">${price}</span>€</td>
 	</tr>`);
-	
+
 	totalCost.innerText = ( parseFloat(totalCost.innerText) + parseFloat(price) ).toFixed(2);
 	partialCost.innerText = (partialCost.innerText - price).toFixed(2);
 	calculateSplit();
@@ -457,14 +457,14 @@ function addToPartial(line){
 	let lineQuantity = line.querySelector("[name=quantity]");
 	let linePrice = line.querySelector("[name=price]");
 	let unitPrice = linePrice.innerText / lineQuantity.innerText;
-	
+
 	if (parseInt(lineQuantity.innerText) == 1)
 		line.parentNode.removeChild(line);
 	else {
 		lineQuantity.innerText = parseInt(lineQuantity.innerText) - 1;
 		linePrice.innerText = (linePrice.innerText - unitPrice).toFixed(2);
 	}
-	
+
 	totalCost.innerText = (totalCost.innerText - unitPrice).toFixed(2);
 	partialCost.innerText = (parseFloat(partialCost.innerText) + parseFloat(unitPrice)).toFixed(2);
 	calculateSplit();
@@ -1270,6 +1270,7 @@ function editProduct(form){
 }
 
 // Asume que hay un ticket creado
+/*
 function addTicketDetail(product){
     var valores = new Object();
 
@@ -1287,6 +1288,16 @@ function addTicketDetail(product){
         });
 
 	});
+}
+*/
+
+//Asume que hay un ticket creado
+function addTicketDetail(ticket, product, quantity=1, isComplement=false){
+	valores.ticket = ticket;
+	valores.product = product;
+	valores.quantity = quantity;
+	valores.isComplement = isComplement;
+	post("ticket_details/",function(){loadTicket();},valores,true);
 }
 
 function removeTicketDetail(id){
