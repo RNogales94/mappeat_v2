@@ -295,31 +295,22 @@ class Ticket_Resume(models.Model):
                 #CASO 1
                 lastDetail.quantity += quantity
                 lastDetail.price += unit_price * quantity
-                self.cost += unit_price * quantity
                 lastDetail.save()
-                return lastDetail
-            else: #Si hay que crear una nueva linea (linea anterior diferente)
-                #CASO 2
-                new_detail = Ticket_Detail(ticket = self,
-                              product = product_local,
-                              product_name = product_local.name,
-                              isComplement = isComplement,
-                              quantity = quantity,
-                              price = unit_price * quantity)
-                new_detail.save()
                 self.cost += unit_price * quantity
-                return new_detail
-        else: #Si hay que crear una nueva linea (no hay lineas previas)
-            #CASO 3
-            new_detail = Ticket_Detail(ticket = self,
-                          product = product_local,
-                          product_name = product_local.name,
-                          isComplement = isComplement,
-                          quantity = quantity,
-                          price = unit_price * quantity)
-            self.cost += unit_price * quantity
-            new_detail.save()
-            return new_detail
+                self.save()
+                return lastDetail
+        #CASO 2
+        new_detail = Ticket_Detail(ticket = self,
+                      product = product_local,
+                      product_name = product_local.name,
+                      isComplement = isComplement,
+                      quantity = quantity,
+                      price = unit_price * quantity)
+        new_detail.save()
+        self.cost += unit_price * quantity
+        self.save()
+        return new_detail
+
 
     #NO TESTEADO
     def close_ticket(self):
