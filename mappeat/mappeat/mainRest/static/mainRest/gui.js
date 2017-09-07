@@ -154,7 +154,7 @@ function editStaff(id_user){
     var valores = Object();
 
     valores.first_name = document.getElementById('first_name'+id_user).value;
-	valores.last_name = document.getElementById('last_name'+id_user).value;
+	  valores.last_name = document.getElementById('last_name'+id_user).value;
     valores.role_code =  document.getElementById('role'+id_user).value;;
     valores.hourly_rate = document.getElementById('hourly_rate'+id_user).value;
     valores.is_active =  document.getElementById('is_active'+id_user).checked;
@@ -228,8 +228,8 @@ function showStaffForm(){
 function addStaff(form){
     var valores = Object();
 
-	valores.first_name = form.first_name.value;
-	valores.last_name = form.last_name.value;
+	  valores.first_name = form.first_name.value;
+	  valores.last_name = form.last_name.value;
     valores.role_code = form.role.value;
     valores.hourly_rate = form.hourly_rate.value;
     valores.is_active = form.is_active.checked;
@@ -591,11 +591,11 @@ function splitTicket(){
 }
 
 function showTicket(ticket){
-	document.getElementById('ticketID').innerText = "Número de ticket: " + ticket.pk;
-	document.getElementById('cashButton').innerText = ticket.cost.toFixed(2) + "€";
+	  document.getElementById('ticketID').innerText = "Número de ticket: " + ticket.pk;
+	  document.getElementById('cashButton').innerText = ticket.cost.toFixed(2) + "€";
     document.getElementById('ticketTime').innerText = ticket.time + "  " + ticket.date;
 
-	var table = document.getElementById('ticketTable');
+	  var table = document.getElementById('ticketTable');
     var pending = document.getElementById('kitchenTicket');
 
     table.innerHTML = `<thead>
@@ -1368,19 +1368,19 @@ function loadHistory(){
                         <ul id='ticketList'></ul>
                       </div>
                       </div>`;
-    
+
     // 'zh-Hans-CN' para obtener formato yyyy/mm/dd
     var today = new Date().toLocaleDateString('zh-Hans-CN');
     // cambia / por -
     var currentDate = today.replace(new RegExp('/', 'g'),'-');
-    
+
     get("tickets/?is_closed=True&date="+currentDate,function(){
-      
+
        var list = document.getElementById('ticketList');
        list.innerHTML='';
-      
+
        for( let ticket of this.response){
            list.insertAdjacentHTML('beforeend',`<li onclick='void(0)'>${ticket.pk}</li>`);
-       } 
+       }
     });
 }
