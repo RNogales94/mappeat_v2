@@ -274,7 +274,7 @@ class Ticket_Resume(models.Model):
         #Sacamos el ultimo ticket_detail de este ticket
         details = Ticket_Detail.objects.all().filter(ticket=self)
         print(details)
-
+        
         lastDetail = details.order_by('-time')[0]
         print(lastDetail)
         product_local = Product.objects.all().filter(pk=product_id)[0]

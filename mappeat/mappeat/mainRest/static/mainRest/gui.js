@@ -1298,12 +1298,13 @@ function addTicketDetail(product){
 */
 
 //Asume que hay un ticket creado
-function addTicketDetail(product,ticket=currentTicketID, quantity=1, isComplement=false){
+function addTicketDetail(product, quantity=1, isComplement=false){
     var valores = new Object();
-	valores.ticket = ticket;
+	valores.ticket = currentTicketID;
 	valores.product = product;
 	valores.quantity = quantity;
 	valores.isComplement = isComplement;
+    
 	post("ticket_details/",function(){loadTicket();},valores,true);
 }
 
