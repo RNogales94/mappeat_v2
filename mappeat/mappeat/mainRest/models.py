@@ -274,27 +274,29 @@ class Ticket_Resume(models.Model):
         #Sacamos el ultimo ticket_detail de este ticket
         details = Ticket_Detail.objects.all().filter(ticket=self)
         print(details)
-        
-        lastDetail = details.order_by('-time')[0]
-        print(lastDetail)
+        """
+        Preparamos los valores del ticket_detail:
+        """
+        #Producto
         product_local = Product.objects.all().filter(pk=product_id)[0]
-        mismoProducto = product_local == lastDetail.product
-        if not len(details) == 0 and mismoProducto:
-            lastDetail.quantity += quantity
-            if not isComplement:
-                price = product_local.price_with_tax
-            else:
-                price = product_local.price_as_complement_with_tax
-
-            lastDetail.price += price * quantity
-            lastDetail.save()
-            return lastDetail
+        #Precio por unidad
+        if not isComplement:
+            unit_price = product_local.price_with_tax
         else:
-            if not isComplement:
-                price = product_local.price_with_tax
-            else:
-                price = product_local.price_as_complement_with_tax
+            unit_price = product_local.price_as_complement_with_tax
 
+
+        if len(details) != 0:  #Si ya hay lineas:
+            lastDetail = details.order_by('-time')[0]
+            mismoProducto = product_local == lastDetail.product
+            mismoTipo = product_local.isComplement == lastDetail.product.isComplement
+            nuevaLinea = mismoProducto and mismoTipo
+            if nuevaLinea: #Si la ultima linea del mismo producto / complemento:
+                lastDetail.quantity += quantity
+                lastDetail.price += unit_price * quantity
+                lastDetail.save()
+                return lastDetail
+        else: #Si hay que crear una nueva linea (no hay lineas previas o son distintas)
             new_detail = Ticket_Detail(ticket = self,
                           product = product_local,
                           product_name = product_local.name,
