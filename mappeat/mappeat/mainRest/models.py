@@ -289,7 +289,7 @@ class Ticket_Resume(models.Model):
         if len(details) != 0:  #Si ya hay lineas:
             lastDetail = details.order_by('-time')[0]
             mismoProducto = product_local == lastDetail.product
-            mismoTipo = product_local.isComplement == lastDetail.product.isComplement
+            mismoTipo = isComplement == lastDetail.isComplement
             nuevaLinea = mismoProducto and mismoTipo
             if nuevaLinea: #Si la ultima linea del mismo producto / complemento:
                 lastDetail.quantity += quantity
