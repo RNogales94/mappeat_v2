@@ -2,6 +2,9 @@
     font-style: bold;
 }
 
+.navbar{
+    margin-bottom: 0px;
+}
 
 #navbar-parent {
     float: right;
@@ -50,21 +53,40 @@
   top: 0px ! important
 }
 
-html {
-    height: 100%
+html,body{
+    height: 100%;
 }
 
+.btn-toolbar{
+    padding-left: 10px;
+}
 
-body{
-    min-height: 100%
+main{
+    height: 100%;
+}
+
+.content{
+    height: 100%;
     background: #ff9966;  /* fallback for old browsers */
     background: -webkit-linear-gradient(to top, #ff5e62, #ff9966);  /* Chrome 10-25, Safari 5.1-6 */
     background: linear-gradient(to top, #ff5e62, #ff9966); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     background-repeat: no-repeat;
     background-size: 100% 100%;
+    margin-top: -20px;
+
+}
+
+.mappeat-sidenav{
+    padding: 10px;
+}
+.row{
+    height: 100%;
+    padding-top: 20px;
+    margin-bottom: 0px;
 }
 
 #register_form{
+    padding: 30px;
     border: 1px solid #959595;
 }
 

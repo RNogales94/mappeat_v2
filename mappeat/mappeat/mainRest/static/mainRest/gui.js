@@ -5,7 +5,8 @@ var currentTableID;
 var currentTicketID;
 
 function loadSettings(){
-	main.innerHTML = `<div class="container-fluid">
+	main.innerHTML = `<div class=" content container-fluid">
+                        <div class='row'>
                        	<div class="col-md-2 sidebar">
                             <div class="list-group text-center">
                             <span><h3>Ajustes</h3></span>
@@ -18,6 +19,7 @@ function loadSettings(){
                        <div class="col-sm-10">
 	                       <div class="well" id="content">
                            </div>
+                        </div>
                         </div>
                       </div>`;
 
@@ -329,7 +331,8 @@ function editRestaurant(id_rest){
 }
 
 function seeTables(){
-	main.innerHTML = `<div class="btn-toolbar" role="toolbar">
+	main.innerHTML = `  <div class='row content'>
+                        <div class="btn-toolbar" role="toolbar">
                             <button type="button" class="btn btn-default btn-lg"  onclick='loadTPV()'>
                             <span class='glyphicon glyphicon-arrow-left'></span>
                             </button>
@@ -337,7 +340,7 @@ function seeTables(){
                         </div>
                       <div class = 'well'>
                           <svg id='tableMap'></svg>
-                      </div>`;
+                      </div></div>`;
 
 	get("tables/", function(){
 		"use strict";
@@ -488,7 +491,7 @@ function addToPartial(line){
 }
 
 function splitTicket(){
-	main.innerHTML = `
+	main.innerHTML = `<div class='row content'>
             <div class="btn-toolbar" role="toolbar">
             <button type="button" class="btn btn-default btn-lg"  onclick='loadTPV()'>
                 <span class='glyphicon glyphicon-arrow-left'></span>
@@ -562,7 +565,7 @@ function splitTicket(){
 <div class='row text-center'>
     <button class='btn btn-success btn-lg' onclick='charge()'>Cobrar</button>
 </div>
-    </div>`;
+    </div></div>`;
 
 	totalCost = document.getElementById("totalCost");
 	totalRest = document.getElementById("totalRest");
@@ -673,7 +676,8 @@ function cancelTicket(){
 //mapa de mesas con onclick = cambio de mesa
 function viewTables(){
     if(currentTableID){
-    	main.innerHTML = `<div class="btn-toolbar" role="toolbar">
+    	main.innerHTML = `<div class='row content'>
+                            <div class="btn-toolbar" role="toolbar">
                             <button type="button" class="btn btn-default btn-lg"  onclick='loadTPV()'>
                             <span class='glyphicon glyphicon-arrow-left'></span>
                             </button>
@@ -681,6 +685,7 @@ function viewTables(){
                         </div>
                       <div class = 'well'>
                           <svg id='tableMap'></svg>
+                      </div>
                       </div>`;
 
 	get("tables/", function(){
@@ -755,9 +760,9 @@ function transferTable(newTableID,newTable){
 }
 
 function loadTPV(){
-	main.innerHTML = `<div class="container-fluid">
+	main.innerHTML = `<div class=" content container-fluid">
 		<div class="row content">
-		 <div class="col-sm-1 sidenav " style="width: 12% ">
+		 <div class="col-sm-1 sidenav mappeat-sidenav" style="width: 12% ">
 		     <div class="btn-group-vertical" style="width: 110%">
 		     <button onclick="seeTables()" type="button" class="btn btn-primary btn-side" style="height: 70px">Ver Mesas</button>
 		     <button type="button" class="btn btn-warning btn-side" style="height: 70px">Abrir Cajón</button>
@@ -934,7 +939,8 @@ function login(form){
 }
 
 function loadStore(){
-    main.innerHTML = `<div class="container-fluid">
+    main.innerHTML = `<div class="row content container-fluid">
+                        <div class="col-sm-1"></div>
                         <div class="col-sm-10">
 		                      <div class="well" id="content">
                                   <h4> Almacen </h4>
@@ -951,6 +957,7 @@ function loadStore(){
 	                               </div>
                               </div>
                         </div>
+                         <div class="col-sm-1"></div>
                      </div>`;
 
     let list = document.getElementById('storeList');
@@ -1047,7 +1054,7 @@ function removeInventory(id){
 }
 
 function loadMenu(){
-      main.innerHTML = `<div class="container-fluid">
+      main.innerHTML = `<div class="row content container-fluid">
                         <div class="col-sm-12">
 		                      <div class="well" id="content">
                                   <h2> Menu </h2>
@@ -1380,10 +1387,12 @@ function setTableFree(){
 }
 
 function loadHistory(){
-    main.innerHTML = `<div class="container-fluid">
-                      <div class='col-md-12 well'>
+    main.innerHTML = `<div class="content row container-fluid">
+                         <div class="col-sm-2"></div>
+                      <div class='col-md-8 well'>
                         <ul class="list-group" id='ticketList'></ul>
                       </div>
+                       <div class="col-sm-2"></div>
                       </div>`;
 
     // 'zh-Hans-CN' para obtener formato yyyy/mm/dd
@@ -1397,20 +1406,21 @@ function loadHistory(){
        list.innerHTML='';
 
        for( var ticket of this.response){
-           list.insertAdjacentHTML('beforeend',`<li  class="list-group-item" onclick='seeTicket(${ticket.pk})'>${ticket.time}<span class='pull-right'>${ticket.cost.toFixed(2)}</span></li>`);
+           list.insertAdjacentHTML('beforeend',`<li  class="list-group-item" onclick='seeTicket(${ticket.pk})'>${ticket.time}<span class='pull-right'>${ticket.cost.toFixed(2)}€</span></li>`);
        } 
     });
 }
 
 function seeTicket(ticket){
-     main.innerHTML = `<div class="container-fluid">
-<div class="btn-toolbar" role="toolbar">
+     main.innerHTML = `<div class="row content container-fluid">
+                        <div class="btn-toolbar" role="toolbar">
                             <button type="button" class="btn btn-default btn-lg"  onclick='loadTPV()'>
                             <span class='glyphicon glyphicon-arrow-left'></span>
                             </button>
                             <h3 class="text-center"></h3>
                         </div>
-                      <div class='col-md-12 well'>
+                       <div class='col-md-2 '></div>
+                      <div class='col-md-8 well'>
                         <div id="ticketDiv" class="well">
                           <div class='text-center'>
                             <h4 id='ticketRest'>${sessionStorage['restaurantName']}</h4>
@@ -1427,6 +1437,8 @@ function seeTicket(ticket){
                          <button class='btn btn-success btn-lg' onclick='printTicket()'>Imprimir Ticket</button>
                         </div>
                       </div>
+                       <div class='col-md-2 '></div>
+
                       </div>`;
     
     
@@ -1448,10 +1460,10 @@ function seeTicket(ticket){
         
         table.innerHTML = `<thead>
 		                      <tr>
-                                <th>Cantidad</th>
-			                    <th>Producto</th>
-			                     <th>Precio Unidad</th>
-			                     <th>Importe</th>
+                                <th class='text-center'>Cantidad</th>
+			                    <th class='text-center'>Producto</th>
+			                     <th class='text-center'>Precio Unidad</th>
+			                     <th class='text-center'>Importe</th>
 		                      </tr>
 	                       </thead>
 	                       <tbody>
@@ -1468,10 +1480,10 @@ function seeTicket(ticket){
             get('iva/'+product.iva_tax+'/',function(){
                 total_without_tax += line.quantity*product.price_with_tax*(1-(this.response.tax/100));
                 table.insertAdjacentHTML('afterbegin', `<tr onclick="void(0)">
-			<td>${line.quantity}</td>
-            <td>${line.product_name}</td>
-			<td>${line.price.toFixed(2)}€</td>
-            <td>${(line.price*line.quantity).toFixed(2)}€</td>
+			<td class='text-center'>${line.quantity}</td>
+            <td class='text-center'>${line.product_name}</td>
+			<td class='text-center'>${line.price.toFixed(2)}€</td>
+            <td class='text-center'>${(line.price*line.quantity).toFixed(2)}€</td>
 		    </tr>`);
                 document.getElementById('subtotal').innerHTML=`<strong>${total_without_tax.toFixed(2)}€</strong>`;
                 });
