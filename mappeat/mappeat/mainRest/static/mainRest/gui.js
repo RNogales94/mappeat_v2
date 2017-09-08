@@ -1397,7 +1397,7 @@ function loadHistory(){
        list.innerHTML='';
 
        for( var ticket of this.response){
-           list.insertAdjacentHTML('beforeend',`<li  class="list-group-item" onclick='seeTicket(${ticket.pk})'>${ticket.time}<span class='pull-right'>${ticket.cost}</span></li>`);
+           list.insertAdjacentHTML('beforeend',`<li  class="list-group-item" onclick='seeTicket(${ticket.pk})'>${ticket.time}<span class='pull-right'>${ticket.cost.toFixed(2)}</span></li>`);
        } 
     });
 }
@@ -1429,37 +1429,56 @@ function seeTicket(ticket){
                       </div>
                       </div>`;
     
+    
+    
     get('tickets/'+ticket+'/',function(){
+        
+        var total_without_tax = 0.0;
         var table = document.getElementById('ticketTable');
         var ticket = this.response;
+        
         get ('restaurants/'+ticket.restaurant+'/',function(){
             var rest = this.response;
             document.getElementById('RestInfo').innerText = rest.address +"  "+rest.city;
             document.getElementById('nif').insertAdjacentHTML('beforeend',rest.nif);
-        })
+        });
+        
         document.getElementById('ticketTime').insertAdjacentHTML('beforeend',`${ticket.time}  ${ticket.date}`);
         document.getElementById('n_ticket').insertAdjacentHTML('beforeend',`${ticket.pk}`);
+        
         table.innerHTML = `<thead>
-		                  <tr>
-            <th>Cantidad</th>
-			<th>Producto</th>
-			<th>Precio Unidad</th>
-			<th>Importe</th>
-		</tr>
-	</thead>
-	<tbody>
-	</tbody>`;
+		                      <tr>
+                                <th>Cantidad</th>
+			                    <th>Producto</th>
+			                     <th>Precio Unidad</th>
+			                     <th>Importe</th>
+		                      </tr>
+	                       </thead>
+	                       <tbody>
+	                       </tbody>
+                           <tfoot id='totalTicket'>
+                           <tr><td></td><td><strong>SubTotal:</strong><td></td><td id='subtotal'></td></tr>
+                           <tr><td></td><td><strong>Total:</strong><td></td><td><strong>${ticket.cost.toFixed(2)}€</strong></td></tr>
+                           </tfoot>`;
 	table = table.lastChild;
-    
+        
     for (let line of ticket.details){
-		table.insertAdjacentHTML('beforeend', `<tr onclick="void(0)">
+          get('products/'+line.product+'/',function(){
+            var product = this.response;
+            get('iva/'+product.iva_tax+'/',function(){
+                total_without_tax += line.quantity*product.price_with_tax*(1-(this.response.tax/100));
+                table.insertAdjacentHTML('afterbegin', `<tr onclick="void(0)">
 			<td>${line.quantity}</td>
             <td>${line.product_name}</td>
 			<td>${line.price.toFixed(2)}€</td>
             <td>${(line.price*line.quantity).toFixed(2)}€</td>
-		</tr>`);
-     }
+		    </tr>`);
+                document.getElementById('subtotal').innerHTML=`<strong>${total_without_tax.toFixed(2)}€</strong>`;
+                });
+            });
+    }
         
-    table.insertAdjacentHTML('beforeend',`<tr><td><strong>Total:</strong></td><td><strong>${ticket.cost.toFixed(2)}€</strong></td></tr>`);
     });
+    
+    
 }
