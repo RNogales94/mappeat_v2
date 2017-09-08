@@ -631,7 +631,8 @@ function showTicket(ticket){
 		</tr>`);
         }
 	}
-    table.insertAdjacentHTML('beforeend',`<tr><td></td><td><strong>Total:</strong><td></td><td><strong>${ticket.cost.toFixed(2)}€</strong></td></tr>`);
+    table.insertAdjacentHTML('beforeend',`<tr><td></td><td><strong>SubTotal:</strong><td></td><td><strong>${ticket.cost_without_tax.toFixed(2)}€</strong></td></tr>
+                                            <tr><td></td><td><strong>Total:</strong><td></td><td><strong>${ticket.cost.toFixed(2)}€</strong></td></tr>`);
 }
 
 function createTicket(){
@@ -1445,7 +1446,7 @@ function seeTicket(ticket){
     
     get('tickets/'+ticket+'/',function(){
         
-        var total_without_tax = 0.0;
+        
         var table = document.getElementById('ticketTable');
         var ticket = this.response;
         
@@ -1469,25 +1470,19 @@ function seeTicket(ticket){
 	                       <tbody>
 	                       </tbody>
                            <tfoot id='totalTicket'>
-                           <tr><td></td><td><strong>SubTotal:</strong><td></td><td id='subtotal'></td></tr>
+                           <tr><td></td><td><strong>SubTotal:</strong><td></td><td><strong>${ticket.cost_without_tax.toFixed(2)}€</strong></td></tr>
                            <tr><td></td><td><strong>Total:</strong><td></td><td><strong>${ticket.cost.toFixed(2)}€</strong></td></tr>
                            </tfoot>`;
 	table = table.lastChild;
         
     for (let line of ticket.details){
-          get('products/'+line.product+'/',function(){
-            var product = this.response;
-            get('iva/'+product.iva_tax+'/',function(){
-                total_without_tax += line.quantity*product.price_with_tax*(1-(this.response.tax/100));
-                table.insertAdjacentHTML('afterbegin', `<tr onclick="void(0)">
+          table.insertAdjacentHTML('afterbegin', `<tr onclick="void(0)">
 			<td class='text-center'>${line.quantity}</td>
             <td class='text-center'>${line.product_name}</td>
 			<td class='text-center'>${line.price.toFixed(2)}€</td>
             <td class='text-center'>${(line.price*line.quantity).toFixed(2)}€</td>
 		    </tr>`);
-                document.getElementById('subtotal').innerHTML=`<strong>${total_without_tax.toFixed(2)}€</strong>`;
-                });
-            });
+                
     }
         
     });
