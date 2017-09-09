@@ -491,7 +491,7 @@ function addToPartial(line){
 }
 
 function splitTicket(){
-	main.innerHTML = `<div class='row content'>
+	main.innerHTML = `<div class='container-fluid row content'>
             <div class="btn-toolbar" role="toolbar">
             <button type="button" class="btn btn-default btn-lg"  onclick='loadTPV()'>
                 <span class='glyphicon glyphicon-arrow-left'></span>
@@ -642,6 +642,7 @@ function createTicket(){
 	newTicket.table = currentTableID;
 
 	post("tickets/", function(){
+        currentTicketID = this.response.pk;
 		showTicket(this.response);
 	}, newTicket);
 }
@@ -665,9 +666,7 @@ function cancelTicket(){
     if(currentTableID){
 	   if(confirm("¿Estás seguro de que deseas cancelar esta cuenta?")){
            get("tickets/?is_closed=False&table=" + currentTableID,function(){
-                setTableFree();
-                _delete('tickets/'+this.response[0].pk+'/',function(){});
-                loadTPV();
+                _delete('tickets/'+this.response[0].pk+'/',function(){ setTableFree();});
             });
 
         }
@@ -1369,7 +1368,6 @@ function charge(){
                 ticket.is_closed = true;
                 put("tickets/"+ ticket.pk +"/",function(){
                     setTableFree();
-                    loadTPV();
                 },ticket,true);
         });
     }
@@ -1382,7 +1380,7 @@ function setTableFree(){
                 put('tables/'+currentTableID+'/',function(){
                                                 currentTable = undefined;
                                                 currentTableID = undefined;
-
+                                                loadTPV();
                                                 },valores,true)}
                );
 }
