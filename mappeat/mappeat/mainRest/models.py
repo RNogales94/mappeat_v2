@@ -95,7 +95,7 @@ class Supply(models.Model):
     mesure_unity = models.ForeignKey(Mesure_Unity, null=True)
     is_storable = models.BooleanField(default=True)
     category = models.ForeignKey(Supply_Category, null = True)
-    barcode = models.IntegerField(null = True)
+    barcode = models.CharField(max_length=40,null = True)
 
     def __str__(self):
         return self.name

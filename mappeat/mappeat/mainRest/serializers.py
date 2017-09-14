@@ -455,7 +455,9 @@ class InventoryViewSet(viewsets.ModelViewSet):
     queryset = Inventory.objects.all()
     serializer_class = InventorySerializer
 
-
+    def get_queryset(self):
+        staff = Staff.objects.filter (user = self.request.user)
+        return self.queryset.filter(restaurant = staff[0].restaurant.pk)
 
 
 # Routers provide an easy way of automatically determining the URL conf.
