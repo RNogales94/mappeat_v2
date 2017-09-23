@@ -8,6 +8,8 @@ from .filters import *
 from .models import *
 from rest_framework import status
 from rest_framework.response import Response
+from django.http import HttpResponse
+
 from django.shortcuts import get_object_or_404
 from django.db.models import Max
 
@@ -230,9 +232,16 @@ class Ticket_DetailSerializer(serializers.ModelSerializer):
         print(p)
         print("#####################")
 
-        return ticket.addTicketDetail(product_id = p.pk, quantity=q, isComplement = iC )
-
-
+        ticket = ticket.addTicketDetail(product_id = p.pk, quantity=q, isComplement = iC )
+        serializer = TicketSerializer(ticket)
+        print("$$$$$$$$$$$$$$$$$$$$$$")
+        print(ticket)
+        print("$$$$$$$$$$$$$$$$$$$$$$")
+        print(serializer)
+        print("$$$$$$$$$$$$$$$$$$$$$$")
+        print(serializer.data)
+        print("$$$$$$$$$$$$$$$$$$$$$$")
+        return serializer.data
 
 
 """

@@ -2,11 +2,10 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.utils import timezone
 
-# Create your models here.
-
 """
 Secondary Tables
 """
+
 class Icon(models.Model):
     image = models.ImageField()
     name = models.CharField(max_length=30)
@@ -286,7 +285,6 @@ class Ticket_Resume(models.Model):
         else:
             unit_price = product_local.price_as_complement_with_tax
 
-
         if len(details) != 0:  #Si ya hay lineas:
             lastDetail = details.order_by('-time')[0]
             mismoProducto = product_local == lastDetail.product
@@ -299,7 +297,7 @@ class Ticket_Resume(models.Model):
                 lastDetail.save()
                 self.cost += unit_price * quantity
                 self.save()
-                return lastDetail
+                return self
         #CASO 2
         new_detail = Ticket_Detail(ticket = self,
                       product = product_local,
@@ -310,7 +308,7 @@ class Ticket_Resume(models.Model):
         new_detail.save()
         self.cost += unit_price * quantity
         self.save()
-        return new_detail
+        return self
 
 
     #NO TESTEADO
@@ -320,8 +318,6 @@ class Ticket_Resume(models.Model):
 
     def __str__(self):
         return str(self.date) + ": " + self.restaurant.name
-
-
 
 """
 Relaciona los tickets y los productos y representa cada linea de un ticket
