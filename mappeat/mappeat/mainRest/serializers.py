@@ -197,13 +197,8 @@ class ProductSerializer(serializers.ModelSerializer):
         manager = Staff.objects.filter(user=self.context['request'].user)[0]
         rest = manager.restaurant
         restaurant = validated_data.pop('restaurant')
-        
-        tax = IVA.objects.filter(name=validated_data['iva_tax'])[0]
-        price_without_tax = validated_data['price_with_tax']*(1-(tax.tax)/100)
-        
-        new_item = Product.objects.create(restaurant = rest, price_without_tax=price_without_tax,**validated_data)
+        new_item = Product.objects.create(restaurant = rest, **validated_data)
         return new_item
-    
 
 class Ticket_ResumeSerializer(serializers.ModelSerializer):
     class Meta:
@@ -262,7 +257,7 @@ class TicketSerializer(serializers.ModelSerializer):
         model = Ticket_Resume
         #fields = ("__all__", 'details')   <-- basicamente es eso
         fields = ('pk', 'restaurant', 'table', 'staff', 'date',\
-                    'time', 'cost','cost_without_tax', 'is_closed', 'details' )
+                    'time', 'cost', 'is_closed', 'details' )
 
     def get_details(self, ticket_resume):
         details = Ticket_Detail.objects.filter(ticket=ticket_resume)
@@ -464,9 +459,7 @@ class InventoryViewSet(viewsets.ModelViewSet):
     queryset = Inventory.objects.all()
     serializer_class = InventorySerializer
 
-    def get_queryset(self):
-        staff = Staff.objects.filter (user = self.request.user)
-        return self.queryset.filter(restaurant = staff[0].restaurant.pk)
+
 
 
 # Routers provide an easy way of automatically determining the URL conf.

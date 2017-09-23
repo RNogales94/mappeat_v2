@@ -94,7 +94,7 @@ class Supply(models.Model):
     mesure_unity = models.ForeignKey(Mesure_Unity, null=True)
     is_storable = models.BooleanField(default=True)
     category = models.ForeignKey(Supply_Category, null = True)
-    barcode = models.CharField(max_length=40,null = True)
+    barcode = models.IntegerField(null = True)
 
     def __str__(self):
         return self.name
@@ -233,16 +233,15 @@ class Product(models.Model):
     can_be_complement = models.BooleanField(default=False)
     price_with_tax = models.FloatField(default=0)
     price_as_complement_with_tax = models.FloatField(default=0)
-    price_without_tax = models.FloatField(default = 0)
+
     restaurant = models.ForeignKey(Restaurant, db_index=True) #Se usa el db_index
     product = models.ForeignKey(Product_Class, db_index=True)
     icon = models.ForeignKey(Icon, null=True)
     iva_tax = models.ForeignKey(IVA, null=True)
-    
-    
+
     class Meta:
         unique_together = ('name', 'restaurant',)
-        
+
     def __str__(self):
         return self.product.name + ": (" + self.name + ")"
 
@@ -269,8 +268,6 @@ class Ticket_Resume(models.Model):
     date = models.DateField(db_index=True, default=defaultDate)
     time = models.TimeField(db_index=True, default=defaultTime)
     cost = models.FloatField(default = 0)
-    cost_without_tax = models.FloatField(default = 0)
-
     is_closed = models.BooleanField(default = False, db_index=True)
 
     def addTicketDetail(self, product_id, quantity=1, isComplement=False):
@@ -285,10 +282,8 @@ class Ticket_Resume(models.Model):
         #Precio por unidad
         if not isComplement:
             unit_price = product_local.price_with_tax
-            unit_price_without_tax = product_local.price_without_tax
         else:
             unit_price = product_local.price_as_complement_with_tax
-            unit_price_without_tax = product_local.price_without_tax
 
         if len(details) != 0:  #Si ya hay lineas:
             lastDetail = details.order_by('-time')[0]
@@ -301,7 +296,6 @@ class Ticket_Resume(models.Model):
                 lastDetail.price += unit_price * quantity
                 lastDetail.save()
                 self.cost += unit_price * quantity
-                self.cost_without_tax += quantity * unit_price_without_tax
                 self.save()
                 return self
         #CASO 2
@@ -313,7 +307,6 @@ class Ticket_Resume(models.Model):
                       price = unit_price * quantity)
         new_detail.save()
         self.cost += unit_price * quantity
-        self.cost_without_tax += quantity * unit_price_without_tax
         self.save()
         return self
 
@@ -382,7 +375,6 @@ class Ticket_Detail(models.Model):
         #Actualiza el precio de la cuenta total:
         print("Hola, aqui borro: ", self.ticket.cost, " - ", self.price)
         self.ticket.cost = self.ticket.cost - self.price
-        self.ticket.cost_without_tax =  self.ticket.cost_without_tax - self.price*(1-(self.product.iva_tax.tax)/100)
         super(Ticket_Resume, self.ticket).save()
         super(Ticket_Detail, self).delete(*args, **kwargs)
 
