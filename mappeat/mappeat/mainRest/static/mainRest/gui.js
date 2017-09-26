@@ -3,6 +3,7 @@ var familyWanted;
 var currentTable;
 var currentTableID;
 var currentTicketID;
+var combined;
 
 function loadSettings(){
 	main.innerHTML = `<div class=" content container-fluid">
@@ -795,7 +796,7 @@ function loadTPV(){
 		   <div class="row">
 		     <div class="col-sm-8">
 		       <div class="well">
-		         <h4>Productos</h4>
+		         <h4>Productos</h4><button class='pull-right btn btn-warning btn-lg' onclick='toggleCombined()' id='combinedButton'>Combinar</button>
 		         <ul id="productsList" class="ul-tpv">Cargando...</ul>
 
 					 </div>
@@ -831,7 +832,7 @@ function loadTPV(){
 	</div>`;
 
 	familyWanted = '';
-    
+    combined = false;
     loadTicket();
     
 	get("families/", function(){
@@ -1313,14 +1314,15 @@ function addTicketDetail(product){
 */
 
 //Asume que hay un ticket creado
-function addTicketDetail(product, quantity=1, isComplement=false){
+function addTicketDetail(product, quantity=1){
     var valores = new Object();
 	valores.ticket = currentTicketID;
 	valores.product = product;
 	valores.quantity = quantity;
-	valores.isComplement = isComplement;
+	valores.isComplement = combined;
     
-	post("ticket_details/",function(){loadTicket();},valores,true);
+	post("ticket_details/",function(){if(combined){toggleCombined();}
+                                      loadTicket();},valores,true);
 }
 
 function removeTicketDetail(id){
@@ -1493,4 +1495,16 @@ function seeTicket(ticket){
     });
     
     
+}
+
+function toggleCombined(){
+    button = document.getElementById('combinedButton');
+    if(combined){
+        combined = false;
+        button.disabled='true';
+    }
+    else{
+        combined = true;
+        button.disabled='false';    
+    }
 }
