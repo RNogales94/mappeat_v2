@@ -619,11 +619,11 @@ function showTicket(ticket){
 	pending.innerHTML = '';
 
     for (let line of ticket.details){
-		table.insertAdjacentHTML('beforeend', `<tr onclick="void(0)">
+		table.insertAdjacentHTML('beforeend', `<tr>
 			<td><span class='glyphicon glyphicon-remove remove_button' onclick='removeTicketDetail(${line.pk})'></span> </td>
 			<td>${line.product_name}</td>
 			<td>${line.quantity}</td>
-			<td>${line.price.toFixed(2)}€</td>
+			<td onclick='showCalculator()'>${line.price.toFixed(2)}€</td>
 		</tr>`);
         if (!line.sent_kitchen){
             pending.insertAdjacentHTML('beforeend', `<tr onclick="void(0)">
@@ -1464,8 +1464,8 @@ function seeTicket(ticket){
 		                      <tr>
                                 <th class='text-center'>Cantidad</th>
 			                    <th class='text-center'>Producto</th>
-			                     <th class='text-center'>Precio Unidad</th>
-			                     <th class='text-center'>Importe</th>
+			                    <th class='text-center'>Precio Unidad</th>
+			                    <th class='text-center'>Importe</th>
 		                      </tr>
 	                       </thead>
 	                       <tbody>
@@ -1507,4 +1507,49 @@ function toggleCombined(){
         combined = true;
         button.disabled='false';    
     }
+}
+
+function showCalculator(){
+    main.insertAdjacentHTML('beforeend',`<div class="modal fade" id="modalCalc" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+	                                       <div class="modal-dialog" role="document">
+		                                      <div class="modal-content">
+			                                     <div class="modal-header">
+				                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					                               <span aria-hidden="true">&times;</span></button>
+				                                    <h4 class="modal-title" id="myModalLabel">Editar</h4>
+			                                     </div>
+			                                 <div class="modal-body">
+                                                <div id="calculator">
+	                                            <div class="top">
+		                                          <div class="screen" id='screenCalc'></div>
+	                                               </div>
+	                                            <div class="keys">
+		                                          <span onclick='addCalc(7)'>7</span>
+		                                          <span onclick='addCalc(8)'>8</span>
+		                                          <span onclick='addCalc(9)'>9</span>
+		                                          <span onclick='addCalc(4)'>4</span>
+		                                          <span onclick='addCalc(5)'>5</span>
+		                                          <span onclick='addCalc(6)'>6</span>
+		                                          <span onclick='addCalc(1)'>1</span>
+		                                          <span onclick='addCalc(2)'>2</span>
+		                                          <span onclick='addCalc(3)'>3</span>
+		                                          <span onclick='addCalc(0)'>0</span>
+		                                          <span onclick='addCalc(".")'>.</span>
+                                                  <span onclick='addCalc("C")' class="clear">C</span>
+	                                           </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type='submit' class='btn-success btn pull-right'>Continuar</button>
+                                            </div>
+                                            </div>
+			                             </div></div></div></div>`);
+    $('#modalCalc').modal('show');
+    
+}
+
+function addCalc(n){
+    if(n =='C')
+        document.getElementById('screenCalc').innerHTML='';
+    else
+        document.getElementById('screenCalc').innerHTML=document.getElementById('screenCalc').innerHTML+n;
 }
