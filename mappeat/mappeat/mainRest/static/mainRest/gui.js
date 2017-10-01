@@ -796,7 +796,7 @@ function loadTPV(){
 		   <div class="row">
 		     <div class="col-sm-8">
 		       <div class="well">
-		         <h4>Productos</h4><button class='pull-right btn btn-warning btn-lg' onclick='toggleCombined()' id='combinedButton'>Combinar</button>
+		         <h4>Productos</h4><button class='pull-right btn btn-warning btn-lg' onclick='toggleCombined()' style="filter: grayscale(100%)" id='combinedButton'>Combinar</button>
 		         <ul id="productsList" class="ul-tpv">Cargando...</ul>
 
 					 </div>
@@ -1321,7 +1321,7 @@ function addTicketDetail(product, quantity=1){
 	valores.quantity = quantity;
 	valores.isComplement = combined;
     
-	post("ticket_details/",function(){if(combined){toggleCombined();}
+	post("ticket_details/",function(){if(combined) toggleCombined();
                                       loadTicket();},valores,true);
 }
 
@@ -1501,11 +1501,11 @@ function toggleCombined(){
     button = document.getElementById('combinedButton');
     if(combined){
         combined = false;
-        button.disabled='true';
+        button.style.filter = "grayscale(100%)";
     }
     else{
         combined = true;
-        button.disabled='false';    
+        button.style.filter = "none";
     }
 }
 
