@@ -271,9 +271,9 @@ class Ticket_Resume(models.Model):
     is_closed = models.BooleanField(default = False, db_index=True)
 
     def addTicketDetail(self, product_id, quantity=1, isComplement=False):
+        print("addTicketDetail")
         #Sacamos el ultimo ticket_detail de este ticket
         details = Ticket_Detail.objects.all().filter(ticket=self)
-        print(details)
         """
         Preparamos los valores del ticket_detail:
         """
@@ -292,6 +292,7 @@ class Ticket_Resume(models.Model):
             nuevaLinea = mismoProducto and mismoTipo
             if nuevaLinea: #Si la ultima linea del mismo producto / complemento:
                 #CASO 1
+                print("addTicketDetail CASO 1 (ya hay más lineas)")
                 lastDetail.quantity += quantity
                 lastDetail.price += unit_price * quantity
                 lastDetail.save()
@@ -299,6 +300,7 @@ class Ticket_Resume(models.Model):
                 self.save()
                 return self
         #CASO 2
+        print("addTicketDetail CASO 2 (ticket vacío)")
         new_detail = Ticket_Detail(ticket = self,
                       product = product_local,
                       product_name = product_local.name,
@@ -308,8 +310,16 @@ class Ticket_Resume(models.Model):
         new_detail.save()
         self.cost += unit_price * quantity
         self.save()
+        print("addTicketDetail CASO 2 [FIN]")
         return self
 
+    def getLastDetail(self):
+        details = Ticket_Detail.objects.all().filter(ticket=self)
+        if len(details) != 0:  #Si ya hay lineas:
+            lastDetail = details.order_by('-time')[0]
+            return(lastDetail)
+        else:
+            return(None)
 
     #NO TESTEADO
     def close_ticket(self):
@@ -317,7 +327,7 @@ class Ticket_Resume(models.Model):
         self.save()
 
     def __str__(self):
-        return str(self.date) + ": " + self.restaurant.name
+        return str(self.date) + ": " + self.restaurant.name + " " + str(self.pk)
 
 """
 Relaciona los tickets y los productos y representa cada linea de un ticket
@@ -366,8 +376,7 @@ class Ticket_Detail(models.Model):
             super(Ticket_Resume, self.ticket).save()
 
         #A partir de aqui se ejecuta cada vez que actualizamos un Ticket_Detail
-        print("Ticket Detail")
-        print(self.time)
+        print("Actualiza Ticket_Detail save()")
         super(Ticket_Detail, self).save()
         #super(Ticket_Detail, self).save(self, *args, **kwargs)
 

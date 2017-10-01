@@ -222,26 +222,17 @@ class Ticket_DetailSerializer(serializers.ModelSerializer):
                     'price', 'time', 'sent_kitchen')
 
     def create(self, validated_data):
+        print("Creando Ticket_Detail..")
         ticket = validated_data['ticket']
+        print("Aquí llega")
         p = validated_data['product']
         q = validated_data['quantity']
         iC = validated_data['isComplement']
-        print("#####################")
-        print(ticket)
-        print("#####################")
-        print(p)
-        print("#####################")
 
         ticket = ticket.addTicketDetail(product_id = p.pk, quantity=q, isComplement = iC )
-        serializer = TicketSerializer(ticket)
-        print("$$$$$$$$$$$$$$$$$$$$$$")
-        print(ticket)
-        print("$$$$$$$$$$$$$$$$$$$$$$")
-        print(serializer)
-        print("$$$$$$$$$$$$$$$$$$$$$$")
-        print(serializer.data)
-        print("$$$$$$$$$$$$$$$$$$$$$$")
-        return serializer.data
+        new_detail = ticket.getLastDetail()
+        
+        return new_detail
 
 
 """
