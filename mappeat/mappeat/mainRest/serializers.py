@@ -233,8 +233,14 @@ class Ticket_DetailSerializer(serializers.ModelSerializer):
         new_detail = ticket.getLastDetail()
         
         return new_detail
-
-
+    
+    def update(self,instance,validated_data):
+        ticket = validated_data['ticket']
+        price = validated_data['price'] 
+        ticket = ticket.updateTicketDetail(detail=self.data['pk'],price = price)
+        
+        return self
+    
 """
 TicketSerializer
 Es un serializador para el modelo Ticket_Resume

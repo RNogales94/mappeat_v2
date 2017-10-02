@@ -320,6 +320,16 @@ class Ticket_Resume(models.Model):
             return(lastDetail)
         else:
             return(None)
+    
+    def updateTicketDetail(self,detail,price):
+        line = Ticket_Detail.objects.all().filter(pk = detail)[0]
+        self.cost -= line.price;
+        line.price = price
+        self.cost += line.price
+        line.save()
+        self.save()
+        return self
+        
 
     #NO TESTEADO
     def close_ticket(self):

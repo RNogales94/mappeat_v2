@@ -4,6 +4,7 @@ var currentTable;
 var currentTableID;
 var currentTicketID;
 var combined;
+var currentTicketDetailID;
 
 function loadSettings(){
 	main.innerHTML = `<div class=" content container-fluid">
@@ -623,7 +624,7 @@ function showTicket(ticket){
 			<td><span class='glyphicon glyphicon-remove remove_button' onclick='removeTicketDetail(${line.pk})'></span> </td>
 			<td>${line.product_name}</td>
 			<td>${line.quantity}</td>
-			<td onclick='showCalculator()'>${line.price.toFixed(2)}€</td>
+			<td onclick='showCalculator(${line.pk})'>${line.price.toFixed(2)}€</td>
 		</tr>`);
         if (!line.sent_kitchen){
             pending.insertAdjacentHTML('beforeend', `<tr onclick="void(0)">
@@ -796,7 +797,7 @@ function loadTPV(){
 		   <div class="row">
 		     <div class="col-sm-8">
 		       <div class="well">
-		         <h4>Productos</h4><button class='pull-right btn btn-warning btn-lg' onclick='toggleCombined()' style="filter: grayscale(100%)" id='combinedButton'>Combinar</button>
+		         <h4>Productos</h4><button class='pull-right btn btn-warning btn-lg' onclick='toggleCombined()' id='combinedButton'>Combinar</button>
 		         <ul id="productsList" class="ul-tpv">Cargando...</ul>
 
 					 </div>
@@ -1501,15 +1502,17 @@ function toggleCombined(){
     button = document.getElementById('combinedButton');
     if(combined){
         combined = false;
-        button.style.filter = "grayscale(100%)";
+        button.style.filter = "none";
     }
     else{
         combined = true;
-        button.style.filter = "none";
+        button.style.filter = "grayscale(100%)";
+       
     }
 }
 
-function showCalculator(){
+function showCalculator(id){
+    currentTicketDetailID = id;
     main.insertAdjacentHTML('beforeend',`<div class="modal fade" id="modalCalc" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	                                       <div class="modal-dialog" role="document">
 		                                      <div class="modal-content">
@@ -1519,9 +1522,11 @@ function showCalculator(){
 				                                    <h4 class="modal-title" id="myModalLabel">Editar</h4>
 			                                     </div>
 			                                 <div class="modal-body">
+                                                <form onsubmit='return editTicketDetail()'>
+                                                
                                                 <div id="calculator">
 	                                            <div class="top">
-		                                          <div class="screen" id='screenCalc'></div>
+		                                          <div class="screen" id='screenCalc' name='screenCalc'></div>
 	                                               </div>
 	                                            <div class="keys">
 		                                          <span onclick='addCalc(7)'>7</span>
@@ -1542,8 +1547,11 @@ function showCalculator(){
                                                 <button type='submit' class='btn-success btn pull-right'>Continuar</button>
                                             </div>
                                             </div>
+                                            </form>
 			                             </div></div></div></div>`);
+    document.getElementById('screenCalc').innerHTML='';
     $('#modalCalc').modal('show');
+    
     
 }
 
@@ -1552,4 +1560,18 @@ function addCalc(n){
         document.getElementById('screenCalc').innerHTML='';
     else
         document.getElementById('screenCalc').innerHTML=document.getElementById('screenCalc').innerHTML+n;
+}
+
+function editTicketDetail(){
+    var valores = new Object();
+    get('ticket_details/'+currentTicketDetailID +'/', function(){ valores = this.response;
+                                              valores.price =document.getElementById('screenCalc').innerHTML;
+                                              put('ticket_details/'+currentTicketDetailID+'/', function(){ $('#modalCalc').modal('hide');
+                                                                                        loadTicket();}, valores);
+                                              
+                
+                                              });
+    
+       return false;
+    
 }
