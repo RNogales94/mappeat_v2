@@ -1,5 +1,5 @@
 # mappeat_v2
-Nueva versión de Mappeat  
+Mappeat new version
 Stack:
 Python 3.6.0  
 Django 1.10.5
